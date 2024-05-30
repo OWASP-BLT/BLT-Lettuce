@@ -10,7 +10,6 @@ from flask import Flask, jsonify, request
 from slack import WebClient
 from slack_sdk.errors import SlackApiError
 from slackeventsapi import SlackEventAdapter
-from datetime import datetime, timedelta
 
 DEPLOYS_CHANNEL_NAME = "#project-blt-lettuce-deploys"
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
@@ -247,8 +246,7 @@ def format_data(prs, issues, comments):
             user_data[user] = {'prs': 0, 'issues': 0, 'comments': 0}
         user_data[user]['comments'] += 1
 
-    table = "User | PRs Merged | Issues Resolved | Comments\n"
-    table += "---- | ---------- | --------------- | --------\n"
+    table = "User | PRs Merged | Issues Resolved | Comments\n ---- | ---------- | --------------- | --------\n"
     for user, counts in user_data.items():
         table += f"{user} | {counts['prs']} | {counts['issues']} | {counts['comments']}\n"
     
