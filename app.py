@@ -259,7 +259,6 @@ def contributors():
     data = request.form
     owner = "OWASP-BLT"
     repo = "BLT"
-    slack_channel = data.get('channel_id')
 
     prs, issues, comments = fetch_github_data(owner, repo)
 
