@@ -3,16 +3,18 @@ import os
 import sqlite3
 
 import json
+import requests
 import git
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from slack import WebClient
 from slack_sdk.errors import SlackApiError
 from slackeventsapi import SlackEventAdapter
+from datetime import datetime, timedelta
 
 DEPLOYS_CHANNEL_NAME = "#project-blt-lettuce-deploys"
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
-
+GITHUB_API_URL = 'https://github.com/OWASP-BLT/BLT'
 
 load_dotenv()
 
@@ -209,6 +211,62 @@ def list_project():
         message = f"Hello {user_name}, here the information about '{project_name}':\n{project_list}"
     else:
         message = f"Hello {user_name}, the project '{project_name}' is not recognized. Please try different query."
+
+    return jsonify(
+        {
+            "response_type": "in_channel",
+            "text": message,
+        }
+    )
+
+def fetch_github_data(owner, repo):
+    prs = requests.get(f'{GITHUB_API_URL}/repos/{owner}/{repo}/pulls?state=closed').json()
+    issues = requests.get(f'{GITHUB_API_URL}/repos/{owner}/{repo}/issues?state=closed').json()
+    comments = requests.get(f'{GITHUB_API_URL}/repos/{owner}/{repo}/issues/comments').json()
+    
+    return prs, issues, comments
+
+def format_data(prs, issues, comments):
+    user_data = {}
+
+    for pr in prs:
+        user = pr['user']['login']
+        if user not in user_data:
+            user_data[user] = {'prs': 0, 'issues': 0, 'comments': 0}
+        user_data[user]['prs'] += 1
+
+    for issue in issues:
+        user = issue['user']['login']
+        if user not in user_data:
+            user_data[user] = {'prs': 0, 'issues': 0, 'comments': 0}
+        user_data[user]['issues'] += 1
+
+    for comment in comments:
+        user = comment['user']['login']
+        if user not in user_data:
+            user_data[user] = {'prs': 0, 'issues': 0, 'comments': 0}
+        user_data[user]['comments'] += 1
+
+    table = "User | PRs Merged | Issues Resolved | Comments\n"
+    table += "---- | ---------- | --------------- | --------\n"
+    for user, counts in user_data.items():
+        table += f"{user} | {counts['prs']} | {counts['issues']} | {counts['comments']}\n"
+    
+    return table
+
+@app.route('/contributors', methods=['POST'])
+def contributors():
+    data = request.form
+    owner = "OWASP-BLT"
+    repo = "BLT"
+    slack_channel = data.get('channel_id')
+
+    prs, issues, comments = fetch_github_data(owner, repo)
+    table = format_data(prs, issues, comments)
+    if table:
+        message = f"{table}"
+    else:
+        message = f"No data available"
 
     return jsonify(
         {
