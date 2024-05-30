@@ -262,15 +262,10 @@ def contributors():
     slack_channel = data.get('channel_id')
 
     prs, issues, comments = fetch_github_data(owner, repo)
-    table = format_data(prs, issues, comments)
-    if table:
-        message = f"{table}"
-    else:
-        message = f"No data available"
 
     return jsonify(
         {
             "response_type": "in_channel",
-            "text": message,
+            "text": format_data(prs, issues, comments) or "No data available",
         }
     )
