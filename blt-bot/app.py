@@ -2,7 +2,7 @@ import os
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 
@@ -69,7 +69,6 @@ def format_data(prs, issues, comments):
 
 @app.route("/contributors", methods=["POST"])
 def contributors():
-    data = request.form
     owner = "OWASP-BLT"
     repo = "BLT"
 
