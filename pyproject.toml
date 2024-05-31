@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "slacktools"
 version = "0.1.0"
-description = ""
+description = "OWASP BLT Slack Bot"
 authors = ["Sarthak5598 <sarthak5598sharma@gmail.com>"]
 readme = "README.md"
 
