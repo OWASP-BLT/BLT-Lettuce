@@ -12,7 +12,6 @@ python-dotenv = "^1.0.1"
 gitpython = "^3.1.43"
 slack-sdk = "^3.27.2"
 slackeventsapi = "^3.0.1"
-touch = "^2020.12.3"
 
 
 [build-system]
