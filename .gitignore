@@ -1,3 +1,4 @@
 .env
 .ruff_cache
 *.code-workspace
+local_settings.py
