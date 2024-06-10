@@ -17,15 +17,6 @@ with open(repo_json_path) as f:
     repos_data = json.load(f)
 
 
-def load_data_to_redis():
-    for tech, repos in repos_data.items():
-        redis_client.setex(tech, 48 * 60 * 60, json.dumps(repos))
-
-
-# Load data to Redis on startup
-load_data_to_redis()
-
-
 class RepoPlugin(MachineBasePlugin):
     @command("/repo")
     async def repo(self, command):
@@ -51,8 +42,8 @@ class RepoPlugin(MachineBasePlugin):
 
         if repos:
             repos_list = "\n".join(repos)
-            message = f"Hello, you can implement your '{tech_name}' knowledge here:\n{repos_list}"
+            message = f"Hello , you can implement your '{tech_name}' knowledge here:\n{repos_list}"
         else:
-            message = f"Hello, the technology '{tech_name}' is not recognized. Please try again."
+            message = f"Hello , the technology '{tech_name}' is not recognized. Please try again."
 
         await command.say(message)

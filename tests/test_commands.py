@@ -53,7 +53,7 @@ async def test_repo_command(mocker):
 
         if tech_name in repos_data:
             repos_list = "\n".join(repos_data[tech_name])
-            expected_message = f"Hello, you can implement your '{tech_name}' knowledge here:\n{repos_list}"
+            expected_message = f"Hello , you can implement your '{tech_name}' knowledge here:\n{repos_list}"
         else:
             expected_message = f"Hello , the technology '{tech_name}' is not recognized. Please try again."
 
