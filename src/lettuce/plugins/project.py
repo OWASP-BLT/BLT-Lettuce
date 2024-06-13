@@ -17,7 +17,7 @@ class ProjectPlugin(MachineBasePlugin):
         with open("data/projects.json") as f:
             self.project_data = json.load(f)
 
-    @command("/jrepo")
+    @command("/project")
     async def project(self, command):
         project_name = command.text.strip().lower()
         channel_id = command._cmd_payload["channel_id"]
