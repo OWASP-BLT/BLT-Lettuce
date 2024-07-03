@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
@@ -39,7 +39,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
+
+      - name: Set up environment variables
+        env:
+          SIGNING_SECRET: "xma1238904"
 
       - name: Install dependencies
         run: |
