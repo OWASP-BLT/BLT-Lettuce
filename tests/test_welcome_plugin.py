@@ -1,18 +1,14 @@
 import pytest
-from unittest.mock import mock_open, patch
+
 from app import handle_team_join
 
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
 
+
 @pytest.fixture
 def event_data():
-    return {
-        "event": {
-            "user": {
-                "id": "D0730R9KFC2"
-            }
-        }
-    }
+    return {"event": {"user": {"id": "D0730R9KFC2"}}}
+
 
 @pytest.fixture
 def expected_message():
@@ -48,7 +44,8 @@ def expected_message():
         "Welcome aboard! :rocket:"
     )
 
-def test_handle_team_join_successful(mocker,event_data, expected_message):
+
+def test_handle_team_join_successful(mocker, event_data, expected_message):
     # event_data={
     #     "event": {
     #         "user": {
@@ -56,31 +53,29 @@ def test_handle_team_join_successful(mocker,event_data, expected_message):
     #         }
     #     }
     # }
-    mock_client = mocker.patch('app.client')
+    mock_client = mocker.patch("app.client")
 
     # Mock responses for chat_postMessage and conversations_open
     mock_client.chat_postMessage.return_value = {"ok": True}
     mock_client.conversations_open.return_value = {"channel": {"id": "C06RBJ779CH"}}
 
     mock_open_file = mocker.mock_open(read_data=expected_message)
-    mocker.patch('builtins.open', mock_open_file)
-    
+    mocker.patch("builtins.open", mock_open_file)
+
     handle_team_join(event_data)
 
     # Assert that the chat_postMessage was called with the correct parameters
     mock_client.chat_postMessage.assert_any_call(
-        channel=JOINS_CHANNEL_ID,
-        text="<@D0730R9KFC2> joined the team."
+        channel=JOINS_CHANNEL_ID, text="<@D0730R9KFC2> joined the team."
     )
 
     mock_client.conversations_open.assert_called_once_with(users=["D0730R9KFC2"])
     welcome_message = expected_message.format(user_id="D0730R9KFC2")
     blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_message.strip()}}]
     mock_client.chat_postMessage.assert_any_call(
-        channel="C06RBJ779CH",
-        text="Welcome to the OWASP Slack Community!",
-        blocks=blocks
+        channel="C06RBJ779CH", text="Welcome to the OWASP Slack Community!", blocks=blocks
     )
+
 
 if __name__ == "__main__":
     pytest.main()
