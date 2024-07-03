@@ -7,7 +7,7 @@ on:
 
 env:
   FORCE_COLOR: 1
-  SIGNING_SECRET: "xma1238904"
+  SIGNING_SECRET: "de41d4f0c5dc6da541498602e45df383"
 
 concurrency:
   cancel-in-progress: true
