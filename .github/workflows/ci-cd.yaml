@@ -7,11 +7,6 @@ on:
 
 env:
   FORCE_COLOR: 1
-  SIGNING_SECRET: "de41d4f0c5dc6da541498602e45df383"
-
-concurrency:
-  cancel-in-progress: true
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
 
 jobs:
   pre-commit:
@@ -42,9 +37,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Set up environment variables
-        env:
-          SIGNING_SECRET: ${{ env.SIGNING_SECRET }}
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "SIGNING_SECRET=de41d4f0c5dc6da541498602e45df383" >> .env
 
       - name: Install dependencies
         run: |
