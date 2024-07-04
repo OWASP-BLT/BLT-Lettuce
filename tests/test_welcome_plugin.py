@@ -12,7 +12,8 @@ JOINS_CHANNEL_ID = "C06RMMRMGHE"
 def setenvvar(monkeypatch):
     with mock.patch.dict(os.environ, clear=True):
         envvars = {
-            "API_AUDIENCE": "https://mock.com",
+            "SIGNING_SECRET": "xapp-token",
+            "SLACK_BOT_TOKEN": "xoxb-token",
         }
         for k, v in envvars.items():
             monkeypatch.setenv(k, v)
