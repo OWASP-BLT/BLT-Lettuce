@@ -1,9 +1,12 @@
-import pytest
-from unittest import mock
 import os
+from unittest import mock
+
+import pytest
+
 from app import handle_team_join
 
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
+
 
 @pytest.fixture()
 def setenvvar(monkeypatch):
@@ -14,6 +17,8 @@ def setenvvar(monkeypatch):
         for k, v in envvars.items():
             monkeypatch.setenv(k, v)
         yield
+
+
 @pytest.fixture
 def event_data():
     return {"event": {"user": {"id": "D0730R9KFC2"}}}
