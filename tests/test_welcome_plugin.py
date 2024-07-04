@@ -1,10 +1,19 @@
 import pytest
-
+from unittest import mock
+import os
 from app import handle_team_join
 
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
 
-
+@pytest.fixture()
+def setenvvar(monkeypatch):
+    with mock.patch.dict(os.environ, clear=True):
+        envvars = {
+            "API_AUDIENCE": "https://mock.com",
+        }
+        for k, v in envvars.items():
+            monkeypatch.setenv(k, v)
+        yield
 @pytest.fixture
 def event_data():
     return {"event": {"user": {"id": "D0730R9KFC2"}}}
@@ -54,7 +63,6 @@ def test_handle_team_join_successful(mocker, event_data, expected_message):
     #     }
     # }
     mock_client = mocker.patch("app.client")
-
     # Mock responses for chat_postMessage and conversations_open
     mock_client.chat_postMessage.return_value = {"ok": True}
     mock_client.conversations_open.return_value = {"channel": {"id": "C06RBJ779CH"}}

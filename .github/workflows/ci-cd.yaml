@@ -8,12 +8,6 @@ on:
 env:
   FORCE_COLOR: 1
 
-[tool.pytest.ini_options]
-env:
-    "SIGNING_SECRET=de41d4f0c5dc6da541498602e45df383"
-    "SLACK_TOKEN=xapp-1-A076K2SA7PG-72425278908"
-
-
 jobs:
   pre-commit:
     name: Run pre-commit
