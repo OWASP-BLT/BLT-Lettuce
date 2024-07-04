@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from app import handle_team_join
+from app import create_slack_client, create_slack_event_adapter, handle_team_join
 
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
 
@@ -60,36 +60,60 @@ def expected_message():
     )
 
 
-def test_handle_team_join_successful(mocker, event_data, expected_message):
-    # event_data={
-    #     "event": {
-    #         "user": {
-    #             "id": "D0730R9KFC2"
-    #         }
-    #     }
-    # }
-    mock_client = mocker.patch("app.client")
-    # Mock responses for chat_postMessage and conversations_open
-    mock_client.chat_postMessage.return_value = {"ok": True}
-    mock_client.conversations_open.return_value = {"channel": {"id": "C06RBJ779CH"}}
+@pytest.fixture
+def slack_event_adapter_mock():
+    with mock.patch("app.SlackEventAdapter") as mock_adapter:
+        yield mock_adapter
 
-    mock_open_file = mocker.mock_open(read_data=expected_message)
-    mocker.patch("builtins.open", mock_open_file)
 
+@pytest.fixture
+def slack_client_mock():
+    with mock.patch("app.WebClient") as mock_client:
+        yield mock_client
+
+
+@pytest.fixture
+def slack_event_adapter():
+    return create_slack_event_adapter("xapp-token", "/slack/events", None)
+
+
+@pytest.fixture
+def slack_client():
+    return create_slack_client("xoxb-token")
+
+
+def test_handle_team_join(
+    setenvvar,
+    slack_event_adapter_mock,
+    slack_client_mock,
+    event_data,
+    slack_client,
+):
+    # Configure the mock Slack client to return a specific response for conversations_open
+    slack_client_mock.conversations_open.return_value = {"channel": {"id": "mock_channel_id"}}
+
+    with open("welcome_message.txt", "r", encoding="utf-8") as file:
+        welcome_message_template = file.read()
+
+    # Call the handle_team_join function with the event data
     handle_team_join(event_data)
 
-    # Assert that the chat_postMessage was called with the correct parameters
-    mock_client.chat_postMessage.assert_any_call(
+    # Check that the Slack client methods were called as expected
+    slack_client_mock.chat_postMessage.assert_called_once_with(
         channel=JOINS_CHANNEL_ID, text="<@D0730R9KFC2> joined the team."
     )
 
-    mock_client.conversations_open.assert_called_once_with(users=["D0730R9KFC2"])
-    welcome_message = expected_message.format(user_id="D0730R9KFC2")
-    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_message.strip()}}]
-    mock_client.chat_postMessage.assert_any_call(
-        channel="C06RBJ779CH", text="Welcome to the OWASP Slack Community!", blocks=blocks
+    # Check that the direct message was sent
+    slack_client_mock.chat_postMessage.assert_any_call(
+        channel="mock_channel_id",
+        text="Welcome to the OWASP Slack Community!",
+        blocks=[
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": welcome_message_template.format(user_id="D0730R9KFC2").strip(),
+                },
+            }
+        ],
     )
-
-
-if __name__ == "__main__":
-    pytest.main()

@@ -23,8 +23,23 @@ logging.basicConfig(
 
 app = Flask(__name__)
 
-slack_events_adapter = SlackEventAdapter(os.environ["SIGNING_SECRET"], "/slack/events", app)
-client = WebClient(token=os.environ["SLACK_TOKEN"])
+
+def create_slack_event_adapter(signing_secret, endpoint, app):
+    if not signing_secret:
+        raise ValueError("SIGNING_SECRET environment variable is not set.")
+    return SlackEventAdapter(signing_secret, endpoint, app)
+
+
+def create_slack_client(token):
+    if not token:
+        raise ValueError("SLACK_TOKEN environment variable is not set.")
+    return WebClient(token=token)
+
+
+slack_events_adapter = create_slack_event_adapter(
+    os.getenv("SIGNING_SECRET"), "/slack/events", app
+)
+client = create_slack_client(os.getenv("SLACK_TOKEN"))
 client.chat_postMessage(channel=DEPLOYS_CHANNEL_NAME, text="bot started v1.9 240611-1 top")
 
 
