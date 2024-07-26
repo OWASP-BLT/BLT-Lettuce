@@ -1,13 +1,10 @@
 import logging
 import os
-from datetime import datetime, timezone
 from pathlib import Path
 
 import git
-from cachetools import TTLCache
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
-from openai import OpenAI
 from slack import WebClient
 from slack_sdk.errors import SlackApiError
 from slackeventsapi import SlackEventAdapter

@@ -16,6 +16,7 @@ slackeventsapi = "^3.0.1"
 slack-sdk = "^3.27.2"
 openai = "^1.35.7"
 cachetools = "^5.3.3"
+pre-commit = "^3.7.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
