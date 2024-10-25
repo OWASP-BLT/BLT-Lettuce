@@ -25,8 +25,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install pre-commit
+        run: pip install pre-commit
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
+
+      - name: Run black
+        run: black .
 
   tests:
     name: Run tests

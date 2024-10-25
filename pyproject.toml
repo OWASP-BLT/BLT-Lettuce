@@ -14,12 +14,14 @@ gitpython = "^3.1.43"
 slack-machine = { git = "https://github.com/Owasp-blt/slack-machine" }
 slackeventsapi = "^3.0.1"
 slack-sdk = "^3.27.2"
+pre-commit = "^3.3.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 pytest-asyncio = "^0.23.7"
 pytest-mock = "^3.14.0"
 ruff = "^0.4.8"
+black = "^23.7.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^8.2.2"
