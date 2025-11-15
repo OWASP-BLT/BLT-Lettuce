@@ -8,7 +8,7 @@ packages = [{ include = "lettuce", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "^2.32.3"
+requests = "^2.32.4"
 python-dotenv = "^1.0.1"
 gitpython = "^3.1.43"
 slack-machine = { git = "https://github.com/Owasp-blt/slack-machine" }
