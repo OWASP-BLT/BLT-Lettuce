@@ -152,33 +152,8 @@ See [cloudflare-worker/README.md](cloudflare-worker/README.md) for setup instruc
 ### Prerequisites
 
 - Python 3.10+
-- [Poetry](https://python-poetry.org/docs/#installation) for dependency management
 - [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) for Cloudflare Workers
 - Slack Bot Token and Signing Secret
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/OWASP-BLT/BLT-Lettuce.git
-   cd BLT-Lettuce
-   ```
-
-2. **Install dependencies**
-   ```bash
-   poetry install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.sample .env
-   # Edit .env with your Slack credentials
-   ```
-
-4. **Run locally**
-   ```bash
-   poetry run python app.py
-   ```
 
 ### Deploy Cloudflare Worker
 
@@ -198,17 +173,19 @@ wrangler deploy
 
 ```
 BLT-Lettuce/
-├── app.py                  # Main Flask application
 ├── cloudflare-worker/      # Cloudflare Worker code
 │   ├── worker.py           # Python worker implementation
 │   ├── wrangler.toml       # Worker configuration
 │   └── README.md           # Worker documentation
 ├── data/
 │   ├── projects.json       # OWASP project metadata cache
-│   └── repos.json          # Repository categorization
+│   ├── repos.json          # Repository categorization
+│   └── stats.json          # Bot statistics
 ├── docs/
 │   └── index.html          # GitHub Pages dashboard
-├── src/lettuce/            # Bot plugins and modules
+├── scripts/
+│   ├── requirements.txt    # Script dependencies
+│   └── scrape_stats.py     # Stats scraper script
 ├── tests/                  # Test suite
 ├── pyproject.toml          # Poetry configuration
 └── README.md               # This file

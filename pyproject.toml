@@ -4,17 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["OWASP BLT Team", "Sarthak5598 <sarthak5598sharma@gmail.com>"]
 readme = "README.md"
-packages = [{ include = "lettuce", from = "src" }]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10"
-requests = "^2.32.3"
-python-dotenv = "^1.0.1"
-gitpython = "^3.1.43"
-slack-machine = { git = "https://github.com/Owasp-blt/slack-machine" }
-slackeventsapi = "^3.0.1"
-slack-sdk = "^3.27.2"
-beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
@@ -28,7 +21,7 @@ pytest-asyncio = "^0.23.7"
 pytest-mock = "^3.14.0"
 
 [tool.isort]
-known_first_party = ["lettuce", "tests"]
+known_first_party = ["tests"]
 line_length = 99
 multi_line_output = 3
 profile = "black"
