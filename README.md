@@ -175,6 +175,7 @@ wrangler deploy
 BLT-Lettuce/
 ├── cloudflare-worker/      # Cloudflare Worker code
 │   ├── worker.py           # Python worker implementation
+│   ├── welcome_message.txt # Welcome message template
 │   ├── wrangler.toml       # Worker configuration
 │   └── README.md           # Worker documentation
 ├── data/
@@ -187,6 +188,7 @@ BLT-Lettuce/
 │   ├── requirements.txt    # Script dependencies
 │   └── scrape_stats.py     # Stats scraper script
 ├── tests/                  # Test suite
+├── welcome_message.txt     # Welcome message source
 ├── pyproject.toml          # Poetry configuration
 └── README.md               # This file
 ```
