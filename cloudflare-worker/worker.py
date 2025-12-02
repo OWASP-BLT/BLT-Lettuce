@@ -9,6 +9,7 @@ import hashlib
 import hmac
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 
 from js import Response, fetch
 
@@ -21,40 +22,14 @@ def get_utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
-WELCOME_MESSAGE = (
-    ":tada: *Welcome to the OWASP Slack Community, <@{user_id}>!* :tada:\n\n"
-    "We're thrilled to have you here! Whether you're new to OWASP or a "
-    "long-time contributor, this Slack workspace is the perfect place to "
-    "connect, collaborate, and stay informed about all things OWASP.\n\n"
-    ":small_blue_diamond: *Get Involved:*\n"
-    "• Check out the *#contribute* channel to find ways to get involved "
-    "with OWASP projects and initiatives.\n"
-    "• Explore individual project channels, which are named *#project-name*, "
-    "to dive into specific projects that interest you.\n"
-    "• Join our chapter channels, named *#chapter-name*, to connect with "
-    "local OWASP members in your area.\n\n"
-    ":small_blue_diamond: *Stay Updated:*\n"
-    "• Visit *#newsroom* for the latest updates and announcements.\n"
-    "• Follow *#external-activities* for news about OWASP's engagement "
-    "with the wider security community.\n\n"
-    ":small_blue_diamond: *Connect and Learn:*\n"
-    "• *#jobs*: Looking for new opportunities? Check out the latest "
-    "job postings here.\n"
-    "• *#leaders*: Connect with OWASP leaders and stay informed about "
-    "leadership activities.\n"
-    "• *#project-committee*: Engage with the committee overseeing "
-    "OWASP projects.\n"
-    "• *#gsoc*: Stay updated on Google Summer of Code initiatives.\n"
-    "• *#github-admins*: Get support and discuss issues related to "
-    "OWASP's GitHub repositories.\n"
-    "• *#learning*: Share and find resources to expand your knowledge "
-    "in the field of application security.\n\n"
-    "We're excited to see the amazing contributions you'll make. If you "
-    "have any questions or need assistance, don't hesitate to ask. Let's "
-    "work together to make software security visible and improve the "
-    "security of the software we all rely on.\n\n"
-    "Welcome aboard! :rocket:"
-)
+def load_welcome_message():
+    """Load the welcome message from the text file."""
+    welcome_file = Path(__file__).parent / "welcome_message.txt"
+    return welcome_file.read_text(encoding="utf-8")
+
+
+# Load welcome message from file
+WELCOME_MESSAGE = load_welcome_message()
 
 
 async def get_stats(env):
