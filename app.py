@@ -54,9 +54,13 @@ logging.basicConfig(
 
 app = Flask(__name__)
 
+BOT_VERSION = "2.0"
+
 slack_events_adapter = SlackEventAdapter(os.environ["SIGNING_SECRET"], "/slack/events", app)
 client = WebClient(token=os.environ["SLACK_TOKEN"])
-client.chat_postMessage(channel=DEPLOYS_CHANNEL_NAME, text="bot started v2.0 with recommendations")
+client.chat_postMessage(
+    channel=DEPLOYS_CHANNEL_NAME, text=f"bot started v{BOT_VERSION} with recommendations"
+)
 
 
 def get_tech_recommendations(tech, difficulty, project_type):
@@ -251,7 +255,12 @@ def build_fallback_blocks():
 @app.route("/slack/interactivity", methods=["POST"])
 def handle_interactivity():
     """Handle interactive button clicks from Slack."""
-    payload = json.loads(request.form.get("payload", "{}"))
+    try:
+        payload = json.loads(request.form.get("payload", "{}"))
+    except json.JSONDecodeError:
+        logging.error("Invalid JSON payload received")
+        return "Invalid payload", 400
+
     action_id = payload.get("actions", [{}])[0].get("action_id", "")
     action_value = payload.get("actions", [{}])[0].get("value", "")
     channel_id = payload.get("channel", {}).get("id", "")
@@ -618,7 +627,7 @@ def handle_interactivity():
             )
 
     except SlackApiError as e:
-        logging.error(f"Error handling interactivity: {e.response['error']}")
+        logging.error(f"Error handling interactivity: {e.response.get('error', 'Unknown error')}")
 
     return "", 200
 
@@ -670,7 +679,9 @@ def handle_slash_commands():
                 blocks=blocks,
             )
         except SlackApiError as e:
-            logging.error(f"Error sending recommendation message: {e.response['error']}")
+            logging.error(
+                f"Error sending recommendation message: {e.response.get('error', 'Unknown error')}"
+            )
 
         return "", 200
 

@@ -69,8 +69,8 @@ class RecommendationsPlugin(MachineBasePlugin):
         """Initialize the recommendations plugin."""
         super().__init__(client, settings, storage)
 
-        # Load project data
-        project_home = os.environ.get("PROJECT_HOME", "/home/DonnieBLT/BLT-Lettuce")
+        # Load project data - use environment variable or default to current directory
+        project_home = os.environ.get("PROJECT_HOME", os.getcwd())
         data_path = os.path.join(project_home, "data", "projects.json")
         try:
             with open(data_path) as f:
