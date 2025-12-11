@@ -5,6 +5,8 @@ This module provides filtering and ranking logic for recommending OWASP projects
 based on technology, mission, difficulty level, and other criteria.
 """
 
+import json
+from pathlib import Path
 from typing import Any
 
 
@@ -244,9 +246,6 @@ class ProjectRecommender:
 
 def load_projects_metadata() -> dict[str, Any]:
     """Load projects metadata from JSON file."""
-    import json
-    from pathlib import Path
-
     metadata_file = Path(__file__).parent.parent / "data" / "projects_metadata.json"
 
     try:

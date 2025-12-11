@@ -11,6 +11,7 @@ This script processes the existing projects.json file and adds:
 
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -268,14 +269,12 @@ def main():
         return 0
 
     except FileNotFoundError:
-        print(f"Error: {INPUT_FILE} not found", file=__import__("sys").stderr)
+        print(f"Error: {INPUT_FILE} not found", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"Unexpected error: {e}", file=__import__("sys").stderr)
+        print(f"Unexpected error: {e}", file=sys.stderr)
         return 1
 
 
 if __name__ == "__main__":
-    import sys
-
     sys.exit(main())

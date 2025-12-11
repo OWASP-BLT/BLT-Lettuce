@@ -15,8 +15,9 @@ from js import Response, fetch
 # Import project recommender
 try:
     from project_recommender import ProjectRecommender, load_projects_metadata
-except ImportError:
-    # Fallback if module not available
+except ImportError as e:
+    # Fallback if module not available (e.g., during initial deployment)
+    print(f"Warning: project_recommender not available: {e}")
     ProjectRecommender = None
     load_projects_metadata = None
 
@@ -28,8 +29,10 @@ PROJECTS_METADATA = None
 if load_projects_metadata:
     try:
         PROJECTS_METADATA = load_projects_metadata()
-    except Exception:
-        pass
+    except FileNotFoundError:
+        print("Warning: projects_metadata.json not found, recommendations disabled")
+    except Exception as e:
+        print(f"Error loading projects metadata: {e}")
 
 
 def get_utc_now():

@@ -1,14 +1,14 @@
 """Tests for project recommendation engine."""
 
-import json
+import sys
 from pathlib import Path
 
 import pytest
 
-# Import the recommender
-import sys
-
+# Add cloudflare-worker to path for imports
+# Note: In production, this would be handled by proper package structure
 sys.path.insert(0, str(Path(__file__).parent.parent / "cloudflare-worker"))
+
 from project_recommender import ProjectRecommender
 
 
