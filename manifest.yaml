@@ -14,6 +14,9 @@ features:
     - command: /repo
       description: Checkout all the repositories available
       should_escape: false
+    - command: /recommend
+      description: Get personalized OWASP project recommendations
+      should_escape: false
 oauth_config:
   scopes:
     bot:
@@ -23,6 +26,7 @@ oauth_config:
       - im:read
       - mpim:read
       - users:read
+      - chat:write
 settings:
   interactivity:
     is_enabled: true
