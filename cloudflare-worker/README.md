@@ -8,6 +8,8 @@ A Cloudflare Python Worker that handles Slack webhooks, sends welcome messages t
 - **Welcome Messages**: Automatically sends welcome messages to new team members
 - **Stats Tracking**: Tracks number of joins and commands run
 - **Stats API**: Provides a JSON endpoint for stats consumption
+- **Project Recommendations**: AI-powered OWASP project recommendations based on technology or mission
+- **Project Discovery**: Browse available technologies, missions, and difficulty levels
 
 ## Endpoints
 
@@ -16,6 +18,8 @@ A Cloudflare Python Worker that handles Slack webhooks, sends welcome messages t
 | `/webhook` | POST | Slack webhook endpoint for receiving events |
 | `/stats` | GET | Returns current statistics as JSON |
 | `/health` | GET | Health check endpoint |
+| `/projects` | GET | Returns available technologies, missions, levels, and project types |
+| `/recommend` | POST | Returns personalized project recommendations |
 
 ## Setup
 
@@ -94,3 +98,107 @@ wrangler tail
 ## Stats Dashboard
 
 View the stats dashboard at the GitHub Pages site for this repository.
+
+## Project Recommendations API
+
+### GET /projects
+
+Returns metadata about available project categories.
+
+**Response:**
+```json
+{
+  "technologies": ["python", "java", "javascript", "cloud", "mobile", ...],
+  "missions": ["learning", "tool", "documentation", "vulnerable-app", ...],
+  "levels": ["beginner", "intermediate", "advanced"],
+  "types": ["tool", "documentation", "training", "vulnerable-app", ...],
+  "total_projects": 338
+}
+```
+
+### POST /recommend
+
+Get personalized project recommendations based on preferences.
+
+**Request Body:**
+```json
+{
+  "approach": "technology",
+  "technology": "python",
+  "level": "beginner",
+  "type": "tool",
+  "top_n": 3
+}
+```
+
+Or for mission-based approach:
+```json
+{
+  "approach": "mission",
+  "mission": "learning",
+  "contribution_type": "code",
+  "top_n": 5
+}
+```
+
+**Parameters:**
+- `approach` (string): Either "technology" or "mission"
+- `technology` (string): Technology stack (e.g., "python", "java", "javascript")
+- `mission` (string): Project mission (e.g., "learning", "tool", "documentation")
+- `level` (string, optional): Difficulty level ("beginner", "intermediate", "advanced")
+- `type` (string, optional): Project type ("tool", "documentation", "training", etc.)
+- `contribution_type` (string, optional): Type of contribution ("code", "documentation", "research")
+- `top_n` (integer, optional): Number of recommendations to return (default: 3)
+
+**Response:**
+```json
+{
+  "ok": true,
+  "approach": "technology",
+  "criteria": {
+    "technology": "python",
+    "level": "beginner"
+  },
+  "recommendations": [
+    {
+      "name": "PyGoat",
+      "description": "Python vulnerable web application for learning",
+      "url": "https://github.com/OWASP/www-project-pygoat",
+      "technologies": ["python"],
+      "missions": ["learning", "vulnerable-app"],
+      "level": "beginner",
+      "type": "vulnerable-app"
+    }
+  ]
+}
+```
+
+### Example Usage
+
+**Technology-based recommendations:**
+```bash
+curl -X POST https://your-worker.workers.dev/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "approach": "technology",
+    "technology": "python",
+    "level": "beginner",
+    "top_n": 3
+  }'
+```
+
+**Mission-based recommendations:**
+```bash
+curl -X POST https://your-worker.workers.dev/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "approach": "mission",
+    "mission": "learning",
+    "top_n": 5
+  }'
+```
+
+**Get available categories:**
+```bash
+curl https://your-worker.workers.dev/projects
+```
