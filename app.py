@@ -1,6 +1,6 @@
+import json
 import logging
 import os
-import json
 from pathlib import Path
 
 import git
@@ -8,23 +8,22 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from slack import WebClient
 from slack_sdk.errors import SlackApiError
-# Not using SlackEventAdapter - we handle events manually
-# from slackeventsapi import SlackEventAdapter
 
 from src.lettuce.conversation_manager import (
     ConversationManager,
     ConversationState,
-    get_welcome_message,
-    get_tech_stack_message,
-    get_difficulty_message,
-    get_project_type_message,
-    get_mission_goal_message,
     get_contribution_type_message,
+    get_difficulty_message,
+    get_mission_goal_message,
+    get_project_type_message,
+    get_tech_stack_message,
+    get_welcome_message,
 )
-from src.lettuce.project_recommender import (
-    ProjectRecommender,
-    format_recommendations_message,
-)
+from src.lettuce.project_recommender import ProjectRecommender, format_recommendations_message
+
+# Not using SlackEventAdapter - we handle events manually
+# from slackeventsapi import SlackEventAdapter
+
 
 DEPLOYS_CHANNEL_NAME = "#project-blt-lettuce-deploys"
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
@@ -67,11 +66,11 @@ def slack_events():
 
     # Handle other event types here
     event = data.get("event", {})
-    
+
     # Handle team join events
     if event.get("type") == "team_join":
         handle_team_join_event(event)
-    
+
     # Handle message events
     elif event.get("type") == "message":
         handle_message_event(event)
@@ -183,10 +182,12 @@ def handle_message_event(message):
             if message.get("user") != bot_user_id:
                 # Log to monitoring channel (optional)
                 try:
-                    client.chat_postMessage(channel=JOINS_CHANNEL_ID, text=f"<@{user}> said {text}")
-                except:
+                    client.chat_postMessage(
+                        channel=JOINS_CHANNEL_ID, text=f"<@{user}> said {text}"
+                    )
+                except SlackApiError:
                     pass  # Don't fail if monitoring channel doesn't exist
-                
+
                 # Handle conversational flow - pass the channel, not user_id
                 handle_dm_conversation(channel, user, text)
         except SlackApiError as e:
@@ -196,10 +197,10 @@ def handle_message_event(message):
 def handle_dm_conversation(channel_id: str, user_id: str, text: str):
     """Handle conversational DM with user following the flowchart"""
     conversation = conversation_manager.get_or_create_conversation(user_id)
-    
+
     # Trigger words to start conversation
-    start_keywords = ['help', 'start', 'project', 'recommend', 'find', 'looking']
-    
+    start_keywords = ["help", "start", "project", "recommend", "find", "looking"]
+
     if conversation.state == ConversationState.INITIAL:
         # Start conversation if user uses trigger words
         if any(keyword in text for keyword in start_keywords):
@@ -209,8 +210,11 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
         else:
             # Default response for non-conversation messages
             client.chat_postMessage(
-                channel=channel_id, 
-                text=f"Hello! 👋 Say 'help' or 'find project' to get personalized OWASP project recommendations."
+                channel=channel_id,
+                text=(
+                    "Hello! 👋 Say 'help' or 'find project' to get "
+                    "personalized OWASP project recommendations."
+                ),
             )
 
 
@@ -223,16 +227,17 @@ def slack_interactions():
         action = payload["actions"][0]
         action_id = action["action_id"]
         action_value = action["value"]
-        
+
         print(f"Interaction: user={user_id}, action={action_id}, value={action_value}")
-        
+
         conversation = conversation_manager.get_or_create_conversation(user_id)
     except Exception as e:
         print(f"Error parsing interaction: {e}")
         import traceback
+
         traceback.print_exc()
         return "", 200
-    
+
     # Handle preference choice (Technology vs Mission)
     if action_id.startswith("preference_"):
         if action_value == "technology":
@@ -243,54 +248,53 @@ def slack_interactions():
             conversation.update_state(ConversationState.MISSION_GOAL, "preference", "mission")
             msg = get_mission_goal_message()
             client.chat_postMessage(channel=user_id, **msg)
-    
+
     # Handle technology stack choice
     elif action_id.startswith("tech_") and conversation.state == ConversationState.TECH_STACK:
         conversation.update_state(ConversationState.TECH_DIFFICULTY, "technology", action_value)
         msg = get_difficulty_message()
         client.chat_postMessage(channel=user_id, **msg)
-    
+
     # Handle difficulty choice
     elif action_id.startswith("difficulty_"):
         conversation.update_state(ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value)
         msg = get_project_type_message()
         client.chat_postMessage(channel=user_id, **msg)
-    
+
     # Handle project type choice - generate tech recommendations
     elif action_id.startswith("type_"):
         conversation.data["project_type"] = action_value
-        
+
         # Get recommendations
         recommendations = project_recommender.recommend_tech_based(
             technology=conversation.get_data("technology"),
             difficulty=conversation.get_data("difficulty"),
-            project_type=action_value
+            project_type=action_value,
         )
-        
+
         msg = format_recommendations_message(recommendations, conversation.data)
         client.chat_postMessage(channel=user_id, **msg)
         conversation.update_state(ConversationState.COMPLETED)
-    
+
     # Handle mission goal choice
     elif action_id.startswith("mission_") and conversation.state == ConversationState.MISSION_GOAL:
         conversation.update_state(ConversationState.MISSION_CONTRIBUTION, "goal", action_value)
         msg = get_contribution_type_message()
         client.chat_postMessage(channel=user_id, **msg)
-    
+
     # Handle contribution type choice - generate mission recommendations
     elif action_id.startswith("contrib_"):
         conversation.data["contribution_type"] = action_value
-        
+
         # Get recommendations
         recommendations = project_recommender.recommend_mission_based(
-            goal=conversation.get_data("goal"),
-            contribution_type=action_value
+            goal=conversation.get_data("goal"), contribution_type=action_value
         )
-        
+
         msg = format_recommendations_message(recommendations, conversation.data)
         client.chat_postMessage(channel=user_id, **msg)
         conversation.update_state(ConversationState.COMPLETED)
-    
+
     # Handle "Show All" - show all matching projects
     elif action_id == "show_all_projects":
         try:
@@ -301,64 +305,62 @@ def slack_interactions():
             project_type = conversation.get_data("project_type")
             goal = conversation.get_data("goal")
             contribution_type = conversation.get_data("contribution_type")
-            
+
             print(f"Tech data: tech={technology}, diff={difficulty}, type={project_type}")
             print(f"Mission data: goal={goal}, contrib={contribution_type}")
-            
+
             if technology:
-                print(f"Calling recommend_tech_based with limit=0")
+                print("Calling recommend_tech_based with limit=0")
                 recommendations = project_recommender.recommend_tech_based(
                     technology=technology,
                     difficulty=difficulty,
                     project_type=project_type,
-                    limit=0
+                    limit=0,
                 )
                 print(f"Got {len(recommendations)} tech recommendations")
             elif goal:
-                print(f"Calling recommend_mission_based with limit=0")
+                print("Calling recommend_mission_based with limit=0")
                 recommendations = project_recommender.recommend_mission_based(
-                    goal=goal,
-                    contribution_type=contribution_type,
-                    limit=0
+                    goal=goal, contribution_type=contribution_type, limit=0
                 )
                 print(f"Got {len(recommendations)} mission recommendations")
             else:
                 print("No technology or goal found in conversation data")
                 client.chat_postMessage(
                     channel=user_id,
-                    text="Please start a new search to get project recommendations."
+                    text="Please start a new search to get project recommendations.",
                 )
                 return "", 200
-            
-            print(f"Formatting recommendations message...")
+
+            print("Formatting recommendations message...")
             msg = format_recommendations_message(recommendations, conversation.data)
-            print(f"Sending message to Slack...")
+            print("Sending message to Slack...")
             client.chat_postMessage(channel=user_id, **msg)
-            print(f"Message sent successfully")
+            print("Message sent successfully")
         except Exception as e:
             print(f"Error in show_all_projects: {e}")
             import traceback
+
             traceback.print_exc()
             client.chat_postMessage(
-                channel=user_id,
-                text="Sorry, something went wrong. Please start a new search."
+                channel=user_id, text="Sorry, something went wrong. Please start a new search."
             )
-    
+
     # Handle restart
     elif action_id == "restart_conversation":
         conversation.reset()
         msg = get_welcome_message()
         client.chat_postMessage(channel=user_id, **msg)
         conversation.update_state(ConversationState.PREFERENCE_CHOICE)
-    
+
     # Handle end conversation
     elif action_id == "end_conversation":
         client.chat_postMessage(
             channel=user_id,
-            text="Thanks for using the OWASP project finder! Feel free to message me anytime. 👋"
+            text="Thanks for using the OWASP project finder! Feel free to message me anytime. 👋",
         )
         conversation_manager.end_conversation(user_id)
-    
+
     # Acknowledge the interaction
     return "", 200
 

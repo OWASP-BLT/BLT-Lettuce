@@ -75,3 +75,38 @@
 2026-01-18 23:02:12,470 - INFO - 127.0.0.1 - - [18/Jan/2026 23:02:12] "POST /slack/interactions HTTP/1.1" 200 -
 2026-01-18 23:02:14,271 - INFO - 127.0.0.1 - - [18/Jan/2026 23:02:14] "POST /slack/events HTTP/1.1" 200 -
 2026-01-18 23:02:30,709 - INFO - 127.0.0.1 - - [18/Jan/2026 23:02:30] "[35m[1mPOST /slack/events HTTP/1.1[0m" 500 -
+2026-01-19 00:19:50,179 - WARNING - Could not send startup message: not_in_channel
+2026-01-19 00:19:50,216 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-19 00:19:50,216 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-19 00:19:50,218 - INFO -  * Restarting with stat
+2026-01-19 00:19:51,454 - WARNING - Could not send startup message: not_in_channel
+2026-01-19 00:19:51,473 - WARNING -  * Debugger is active!
+2026-01-19 00:19:51,476 - INFO -  * Debugger PIN: 780-958-640
+2026-01-19 00:21:30,215 - INFO - 127.0.0.1 - - [19/Jan/2026 00:21:30] "[33mGET / HTTP/1.1[0m" 404 -
+2026-01-19 00:21:30,480 - INFO - 127.0.0.1 - - [19/Jan/2026 00:21:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-19 00:21:46,765 - INFO - 127.0.0.1 - - [19/Jan/2026 00:21:46] "[33mGET / HTTP/1.1[0m" 404 -
+2026-01-19 00:21:47,199 - INFO - 127.0.0.1 - - [19/Jan/2026 00:21:47] "[33mGET / HTTP/1.1[0m" 404 -
+2026-01-19 00:22:10,111 - INFO - 127.0.0.1 - - [19/Jan/2026 00:22:10] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:22:11,284 - INFO - 127.0.0.1 - - [19/Jan/2026 00:22:11] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:22:12,122 - INFO - 127.0.0.1 - - [19/Jan/2026 00:22:12] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:23:47,345 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:47] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:23:48,292 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:48] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:23:49,377 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:49] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:23:50,759 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:50] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:23:52,039 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:52] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:23:53,821 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:53] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:23:54,201 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:54] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:23:55,458 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:55] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:23:56,796 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:56] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:23:58,928 - INFO - 127.0.0.1 - - [19/Jan/2026 00:23:58] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:39,681 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:39] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:41,675 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:41] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:43,203 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:43] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:24:44,669 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:44] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:45,783 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:45] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:24:48,006 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:48] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:48,831 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:48] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:24:51,066 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:51] "POST /slack/events HTTP/1.1" 200 -
+2026-01-19 00:24:52,410 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:52] "POST /slack/interactions HTTP/1.1" 200 -
+2026-01-19 00:24:53,810 - INFO - 127.0.0.1 - - [19/Jan/2026 00:24:53] "POST /slack/events HTTP/1.1" 200 -
