@@ -19,7 +19,8 @@ class ProjectRecommender:
         self, 
         technology: str, 
         difficulty: str, 
-        project_type: str
+        project_type: str,
+        limit: int = 3
     ) -> List[Dict[str, str]]:
         """
         Recommend projects based on technology preferences
@@ -36,28 +37,40 @@ class ProjectRecommender:
         
         # Keywords mapping for filtering
         tech_keywords = {
-            'python': ['python', 'py', 'flask', 'django'],
+            'python': ['python', 'py', 'flask', 'django', 'blt', 'api'],
             'java': ['java', 'spring', 'maven'],
-            'javascript': ['javascript', 'js', 'node', 'react', 'vue', 'angular'],
-            'mobile': ['mobile', 'android', 'ios', 'swift', 'kotlin'],
-            'cloud': ['cloud', 'kubernetes', 'docker', 'container'],
-            'devsecops': ['devsecops', 'cicd', 'pipeline', 'security']
+            'javascript': ['javascript', 'js', 'node', 'react', 'vue', 'angular', 'typescript'],
+            'mobile': ['mobile', 'android', 'ios', 'swift', 'kotlin', 'dart', 'flutter'],
+            'cloud': ['cloud', 'kubernetes', 'docker', 'container', 'cloudflare', 'serverless'],
+            'devsecops': ['devsecops', 'cicd', 'pipeline', 'security', 'github-actions']
         }
         
         type_keywords = {
-            'tools': ['tool', 'scanner', 'analyzer', 'detector'],
-            'code': ['library', 'framework', 'api'],
-            'documentation': ['guide', 'standard', 'cheat', 'top'],
-            'training': ['training', 'workshop', 'learning', 'vulnerable', 'dvwa', 'juice']
+            'tools': ['tool', 'scanner', 'analyzer', 'detector', 'bot', 'extension', 'monitoring'],
+            'code': ['library', 'framework', 'api', 'client'],
+            'documentation': ['guide', 'standard', 'cheat', 'top', 'documentation', 'blog'],
+            'training': ['training', 'workshop', 'learning', 'vulnerable', 'dvwa', 'juice', 'hackathon']
         }
         
         # Well-known projects for each category
         recommended_projects = {
-            'python_beginner': ['juice-shop', 'pytm', 'security-shepherd'],
-            'python_tools': ['zap', 'dependency-check', 'amass'],
+            'python_beginner': ['juice-shop', 'pytm', 'security-shepherd', 'blt', 'blt-netguardian'],
+            'python_tools': ['zap', 'dependency-check', 'amass', 'blt', 'blt-api', 'toasty', 'blt-sammich'],
             'java_beginner': ['webgoat', 'security-shepherd'],
-            'javascript_beginner': ['juice-shop', 'nodejsscan'],
-            'training': ['juice-shop', 'webgoat', 'security-shepherd', 'dvwa']
+            'javascript_beginner': ['juice-shop', 'nodejsscan', 'blt', 'blt-action', 'github-sportscaster'],
+            'javascript_tools': ['blt-extension', 'blt-hackathon', 'my-gsoc-tool', 'owasp-blt-lyte'],
+            'training': ['juice-shop', 'webgoat', 'security-shepherd', 'dvwa', 'blt-hackathon'],
+            'bug_bounty': ['blt', 'blt-extension', 'blt-action', 'blt-sammich', 'blt-netguardian'],
+            'mobile': ['fresh', 'selferase'],
+            'cloud': ['blt-on-cloudflare', 'blt-api-on-cloudflare'],
+            'api': ['blt-api', 'blt-api-on-cloudflare'],
+            'security_tools': ['blt', 'blt-netguardian', 'blt-cve', 'owasp-bumper', 'blt-extension'],
+            'automation': ['blt-action', 'owasp-blt-website-monitor', 'github-sportscaster'],
+            'ai_tools': ['toasty'],
+            'privacy': ['selferase', 'fresh'],
+            'monitoring': ['owasp-blt-website-monitor', 'blt-netguardian'],
+            'documentation': ['blt-documentation', 'blt-blog'],
+            'community': ['blt-hackathon', 'my-gsoc-tool']
         }
         
         # Search keywords
@@ -95,13 +108,17 @@ class ProjectRecommender:
         # Rank by relevance and popularity
         ranked = self._rank_projects(recommendations, technology, difficulty, project_type)
         
-        # Return top 3
-        return ranked[:3]
+        # Return top results based on limit (0 = all)
+        if limit == 0:
+            return ranked
+        else:
+            return ranked[:limit]
     
     def recommend_mission_based(
         self,
         goal: str,
-        contribution_type: str
+        contribution_type: str,
+        limit: int = 3
     ) -> List[Dict[str, str]]:
         """
         Recommend projects based on mission/goal
@@ -149,7 +166,8 @@ class ProjectRecommender:
         # Rank by mission relevance
         ranked = self._rank_projects(recommendations, goal, None, contribution_type)
         
-        return ranked[:3]
+        # Return top results based on limit (0 = all)
+        return ranked if limit == 0 else ranked[:limit]
     
     def _rank_projects(
         self,
@@ -233,21 +251,42 @@ def format_recommendations_message(
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "🎉 *Here are your recommended OWASP projects:*"
+                "text": f"🎉 *Here are your recommended OWASP projects ({len(recommendations)} found):*"
             }
         }
     ]
     
-    # Add each recommendation
-    for i, project in enumerate(recommendations, 1):
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"*{i}. {project['name']}*\n{project['description']}\n🔗 <{project['url']}|View Project>"
-            }
-        })
-        blocks.append({"type": "divider"})
+    # Slack has a 50 block limit. Each project = 2 blocks (section + divider)
+    # Plus ~5 blocks for header/footer = max ~22 projects with individual blocks
+    # If more than 20 projects, use compact text format instead
+    if len(recommendations) <= 20:
+        # Detailed format with individual blocks
+        for i, project in enumerate(recommendations, 1):
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*{i}. {project['name']}*\n{project['description']}\n🔗 <{project['url']}|View Project>"
+                }
+            })
+            blocks.append({"type": "divider"})
+    else:
+        # Compact text format for many projects
+        # Split into chunks to avoid hitting message length limits
+        chunk_size = 15
+        for chunk_start in range(0, len(recommendations), chunk_size):
+            chunk = recommendations[chunk_start:chunk_start + chunk_size]
+            text = ""
+            for i, project in enumerate(chunk, chunk_start + 1):
+                text += f"*{i}. {project['name']}*\n{project['description']}\n🔗 <{project['url']}|View Project>\n\n"
+            
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": text.strip()
+                }
+            })
     
     # Add follow-up actions
     blocks.append({
@@ -258,22 +297,34 @@ def format_recommendations_message(
         }
     })
     
+    # Only show "Show All" button if we haven't shown all yet
+    action_buttons = []
+    if len(recommendations) <= 3:
+        action_buttons.append({
+            "type": "button",
+            "text": {"type": "plain_text", "text": "📋 Show All Projects"},
+            "value": "show_all",
+            "action_id": "show_all_projects"
+        })
+    
+    action_buttons.extend([
+        {
+            "type": "button",
+            "text": {"type": "plain_text", "text": "🔄 New Search"},
+            "value": "restart",
+            "action_id": "restart_conversation"
+        },
+        {
+            "type": "button",
+            "text": {"type": "plain_text", "text": "✅ Done"},
+            "value": "done",
+            "action_id": "end_conversation"
+        }
+    ])
+    
     blocks.append({
         "type": "actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {"type": "plain_text", "text": "🔄 Find More Projects"},
-                "value": "restart",
-                "action_id": "restart_conversation"
-            },
-            {
-                "type": "button",
-                "text": {"type": "plain_text", "text": "✅ Done"},
-                "value": "done",
-                "action_id": "end_conversation"
-            }
-        ]
+        "elements": action_buttons
     })
     
     return {

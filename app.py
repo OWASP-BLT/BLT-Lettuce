@@ -217,13 +217,21 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle interactive button clicks"""
-    payload = json.loads(request.form["payload"])
-    user_id = payload["user"]["id"]
-    action = payload["actions"][0]
-    action_id = action["action_id"]
-    action_value = action["value"]
-    
-    conversation = conversation_manager.get_or_create_conversation(user_id)
+    try:
+        payload = json.loads(request.form["payload"])
+        user_id = payload["user"]["id"]
+        action = payload["actions"][0]
+        action_id = action["action_id"]
+        action_value = action["value"]
+        
+        print(f"Interaction: user={user_id}, action={action_id}, value={action_value}")
+        
+        conversation = conversation_manager.get_or_create_conversation(user_id)
+    except Exception as e:
+        print(f"Error parsing interaction: {e}")
+        import traceback
+        traceback.print_exc()
+        return "", 200
     
     # Handle preference choice (Technology vs Mission)
     if action_id.startswith("preference_"):
@@ -282,6 +290,59 @@ def slack_interactions():
         msg = format_recommendations_message(recommendations, conversation.data)
         client.chat_postMessage(channel=user_id, **msg)
         conversation.update_state(ConversationState.COMPLETED)
+    
+    # Handle "Show All" - show all matching projects
+    elif action_id == "show_all_projects":
+        try:
+            print(f"Show All - Conversation data: {conversation.data}")
+            # Check if user selected technology or mission path
+            technology = conversation.get_data("technology")
+            difficulty = conversation.get_data("difficulty")
+            project_type = conversation.get_data("project_type")
+            goal = conversation.get_data("goal")
+            contribution_type = conversation.get_data("contribution_type")
+            
+            print(f"Tech data: tech={technology}, diff={difficulty}, type={project_type}")
+            print(f"Mission data: goal={goal}, contrib={contribution_type}")
+            
+            if technology:
+                print(f"Calling recommend_tech_based with limit=0")
+                recommendations = project_recommender.recommend_tech_based(
+                    technology=technology,
+                    difficulty=difficulty,
+                    project_type=project_type,
+                    limit=0
+                )
+                print(f"Got {len(recommendations)} tech recommendations")
+            elif goal:
+                print(f"Calling recommend_mission_based with limit=0")
+                recommendations = project_recommender.recommend_mission_based(
+                    goal=goal,
+                    contribution_type=contribution_type,
+                    limit=0
+                )
+                print(f"Got {len(recommendations)} mission recommendations")
+            else:
+                print("No technology or goal found in conversation data")
+                client.chat_postMessage(
+                    channel=user_id,
+                    text="Please start a new search to get project recommendations."
+                )
+                return "", 200
+            
+            print(f"Formatting recommendations message...")
+            msg = format_recommendations_message(recommendations, conversation.data)
+            print(f"Sending message to Slack...")
+            client.chat_postMessage(channel=user_id, **msg)
+            print(f"Message sent successfully")
+        except Exception as e:
+            print(f"Error in show_all_projects: {e}")
+            import traceback
+            traceback.print_exc()
+            client.chat_postMessage(
+                channel=user_id,
+                text="Sorry, something went wrong. Please start a new search."
+            )
     
     # Handle restart
     elif action_id == "restart_conversation":

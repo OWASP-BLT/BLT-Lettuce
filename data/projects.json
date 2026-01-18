@@ -1,5 +1,117 @@
 {
-    "www-project-zap": [
+    "blt": [
+    "OWASP BLT - Bug Logging Tool - A bug bounty and vulnerability disclosure platform",
+    "https://github.com/OWASP-BLT/BLT"
+  ],
+  "blt-extension": [
+    "The chrome extension to BLT that allows you to take screenshots of websites and report them",
+    "https://github.com/OWASP-BLT/BLT-Extension"
+  ],
+  "blt-lettuce": [
+    "A slack bot for OWASP project recommendations",
+    "https://github.com/OWASP-BLT/BLT-Lettuce"
+  ],
+  "blt-action": [
+    "A github action that lets contributors type /assign to be assigned issues and automatically removes it within 24 hours",
+    "https://github.com/OWASP-BLT/BLT-Action"
+  ],
+  "blt-sammich": [
+    "The Slack bot for BLT",
+    "https://github.com/OWASP-BLT/BLT-Sammich"
+  ],
+  "blt-api": [
+    "Python API for BLT platform",
+    "https://github.com/OWASP-BLT/BLT-API"
+  ],
+  "blt-api-on-cloudflare": [
+    "Cloudflare workers API that interfaces with the postgresql database",
+    "https://github.com/OWASP-BLT/BLT-API-on-Cloudflare"
+  ],
+  "blt-on-cloudflare": [
+    "BLT on Cloudflare - serverless deployment",
+    "https://github.com/OWASP-BLT/BLT-on-Cloudflare"
+  ],
+  "blt-blog": [
+    "The BLT Blog",
+    "https://github.com/OWASP-BLT/BLT-Blog"
+  ],
+  "blt-netguardian": [
+    "An agent that continually scans the web making it secure by reporting bugs",
+    "https://github.com/OWASP-BLT/BLT-NetGuardian"
+  ],
+  "blt-netguardian-client": [
+    "The client run on your computer to make the web safer",
+    "https://github.com/OWASP-BLT/BLT-NetGuardian-Client"
+  ],
+  "blt-hackathon": [
+    "A self hosted github project to let you conduct a hackthon on your project with charts and leaderboards and prizes",
+    "https://github.com/OWASP-BLT/BLT-Hackathon"
+  ],
+  "blt-hackathon-npm": [
+    "NPM package for BLT Hackathon",
+    "https://github.com/OWASP-BLT/BLT-Hackathon-NPM"
+  ],
+  "blt-tomato": [
+    "Scripts related to projects mainly for high level OWASP project management",
+    "https://github.com/OWASP-BLT/BLT-Tomato"
+  ],
+  "blt-cve": [
+    "A decentralized CVE database that stays online and offers a backup to CVE and a way to keep it online",
+    "https://github.com/OWASP-BLT/BLT-CVE"
+  ],
+  "blt-sandbox": [
+    "For random experiments",
+    "https://github.com/OWASP-BLT/BLT-sandbox"
+  ],
+  "owasp-blt-lyte": [
+    "JavaScript front end for BLT",
+    "https://github.com/OWASP-BLT/OWASP-BLT-Lyte"
+  ],
+  "owasp-blt-website-monitor": [
+    "Monitors a website using Github Actions",
+    "https://github.com/OWASP-BLT/OWASP-BLT-Website-Monitor"
+  ],
+  "owasp-metadata": [
+    "OWASP metadata management tool",
+    "https://github.com/OWASP-BLT/OWASP-metadata"
+  ],
+  "owasp-bumper": [
+    "OWASP Bumper security tool",
+    "https://github.com/OWASP-BLT/OWASP-Bumper"
+  ],
+  "my-gsoc-tool": [
+    "Allows students to keep track of their voyage through a dashboard of contributions, feedback and documentation",
+    "https://github.com/OWASP-BLT/MY-GSOC-TOOL"
+  ],
+  "fresh": [
+    "Privacy-focused time tracking system for developers with GitHub integration and local LLM analysis",
+    "https://github.com/OWASP-BLT/Fresh"
+  ],
+  "toasty": [
+    "The BLT AI bot that checks your code, updates your priorities and looks at issues through a magnifying glass",
+    "https://github.com/OWASP-BLT/Toasty"
+  ],
+  "selferase": [
+    "An open-source, hybrid local+edge privacy toolkit for managing and deleting personal data online",
+    "https://github.com/OWASP-BLT/SelfErase"
+  ],
+  "panini": [
+    "Banned Apps by Country",
+    "https://github.com/OWASP-BLT/Panini"
+  ],
+  "github-sportscaster": [
+    "GitHub activity sportscaster bot",
+    "https://github.com/OWASP-BLT/Github_Sportscaster"
+  ],
+  "blt-documentation": [
+    "Documentation for OWASP BLT projects",
+    "https://github.com/OWASP-BLT/documentation"
+  ],
+  "www-project-bug-logging-tool": [
+    "OWASP BLT (Bug Logging Tool) official project page",
+    "https://github.com/OWASP-BLT/www-project-bug-logging-tool"
+  ],
+  "www-project-zap": [
     "OWASP Zed Attack Proxy project landing page.",
     "https://github.com/OWASP/www-project-zap"
   ],
