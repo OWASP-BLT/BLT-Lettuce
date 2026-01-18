@@ -272,13 +272,22 @@ def format_recommendations_message(
             blocks.append({"type": "divider"})
     else:
         # Compact text format for many projects
-        # Split into chunks to avoid hitting message length limits
-        chunk_size = 15
+        # Split into chunks to avoid hitting Slack's 3000 char limit per block
+        chunk_size = 10  # Reduced from 15 to ensure we stay under limits
         for chunk_start in range(0, len(recommendations), chunk_size):
             chunk = recommendations[chunk_start:chunk_start + chunk_size]
             text = ""
             for i, project in enumerate(chunk, chunk_start + 1):
-                text += f"*{i}. {project['name']}*\n{project['description']}\n🔗 <{project['url']}|View Project>\n\n"
+                # Truncate description to max 150 chars to prevent block overflow
+                description = project['description']
+                if len(description) > 150:
+                    description = description[:147] + "..."
+                
+                text += f"*{i}. {project['name']}*\n{description}\n🔗 <{project['url']}|View Project>\n\n"
+            
+            # Double-check text length and truncate if needed
+            if len(text) > 2900:
+                text = text[:2897] + "..."
             
             blocks.append({
                 "type": "section",

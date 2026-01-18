@@ -1,67 +1,39 @@
 {
-    "blt": [
-    "OWASP BLT - Bug Logging Tool - A bug bounty and vulnerability disclosure platform",
+  "blt": [
+    "OWASP BLT - Bug Logging Tools",
     "https://github.com/OWASP-BLT/BLT"
+  ],
+  "blt-flutter": [
+    "The official OWASP BLT App repository/ Heist 'em bugs! ",
+    "https://github.com/OWASP-BLT/BLT-Flutter"
+  ],
+  "blt-bacon": [
+    "BACON is a cutting-edge Bitcoin-based token system designed to incentivize engagement and contributions within the OWASP BLT ecosystem. By integrating with Bitcoin Core and utilizing the Runes protocol, BACON introduces a transparent, secure, and gamified environment that rewards developers and contributors for their efforts.",
+    "https://github.com/OWASP-BLT/BLT-Bacon"
   ],
   "blt-extension": [
     "The chrome extension to BLT that allows you to take screenshots of websites and report them",
     "https://github.com/OWASP-BLT/BLT-Extension"
   ],
-  "blt-lettuce": [
-    "A slack bot for OWASP project recommendations",
-    "https://github.com/OWASP-BLT/BLT-Lettuce"
-  ],
   "blt-action": [
-    "A github action that lets contributors type /assign to be assigned issues and automatically removes it within 24 hours",
+    "A github action that lets contributors type /assign to be assigned issues and automatically removes it within 24 hours ",
     "https://github.com/OWASP-BLT/BLT-Action"
   ],
-  "blt-sammich": [
-    "The Slack bot for BLT",
-    "https://github.com/OWASP-BLT/BLT-Sammich"
+  "blt-lettuce": [
+    "A slack bot",
+    "https://github.com/OWASP-BLT/BLT-Lettuce"
   ],
-  "blt-api": [
-    "Python API for BLT platform",
-    "https://github.com/OWASP-BLT/BLT-API"
-  ],
-  "blt-api-on-cloudflare": [
-    "Cloudflare workers API that interfaces with the postgresql database",
-    "https://github.com/OWASP-BLT/BLT-API-on-Cloudflare"
-  ],
-  "blt-on-cloudflare": [
-    "BLT on Cloudflare - serverless deployment",
-    "https://github.com/OWASP-BLT/BLT-on-Cloudflare"
-  ],
-  "blt-blog": [
-    "The BLT Blog",
-    "https://github.com/OWASP-BLT/BLT-Blog"
-  ],
-  "blt-netguardian": [
-    "An agent that continually scans the web making it secure by reporting bugs",
-    "https://github.com/OWASP-BLT/BLT-NetGuardian"
-  ],
-  "blt-netguardian-client": [
-    "The client run on your computer to make the web safer",
-    "https://github.com/OWASP-BLT/BLT-NetGuardian-Client"
-  ],
-  "blt-hackathon": [
-    "A self hosted github project to let you conduct a hackthon on your project with charts and leaderboards and prizes",
-    "https://github.com/OWASP-BLT/BLT-Hackathon"
-  ],
-  "blt-hackathon-npm": [
-    "NPM package for BLT Hackathon",
-    "https://github.com/OWASP-BLT/BLT-Hackathon-NPM"
+  ".github": [
+    "OWASP BLT - .github",
+    "https://github.com/OWASP-BLT/.github"
   ],
   "blt-tomato": [
     "Scripts related to projects mainly for high level OWASP project management",
     "https://github.com/OWASP-BLT/BLT-Tomato"
   ],
-  "blt-cve": [
-    "A decentralized CVE database that stays online and offers a backup to CVE and a way to keep it online",
-    "https://github.com/OWASP-BLT/BLT-CVE"
-  ],
-  "blt-sandbox": [
-    "For random experiments",
-    "https://github.com/OWASP-BLT/BLT-sandbox"
+  "blt-sammich": [
+    "The Slack bot for BLT",
+    "https://github.com/OWASP-BLT/BLT-Sammich"
   ],
   "owasp-blt-lyte": [
     "JavaScript front end for BLT",
@@ -71,1396 +43,1156 @@
     "Monitors a website using Github Actions",
     "https://github.com/OWASP-BLT/OWASP-BLT-Website-Monitor"
   ],
-  "owasp-metadata": [
-    "OWASP metadata management tool",
-    "https://github.com/OWASP-BLT/OWASP-metadata"
+  "blt-on-cloudflare": [
+    "BLT on Cloudflare",
+    "https://github.com/OWASP-BLT/BLT-on-Cloudflare"
   ],
-  "owasp-bumper": [
-    "OWASP Bumper security tool",
-    "https://github.com/OWASP-BLT/OWASP-Bumper"
+  "blt-hackathon": [
+    "a self hosted github project to let you conduct a hackthon on your project with charts and leaderboards and prizes ",
+    "https://github.com/OWASP-BLT/BLT-Hackathon"
   ],
   "my-gsoc-tool": [
-    "Allows students to keep track of their voyage through a dashboard of contributions, feedback and documentation",
+    "Allows students to keep track of their voyage through a dashboard of contributions, feedback and documentation ",
     "https://github.com/OWASP-BLT/MY-GSOC-TOOL"
+  ],
+  "blt-api-on-cloudflare": [
+    "Cloudflare workers API that interfaces with the postgresql database ",
+    "https://github.com/OWASP-BLT/BLT-API-on-Cloudflare"
+  ],
+  "selferase": [
+    "An open-source, hybrid local+edge privacy toolkit for managing and deleting personal data online.",
+    "https://github.com/OWASP-BLT/SelfErase"
   ],
   "fresh": [
     "Privacy-focused time tracking system for developers with GitHub integration and local LLM analysis",
     "https://github.com/OWASP-BLT/Fresh"
   ],
+  "sizzle": [
+    "OWASP BLT - Sizzle",
+    "https://github.com/OWASP-BLT/Sizzle"
+  ],
   "toasty": [
     "The BLT AI bot that checks your code, updates your priorities and looks at issues through a magnifying glass",
     "https://github.com/OWASP-BLT/Toasty"
   ],
-  "selferase": [
-    "An open-source, hybrid local+edge privacy toolkit for managing and deleting personal data online",
-    "https://github.com/OWASP-BLT/SelfErase"
+  "owasp-wich": [
+    "OWASP Project compliance checker can be used on other repos too ",
+    "https://github.com/OWASP-BLT/OWASP-Wich"
   ],
-  "panini": [
-    "Banned Apps by Country",
-    "https://github.com/OWASP-BLT/Panini"
+  "owasp-bumper": [
+    "OWASP BLT - OWASP-Bumper",
+    "https://github.com/OWASP-BLT/OWASP-Bumper"
   ],
-  "github-sportscaster": [
-    "GitHub activity sportscaster bot",
-    "https://github.com/OWASP-BLT/Github_Sportscaster"
-  ],
-  "blt-documentation": [
-    "Documentation for OWASP BLT projects",
+  "documentation": [
+    "OWASP BLT - documentation",
     "https://github.com/OWASP-BLT/documentation"
   ],
-  "www-project-bug-logging-tool": [
-    "OWASP BLT (Bug Logging Tool) official project page",
-    "https://github.com/OWASP-BLT/www-project-bug-logging-tool"
-  ],
-  "www-project-zap": [
-    "OWASP Zed Attack Proxy project landing page.",
-    "https://github.com/OWASP/www-project-zap"
-  ],
-  "www-projectchapter-example": [
-    "None",
-    "https://github.com/OWASP/www-projectchapter-example"
-  ],
-  "www-project-security-integration-system": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-integration-system"
-  ],
-  "www-project-amass": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-amass"
-  ],
-  "www-project-devsecops-maturity-model": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-devsecops-maturity-model"
-  ],
-  "www-project-pytm": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-pytm"
-  ],
-  "www-project-patton": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-patton"
-  ],
-  "www-project-little-web-application-firewall": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-little-web-application-firewall"
-  ],
-  "www-project-damn-vulnerable-crypto-wallet": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-damn-vulnerable-crypto-wallet"
-  ],
-  "www-project-security-busters": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-busters"
-  ],
-  "www-project-best-practices-in-vulnerability-disclosure-and-bug-bounty-programs": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-best-practices-in-vulnerability-disclosure-and-bug-bounty-programs"
-  ],
-  "www-project-attack-surface-detector": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-attack-surface-detector"
-  ],
-  "www-project-software-component-verification-standard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-software-component-verification-standard"
-  ],
-  "www-project-threatspec": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-threatspec"
-  ],
-  "www-project-vulnerability-management-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vulnerability-management-guide"
-  ],
-  "www-project-docker-top-10": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-docker-top-10"
-  ],
-  "www-project-information-security-metrics-bank": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-information-security-metrics-bank"
-  ],
-  "www-project-software-security-5d-framework": [
-    "OWASP Software Security 5D Framework",
-    "https://github.com/OWASP/www-project-software-security-5d-framework"
-  ],
-  "www-project-container-security-verification-standard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-container-security-verification-standard"
-  ],
-  "www-project-find-security-bugs": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-find-security-bugs"
-  ],
-  "www-project-maryam": [
-    "OWASP Maryam project landing page ",
-    "https://github.com/OWASP/www-project-maryam"
-  ],
-  "www-project-cloud-native-application-security-top-10": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloud-native-application-security-top-10"
-  ],
-  "www-project-lock-it": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-lock-it"
-  ],
-  "www-project-threat-model-cookbook": [
-    "OWASP Threat Model Cookbook Project Page",
-    "https://github.com/OWASP/www-project-threat-model-cookbook"
-  ],
-  "www-project-iot-analytics-4industry4": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-iot-analytics-4industry4"
-  ],
-  "www-project-application-security-curriculum": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-application-security-curriculum"
-  ],
-  "www-project-software-composition-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-software-composition-security"
-  ],
-  "www-project-d4n155": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-d4n155"
-  ],
-  "www-project-secure-coding-dojo": [
-    "OWASP Foundation Web Repository",
-    "https://github.com/OWASP/www-project-secure-coding-dojo"
-  ],
-  "www-project-jupiter": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-jupiter"
-  ],
-  "www-project-go-secure-coding-practices-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-go-secure-coding-practices-guide"
-  ],
-  "www-project-serverless-goat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-serverless-goat"
-  ],
-  "www-project-revelo": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-revelo"
-  ],
-  "www-project-sedated": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-sedated"
-  ],
-  "www-project-top-10-card-game": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-10-card-game"
-  ],
-  "www-project-vulnerable-web-application": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vulnerable-web-application"
-  ],
-  "www-project-wpbullet": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-wpbullet"
-  ],
-  "www-project-voice-automated-application-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-voice-automated-application-security"
-  ],
-  "www-project-cloud-security-mentor": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloud-security-mentor"
-  ],
-  "www-project-risk-assessment-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-risk-assessment-framework"
-  ],
-  "www-project-machine-learning-security-top-10": [
-    "OWASP Machine Learning Security Top 10 Project",
-    "https://github.com/OWASP/www-project-machine-learning-security-top-10"
-  ],
-  "www-project-glue-tool": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-glue-tool"
-  ],
-  "www-project-cloud-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloud-security"
-  ],
-  "www-project-online-academy": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-online-academy"
-  ],
-  "www-project-qrljacker": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-qrljacker"
-  ],
-  "www-project-samuraiwtf": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-samuraiwtf"
-  ],
-  "www-project-php": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-php"
-  ],
-  "www-project-enterprise-security-api": [
-    "OWASP Foundation Web Repository",
-    "https://github.com/OWASP/www-project-enterprise-security-api"
-  ],
-  "www-project-api-security": [
-    "OWASP Foundation Web Repository",
-    "https://github.com/OWASP/www-project-api-security"
-  ],
-  "www-project-nettacker": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-nettacker"
-  ],
-  "www-project-zezengorri-code": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-zezengorri-code"
-  ],
-  "www-project-learning-gateway": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-learning-gateway"
-  ],
-  "www-project-seclists": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-seclists"
-  ],
-  "www-project-security-pins": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-pins"
-  ],
-  "www-project-serverless-top-10": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-serverless-top-10"
-  ],
-  "www-project-blockchain-security-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-blockchain-security-framework"
-  ],
-  "www-project-security-shepherd": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-shepherd"
-  ],
-  "www-project-owtf": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-owtf"
-  ],
-  "www-project-application-security-verification-standard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-application-security-verification-standard"
-  ],
-  "www-project-top-ten": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-ten"
-  ],
-  "www-project-code-review-guide": [
-    "OWASP Code Review Guide Web Repository",
-    "https://github.com/OWASP/www-project-code-review-guide"
-  ],
-  "www-project-webgoat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-webgoat"
-  ],
-  "www-project-cheat-sheets": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cheat-sheets"
-  ],
-  "www-project-csrfguard": [
-    "The aim of this project is to protect Java applications against CSRF attacks with the use of Synchronizer Tokens",
-    "https://github.com/OWASP/www-project-csrfguard"
-  ],
-  "www-project-modsecurity-core-rule-set": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-modsecurity-core-rule-set"
-  ],
-  "www-project-samm": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-samm"
-  ],
-  "www-project-web-security-testing-guide": [
-    "The Web Security Testing Guide (WSTG) Project produces the premier cybersecurity testing resource for web application developers and security professionals.",
-    "https://github.com/OWASP/www-project-web-security-testing-guide"
-  ],
-  "www-project-proactive-controls": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-proactive-controls"
-  ],
-  "www-project-hackademic-challenges": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-hackademic-challenges"
-  ],
-  "www-project-ende": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ende"
-  ],
-  "www-project-o2-platform": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-o2-platform"
-  ],
-  "www-project-security-knowledge-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-knowledge-framework"
-  ],
-  "www-project-top-10-privacy-risks": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-10-privacy-risks"
-  ],
-  "www-project-secure-coding-practices-quick-reference-guide": [
-    "OWASP Foundation Project Web Repository for Secure Coding Practices Quick-reference Guide",
-    "https://github.com/OWASP/www-project-secure-coding-practices-quick-reference-guide"
-  ],
-  "www-project-passfault": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-passfault"
-  ],
-  "www-project-java-encoder": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-java-encoder"
-  ],
-  "www-project-igoat-tool": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-igoat-tool"
-  ],
-  "www-project-rfp-criteria": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-rfp-criteria"
-  ],
-  "www-project-web-testing-environment": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-web-testing-environment"
-  ],
-  "www-project-appsensor": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-appsensor"
-  ],
-  "www-project-json-sanitizer": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-json-sanitizer"
-  ],
-  "www-project-java-html-sanitizer": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-java-html-sanitizer"
-  ],
-  "www-project-university-challenge": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-university-challenge"
-  ],
-  "www-project-wafec": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-wafec"
-  ],
-  "www-project-hacking-lab": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-hacking-lab"
+  "github_sportscaster": [
+    "OWASP BLT - Github_Sportscaster",
+    "https://github.com/OWASP-BLT/Github_Sportscaster"
+  ],
+  "panini": [
+    "Banned Apps by Country ",
+    "https://github.com/OWASP-BLT/Panini"
+  ],
+  "blt-cve": [
+    "A decentralized CVE database that stays online and offers a backup to CVE and a way to keep it online",
+    "https://github.com/OWASP-BLT/BLT-CVE"
   ],
   "www-project-bug-logging-tool": [
     "OWASP BLT (Bug Logging Tool)",
+    "https://github.com/OWASP-BLT/www-project-bug-logging-tool"
+  ],
+  "owasp-metadata": [
+    "OWASP BLT - OWASP-metadata",
+    "https://github.com/OWASP-BLT/OWASP-metadata"
+  ],
+  "blt-sandbox": [
+    "for random experiments",
+    "https://github.com/OWASP-BLT/BLT-sandbox"
+  ],
+  "blt-api": [
+    "OWASP BLT - BLT-API",
+    "https://github.com/OWASP-BLT/BLT-API"
+  ],
+  "blt-hackathon-npm": [
+    "OWASP BLT - BLT-Hackathon-NPM",
+    "https://github.com/OWASP-BLT/BLT-Hackathon-NPM"
+  ],
+  "blt-netguardian": [
+    "an agent that continually scans the web making it secure by reporting bugs",
+    "https://github.com/OWASP-BLT/BLT-NetGuardian"
+  ],
+  "blt-netguardian-client": [
+    "The client run on your computer to make the web safer",
+    "https://github.com/OWASP-BLT/BLT-NetGuardian-Client"
+  ],
+  "blt-blog": [
+    "The BLT Blog",
+    "https://github.com/OWASP-BLT/BLT-Blog"
+  ],
+  "team": [
+    "general team information ",
+    "https://github.com/OWASP-BLT/team"
+  ],
+  "webgoat.net": [
+    "OWASP Webgoat.Net",
+    "https://github.com/OWASP/WebGoat.NET"
+  ],
+  "securityshepherd": [
+    "OWASP Securityshepherd",
+    "https://github.com/OWASP/SecurityShepherd"
+  ],
+  "webgoat": [
+    "OWASP Webgoat",
+    "https://github.com/OWASP/WebGoat"
+  ],
+  "devguide": [
+    "OWASP Devguide",
+    "https://github.com/OWASP/DevGuide"
+  ],
+  "asvs": [
+    "OWASP Asvs",
+    "https://github.com/OWASP/ASVS"
+  ],
+  "owaspbugbounty": [
+    "OWASP Owaspbugbounty",
+    "https://github.com/OWASP/OWASPBugBounty"
+  ],
+  "owaspwebgoatphp": [
+    "OWASP Owaspwebgoatphp",
+    "https://github.com/OWASP/OWASPWebGoatPHP"
+  ],
+  "masvs": [
+    "OWASP Masvs",
+    "https://github.com/OWASP/masvs"
+  ],
+  "top10": [
+    "OWASP Top10",
+    "https://github.com/OWASP/Top10"
+  ],
+  "maturity-models-owaspsamm": [
+    "OWASP Maturity Models Owaspsamm",
+    "https://github.com/OWASP/Maturity-Models-OwaspSAMM"
+  ],
+  "nettacker": [
+    "OWASP Nettacker",
+    "https://github.com/OWASP/Nettacker"
+  ],
+  "user-security-stories": [
+    "OWASP User Security Stories",
+    "https://github.com/OWASP/user-security-stories"
+  ],
+  "serverless-top-10-project": [
+    "OWASP Serverless Top 10 Project",
+    "https://github.com/OWASP/Serverless-Top-10-Project"
+  ],
+  "application-security-curriculum": [
+    "OWASP Application Security Curriculum",
+    "https://github.com/OWASP/Application-Security-Curriculum"
+  ],
+  "docker-security": [
+    "OWASP Docker Security",
+    "https://github.com/OWASP/Docker-Security"
+  ],
+  "cheatsheetseries": [
+    "OWASP Cheatsheetseries",
+    "https://github.com/OWASP/CheatSheetSeries"
+  ],
+  "api-security": [
+    "OWASP Api Security",
+    "https://github.com/OWASP/API-Security"
+  ],
+  "owasp.github.io": [
+    "OWASP Foundation, the Open Source Foundation for Application Security - Application Security, Cyber Security, Information Security, Web, Cloud, Vulnerability Assessment",
+    "https://github.com/OWASP/owasp.github.io"
+  ],
+  "zap": [
+    "Zed Attack Proxy (ZAP) is one of the world’s most popular free security tools and is actively maintained by a dedicated international team of volunteers. Great for pentesters, devs, QA, and CI/CD integration.",
+    "https://github.com/OWASP/www-project-zap"
+  ],
+  "amass": [
+    "An open source framework that helps information security professionals perform network mapping of attack surfaces and external asset discovery using open source intelligence gathering and reconnaissance techniques!",
+    "https://github.com/OWASP/www-project-amass"
+  ],
+  "pytm": [
+    "pytm is a Pythonic framework for threat modeling. The goal of pytm is to shift threat modeling to the left, making threat modeling more automated and developer-centric",
+    "https://github.com/OWASP/www-project-pytm"
+  ],
+  "attack-surface-detector": [
+    "OWASP Attack Surface Detector - attack-surface-detector",
+    "https://github.com/OWASP/www-project-attack-surface-detector"
+  ],
+  "vulnerability-management-guide": [
+    "OWASP Vulnerability Management Guide - vuln-mngmt",
+    "https://github.com/OWASP/www-project-vulnerability-management-guide"
+  ],
+  "docker-top-10": [
+    "none yet",
+    "https://github.com/OWASP/www-project-docker-top-10"
+  ],
+  "find-security-bugs": [
+    "Find Security Bugs is a SpotBugs plugin for security audits of Java web applications and Android applications.",
+    "https://github.com/OWASP/www-project-find-security-bugs"
+  ],
+  "software-security-5d-framework": [
+    "OWASP Software Security 5D Framework - 5D",
+    "https://github.com/OWASP/www-project-software-security-5d-framework"
+  ],
+  "maryam": [
+    "OWASP Maryam is a modular/optional open-source framework based on OSINT and data gathering. Maryam is written in the Python programming language and has been designed to provide a powerful environment to harvest data from open-sources and search engines and collect data quickly and thoroughly.",
+    "https://github.com/OWASP/www-project-maryam"
+  ],
+  "jupiter": [
+    "OWASP Jupiter - faq-tag",
+    "https://github.com/OWASP/www-project-jupiter"
+  ],
+  "go-secure-coding-practices-guide": [
+    "OWASP Go Secure Coding Practices Guide - golang go security conding-practices",
+    "https://github.com/OWASP/www-project-go-secure-coding-practices-guide"
+  ],
+  "machine-learning-security-top-10": [
+    "OWASP Machine Learning Security Top Ten - mltop10 related-tag",
+    "https://github.com/OWASP/www-project-machine-learning-security-top-10"
+  ],
+  "risk-assessment-framework": [
+    "OWASP Risk Assessment Framework - risk-assessment-framework",
+    "https://github.com/OWASP/www-project-risk-assessment-framework"
+  ],
+  "samuraiwtf": [
+    "SamuraiWTF (Web Training Framework) is a collection of tools and training bundled into a platform to provide a lab environment and training on web application testing.",
+    "https://github.com/OWASP/www-project-samuraiwtf"
+  ],
+  "enterprise-security-api": [
+    "OWASP Enterprise Security API (ESAPI) - esapi",
+    "https://github.com/OWASP/www-project-enterprise-security-api"
+  ],
+  "security-pins": [
+    "OWASP Security Pins - pins, builder, documentation",
+    "https://github.com/OWASP/www-project-security-pins"
+  ],
+  "serverless-top-10": [
+    "OWASP Serverless Top 10 - serverless security top10 acknowledgments translations join roadmap news",
+    "https://github.com/OWASP/www-project-serverless-top-10"
+  ],
+  "blockchain-security-framework": [
+    "OWASP Blockchain Security Framework - example-tag",
+    "https://github.com/OWASP/www-project-blockchain-security-framework"
+  ],
+  "security-shepherd": [
+    "OWASP Security Shepherd is a web and mobile application security training platform. Security Shepherd has been designed to foster and improve security awareness among a varied skill-set demographic. The aim of this project is to take AppSec novices or experienced engineers and sharpen their penetration testing skillset to security expert status.",
+    "https://github.com/OWASP/www-project-security-shepherd"
+  ],
+  "owtf": [
+    "Offensive Web Testing Framework (OWTF), is an OWASP+PTES focused try to unite great tools and make pen testing more efficient, written mostly in Python.",
+    "https://github.com/OWASP/www-project-owtf"
+  ],
+  "top-ten": [
+    "The OWASP Top 10 is the reference standard for the most critical web application security risks. Adopting the OWASP Top 10 is perhaps the most effective first step towards changing your software development culture focused on producing secure code.",
+    "https://github.com/OWASP/www-project-top-ten"
+  ],
+  "application-security-verification-standard": [
+    "The OWASP Application Security Verification Standard (ASVS) Project is a framework of security requirements that focus on defining the security controls required when designing, developing and testing modern web applications and web services.",
+    "https://github.com/OWASP/www-project-application-security-verification-standard"
+  ],
+  "cheat-sheets": [
+    "The OWASP Cheat Sheet Series project provides a set of concise good practice guides for application developers and defenders to follow.",
+    "https://github.com/OWASP/www-project-cheat-sheets"
+  ],
+  "csrfguard": [
+    "OWASP CSRFGuard is a library that implements a variant of the synchronizer token pattern to mitigate the risk of Cross-Site Request Forgery (CSRF) attacks.",
+    "https://github.com/OWASP/www-project-csrfguard"
+  ],
+  "samm": [
+    "A Software Assurance Maturity Model (SAMM) that provides an effective and measurable way for all types of organizations to analyse and improve their software security posture.",
+    "https://github.com/OWASP/www-project-samm"
+  ],
+  "modsecurity-core-rule-set": [
+    "The OWASP CRS is a set of generic attack detection rules for use with ModSecurity or compatible web application firewalls. The CRS aims to protect web applications from a wide range of attacks, including the OWASP Top Ten, with a minimum of false alerts.",
+    "https://github.com/OWASP/www-project-modsecurity-core-rule-set"
+  ],
+  "security-knowledge-framework": [
+    "The Security Knowledge Framework is an open source web application that explains secure coding principles in multiple programming languages. The goal of SKF is to help you learn and integrate security by design in your software development and build applications that are secure by design.",
+    "https://github.com/OWASP/www-project-security-knowledge-framework"
+  ],
+  "web-security-testing-guide": [
+    "The Web Security Testing Guide (WSTG) Project produces the premier cybersecurity testing resource for web application developers and security professionals.",
+    "https://github.com/OWASP/www-project-web-security-testing-guide"
+  ],
+  "passfault": [
+    "OWASP Passfault - example-tag",
+    "https://github.com/OWASP/www-project-passfault"
+  ],
+  "igoat-tool": [
+    "OWASP iGoat Tool - igoat",
+    "https://github.com/OWASP/www-project-igoat-tool"
+  ],
+  "bug-logging-tool": [
+    "OWASP BLT is a tool enabling internet users to report all kinds of issues they encounter, thereby improving internet security, with a unique feature of rewarding users for bug reporting and allowing companies to launch their own bug hunting programs, promoting responsible disclosure and fostering a safer online environment.",
     "https://github.com/OWASP/www-project-bug-logging-tool"
   ],
-  "www-project-cornucopia": [
-    "OWASP Foundation Web Respository",
+  "java-html-sanitizer": [
+    "OWASP Java HTML Sanitizer - sanitizer",
+    "https://github.com/OWASP/www-project-java-html-sanitizer"
+  ],
+  "cornucopia": [
+    "OWASP Cornucopia provides card game decks (printable cards, online cards, online game) to assist the whole software development team undertake threat modeling of applications (currently website apps and mobile apps)",
     "https://github.com/OWASP/www-project-cornucopia"
   ],
-  "www-project-top-10-fuer-entwickler": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-10-fuer-entwickler"
-  ],
-  "www-project-juice-shop": [
-    "OWASP Foundation Web Respository",
+  "juice-shop": [
+    "Probably the most modern and sophisticated insecure web application for security trainings, awareness demos and CTFs. Also great voluntary guinea pig for your security tools and DevSecOps pipelines!",
     "https://github.com/OWASP/www-project-juice-shop"
   ],
-  "www-project-media-archive": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-media-archive"
-  ],
-  "www-project-dependency-track": [
-    "OWASP Foundation Web Respository",
+  "dependency-track": [
+    "Intelligent Component Analysis platform that allows organizations to identify and reduce risk in the software supply chain.",
     "https://github.com/OWASP/www-project-dependency-track"
   ],
-  "www-project-webgoat-php": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-webgoat-php"
-  ],
-  "www-project-vulnerable-web-applications-directory": [
-    "The OWASP Vulnerable Web Applications Directory (VWAD) Project - OWASP Web Site",
+  "vulnerable-web-applications-directory": [
+    "The OWASP Vulnerable Web Applications Directory Project (VWAD) is a comprehensive and well maintained registry of all known vulnerable web applications currently available for legal security and vulnerability testing of various kinds.",
     "https://github.com/OWASP/www-project-vulnerable-web-applications-directory"
   ],
-  "www-project-benchmark": [
-    "OWASP Foundation Web Respository",
+  "benchmark": [
+    "The OWASP Benchmark Project contains language specific test suites designed to evaluate the accuracy, coverage, and speed of automated software vulnerability detection tools.",
     "https://github.com/OWASP/www-project-benchmark"
   ],
-  "www-project-node.js-goat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-node.js-goat"
-  ],
-  "www-project-automated-threats-to-web-applications": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-automated-threats-to-web-applications"
-  ],
-  "www-project-belva": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-belva"
-  ],
-  "www-project-rat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-rat"
-  ],
-  "www-project-zsc-tool": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-zsc-tool"
-  ],
-  "www-project-defectdojo": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-defectdojo"
-  ],
-  "www-project-security-logging": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-logging"
-  ],
-  "www-project-threat-dragon": [
-    "OWASP Foundation Threat Dragon Project Web Repository",
+  "threat-dragon": [
+    "OWASP Threat Dragon is a threat modeling tool for both developers and defenders alike. Run it as a local application or as a web application.",
     "https://github.com/OWASP/www-project-threat-dragon"
   ],
-  "www-project-game-security-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-game-security-framework"
+  "automated-threats-to-web-applications": [
+    "OWASP Automated Threats to Web Applications - oat",
+    "https://github.com/OWASP/www-project-automated-threats-to-web-applications"
   ],
-  "www-project-webspa": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-webspa"
+  "defectdojo": [
+    "The leading open source application vulnerability management tool built for DevOps and continuous security integration.",
+    "https://github.com/OWASP/www-project-defectdojo"
   ],
-  "www-project-off-the-record-4-java": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-off-the-record-4-java"
-  ],
-  "www-project-web-mapper": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-web-mapper"
-  ],
-  "www-project-deepviolet-tls-ssl-scanner": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-deepviolet-tls-ssl-scanner"
-  ],
-  "www-project-vbscan": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vbscan"
-  ],
-  "www-project-internet-of-things-top-10": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-internet-of-things-top-10"
-  ],
-  "www-project-code-pulse": [
-    "OWASP Foundation Web Respository",
+  "code-pulse": [
+    "OWASP Code Pulse - code-pulse",
     "https://github.com/OWASP/www-project-code-pulse"
   ],
-  "www-project-secure-medical-device-deployment-standard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-secure-medical-device-deployment-standard"
-  ],
-  "www-project-jotp": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-jotp"
-  ],
-  "www-project-incident-response": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-incident-response"
-  ],
-  "www-project-pyttacker": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-pyttacker"
-  ],
-  "www-project-appsec-pipeline": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-appsec-pipeline"
-  ],
-  "www-project-secure-headers": [
-    "The OWASP Secure Headers Project",
+  "secure-headers": [
+    "Provides technical information about HTTP security headers.",
     "https://github.com/OWASP/www-project-secure-headers"
   ],
-  "www-project-php-security-training": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-php-security-training"
-  ],
-  "www-project-mobile-app-security": [
-    "OWASP Foundation Web Respository",
+  "mobile-app-security": [
+    "The OWASP Mobile Application Security (MAS) project consists of a series of documents that establish a security and privacy standard for mobile apps and a comprehensive testing guide that covers the processes, techniques, and tools used during a mobile application security assessment, as well as an exhaustive set of test cases that enables testers to deliver consistent and complete results.",
     "https://github.com/OWASP/www-project-mobile-app-security"
   ],
-  "www-project-mth3l3m3nt-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-mth3l3m3nt-framework"
-  ],
-  "www-project-seraphimdroid": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-seraphimdroid"
-  ],
-  "www-project-o-saft": [
-    "OWASP Foundation Web Respository",
+  "o-saft": [
+    "O-Saft is an easy to use tool to show informations about SSL certificate and tests the SSL connection according given list of ciphers and various SSL configurations.",
     "https://github.com/OWASP/www-project-o-saft"
   ],
-  "www-project-reverse-engineering-and-code-modification-prevention": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-reverse-engineering-and-code-modification-prevention"
-  ],
-  "www-project-snakes-and-ladders": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-snakes-and-ladders"
-  ],
-  "www-project-python-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-python-security"
-  ],
-  "www-project-knowledge-based-authentication-performance-metrics": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-knowledge-based-authentication-performance-metrics"
-  ],
-  "www-project-dependency-check": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-dependency-check"
-  ],
-  "www-project-anti-ransomware-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-anti-ransomware-guide"
-  ],
-  "www-project-embedded-application-security": [
-    "OWASP Embedded Application Security Project",
-    "https://github.com/OWASP/www-project-embedded-application-security"
-  ],
-  "www-project-podcast": [
-    "OWASP Foundation Web Respository",
+  "podcast": [
+    "The official OWASP podcast for audio interviews focusing on OWASP projects, chapters and leaders, as well as industry cybersecurity experts and DevOps/DevSecOps champions.",
     "https://github.com/OWASP/www-project-podcast"
   ],
-  "www-project-broken-web-applications": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-broken-web-applications"
+  "dependency-check": [
+    "Dependency-Check is a Software Composition Analysis (SCA) tool suite that identifies project dependencies and checks if there are any known, publicly disclosed, vulnerabilities.",
+    "https://github.com/OWASP/www-project-dependency-check"
   ],
-  "www-project-virtual-patching-best-practices": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-virtual-patching-best-practices"
-  ],
-  "www-project-vicnum": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vicnum"
-  ],
-  "www-project-ctf": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ctf"
-  ],
-  "www-project-.net": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-.net"
-  ],
-  "www-project-mobile-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-mobile-security"
-  ],
-  "www-project-python-honeypot": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-python-honeypot"
-  ],
-  "www-project-dvsa": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-dvsa"
-  ],
-  "www-project-cloud-testing-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloud-testing-guide"
-  ],
-  "www-project-intelligent-intrusion-detection-system": [
-    "OWASP Foundation Web Respository",
+  "intelligent-intrusion-detection-system": [
+    "OWASP Intelligent Intrusion Detection System - example-tag",
     "https://github.com/OWASP/www-project-intelligent-intrusion-detection-system"
   ],
-  "www-project-auth": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-auth"
+  "mobile-security": [
+    "OWASP mobile security - mobile",
+    "https://github.com/OWASP/www-project-mobile-security"
   ],
-  "www-project-securecodebox": [
-    "OWASP Foundation Web Respository",
+  "securecodebox": [
+    "Automate all your security and vulnerability scanners.",
     "https://github.com/OWASP/www-project-securecodebox"
   ],
-  "www-project-google-assistant": [
-    "None",
-    "https://github.com/OWASP/www-project-google-assistant"
+  "worcestershire": [
+    "OWASP Worcestershire - worcester, security, projects",
+    "https://github.com/OWASP/www-chapter-worcestershire"
   ],
-  "www-project-securityrat": [
-    "None",
+  "halifax": [
+    "OWASP Halifax - OWASP Halifax Canada Application Network Security",
+    "https://github.com/OWASP/www-chapter-halifax"
+  ],
+  "kansas-city": [
+    "OWASP Kansas City - web-application-security kansas-city missouri",
+    "https://github.com/OWASP/www-chapter-kansas-city"
+  ],
+  "portland": [
+    "OWASP Portland - community, mentorship, governance, study, training, meetings, videos, podcasts, committees, sponsors, participation",
+    "https://github.com/OWASP/www-chapter-portland"
+  ],
+  "saint-louis": [
+    "OWASP Saint Louis - web-application-security stl saint-louis st-louis missouri",
+    "https://github.com/OWASP/www-chapter-saint-louis"
+  ],
+  "dorset": [
+    "OWASP Dorset - dorset chapter events meetup ctf security inclusive",
+    "https://github.com/OWASP/www-chapter-dorset"
+  ],
+  "securityrat": [
+    "OWASP SecurityRAT is a tool used by development teams, helping them master security requirements during development.",
     "https://github.com/OWASP/www-project-securityrat"
   ],
-  "www-project-devslop": [
-    "None",
-    "https://github.com/OWASP/www-project-devslop"
-  ],
-  "www-project-mobile-top-10": [
-    "None",
-    "https://github.com/OWASP/www-project-mobile-top-10"
-  ],
-  "www-project-securetea": [
-    "None",
+  "securetea": [
+    "OWASP SecureTea Project - securetea",
     "https://github.com/OWASP/www-project-securetea"
   ],
-  "www-project-internet-of-things": [
-    "The OWASP home for the Internet of Things project",
-    "https://github.com/OWASP/www-project-internet-of-things"
+  "mobile-top-10": [
+    "OWASP Mobile Top 10 - acknowledgements-tag controls-tag",
+    "https://github.com/OWASP/www-project-mobile-top-10"
   ],
-  "www-project-honeypot": [
-    "The goal of the OWASP Honeypot Project is to identify emerging attacks against web applications and report them to the community, in order to facilitate protection against such targeted attacks.",
-    "https://github.com/OWASP/www-project-honeypot"
-  ],
-  "www-project-seeker": [
-    "None",
+  "seeker": [
+    "The Seeker is a unique ML-based tool for hardcoded credentials discovery in source code. It can help to prevent information leakage        and other malicious consequences.",
     "https://github.com/OWASP/www-project-seeker"
   ],
-  "www-project-integration-standards": [
-    "OWASP Foundation Web Respository",
+  "integration-standards": [
+    "Standards to integrate between standardisation projects to properly handle content linking between documents and data exchange between tools",
     "https://github.com/OWASP/www-project-integration-standards"
   ],
-  "www-project-sidekek": [
-    "OWASP Foundation Web Respository",
+  "sidekek": [
+    "Simple tool to protect cryptographic master keys (key encryption keys, KEKs) in a way that is resistant to some of the most common remote file exfiltration attacks.",
     "https://github.com/OWASP/www-project-sidekek"
   ],
-  "www-project-timegap-theory": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-timegap-theory"
-  ],
-  "www-project-antisamy": [
-    "None",
-    "https://github.com/OWASP/www-project-antisamy"
-  ],
-  "www-project-csrfprotector": [
-    "OWASP CSRFProtector Project Landing Page",
-    "https://github.com/OWASP/www-project-csrfprotector"
-  ],
-  "www-project-cyber-defense-matrix": [
-    "Documentation on the Cyber Defense Matrix",
-    "https://github.com/OWASP/www-project-cyber-defense-matrix"
-  ],
-  "www-project-developer-guide": [
-    "OWASP Project Developer Guide - Document and Project Web pages",
+  "developer-guide": [
+    "The Developer Guide provides an introduction to security concepts and an initial reference for application and system developers.",
     "https://github.com/OWASP/www-project-developer-guide"
   ],
-  "www-project-iot-security-verification-standard": [
-    "OWASP IoT Security Verification Standard",
-    "https://github.com/OWASP/www-project-iot-security-verification-standard"
+  "antisamy": [
+    "AntiSamy is a Java component that can sanitize HTML/CSS to eliminate potentially malicious JavaScript.",
+    "https://github.com/OWASP/www-project-antisamy"
   ],
-  "www-project-sso": [
-    "OWASP Foundation SSO Web Repository",
+  "sso": [
+    "Centralize your decentral logins with the safest and most privacy-oriented Single Sign-On experience. Keep the data where it belongs - in your hands!",
     "https://github.com/OWASP/www-project-sso"
   ],
-  "www-project-threat-model": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-threat-model"
+  "iot-security-verification-standard": [
+    "OWASP IoT Security Verification Standard - ISVS",
+    "https://github.com/OWASP/www-project-iot-security-verification-standard"
   ],
-  "www-project-thick-client-top-10": [
-    "OWASP Foundation Web Respository",
+  "malmo": [
+    "OWASP Malmo - ssi ssdlc secure-coding appsec malmo cybersecurity",
+    "https://github.com/OWASP/www-chapter-malmo"
+  ],
+  "threat-modeling": [
+    "Central repository of threat modeling information, techniques, and methodologies",
+    "https://github.com/OWASP/www-project-threat-modeling"
+  ],
+  "iot-security-verification-standard-isvs": [
+    "OWASP Iot Security Verification Standard Isvs",
+    "https://github.com/OWASP/IoT-Security-Verification-Standard-ISVS"
+  ],
+  "thick-client-top-10": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-thick-client-top-10"
   ],
-  "www-project-vulnerableapp": [
-    "OWASP Foundation Web Respository for VulnerableApp project. Project's codebase Repository: https://github.com/SasanLabs/VulnerableApp",
+  "vulnerableapp": [
+    "VulnerableApp is a delibrately Vulnerable Web Application for Vulnerability Scanning Tool developers, its consumers and students.",
     "https://github.com/OWASP/www-project-vulnerableapp"
   ],
-  "www-project-redteam-toolkit": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-redteam-toolkit"
-  ],
-  "www-project-automotive-emb-60": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-automotive-emb-60"
-  ],
-  "www-project-jvmxray": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-jvmxray"
-  ],
-  "www-project-secureflag-open-platform": [
-    "OWASP SecureFlag Open Platform",
+  "secureflag-open-platform": [
+    "Training platform for developers to learn and practice modern secure coding techniques through hands-on exercises.",
     "https://github.com/OWASP/www-project-secureflag-open-platform"
   ],
-  "www-project-pygoat": [
-    "OWASP Pygoat Web Respository",
-    "https://github.com/OWASP/www-project-pygoat"
-  ],
-  "www-project-core-business-application-security": [
-    "OWASP Foundation Web Respository",
+  "core-business-application-security": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-core-business-application-security"
   ],
-  "www-project-access-log-parser": [
-    "OWASP Foundation Web Respository",
+  "access-log-parser": [
+    "Parse and format web access logs for analysis.",
     "https://github.com/OWASP/www-project-access-log-parser"
   ],
-  "www-project-cyber-controls-matrix": [
-    "OWASP Cyber Controls Matrix (OCCM)",
-    "https://github.com/OWASP/www-project-cyber-controls-matrix"
-  ],
-  "www-project-winfim.net": [
-    "WinFIM.NET - File Integrity Monitoring For Windows",
-    "https://github.com/OWASP/www-project-winfim.net"
-  ],
-  "www-project-devsecops-guideline": [
-    "The OWASP DevSecOps Guideline explains how we can implement a secure pipeline and use best practices and introduce tools that we can use in this matter. Also, the project is trying to help us promote the shift-left security culture in our development process.",
-    "https://github.com/OWASP/www-project-devsecops-guideline"
-  ],
-  "www-project-dpd": [
-    "OWASP Foundation Web Respository",
+  "dpd": [
+    "OWASP DPD (DDOS Prevention using DPI) - dpd",
     "https://github.com/OWASP/www-project-dpd"
   ],
-  "www-project-cyber-security-enterprise-operations-architecture": [
-    "OWASP Foundation Web Respository",
+  "winfim.net": [
+    "File Integrity Monitoring For Windows",
+    "https://github.com/OWASP/www-project-winfim.net"
+  ],
+  "cyber-controls-matrix": [
+    "Solve the problem of multiple cyber standards by consolidating them, reducing timelines and effort by months!",
+    "https://github.com/OWASP/www-project-cyber-controls-matrix"
+  ],
+  "cyber-security-enterprise-operations-architecture": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-cyber-security-enterprise-operations-architecture"
   ],
-  "www-project-drill": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-drill"
+  "devsecopsguideline": [
+    "OWASP Devsecopsguideline",
+    "https://github.com/OWASP/DevSecOpsGuideline"
   ],
-  "www-project-android-security-inspector-toolkit": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-android-security-inspector-toolkit"
+  "aligarh": [
+    "OWASP Aligarh - owasp, aligarh, india, security, software, developemnt, majftech, w3lc, anwar jamal faiz, aligarh muslim university, UPSEEE, Engineering, ZHCET, penetration testing, offensive hacker, ethical, national, international, mohd anwar jamal faiz, ieee, w3lc, cyber , forensics, crime, mitigation, samreen faiz, dr samreen f, OwaspAligarh",
+    "https://github.com/OWASP/www-chapter-aligarh"
   ],
-  "www-project-kubernetes-security-testing-guide": [
-    "OWASP Kubernetes Security Testing Guide",
+  "redteamtoolkit": [
+    "OWASP Redteamtoolkit",
+    "https://github.com/OWASP/RedTeamToolkit"
+  ],
+  "devsecops-guideline": [
+    "The OWASP DevSecOps Guideline can help us to embeding security as a part of pipeline.",
+    "https://github.com/OWASP/www-project-devsecops-guideline"
+  ],
+  "www-event-appsecdays": [
+    "AppSec Days - Summer of Security 2020",
+    "https://github.com/OWASP/www-event-appsecdays"
+  ],
+  "kubernetes-security-testing-guide": [
+    "A comprehensive guide to Kubernetes Security Testing",
     "https://github.com/OWASP/www-project-kubernetes-security-testing-guide"
   ],
-  "www-project-security-resource-framework": [
-    "OWASP Foundation Web Respository",
+  "android-security-inspector-toolkit": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-android-security-inspector-toolkit"
+  ],
+  "drill": [
+    "The Security Engineer's Data Tool Kit",
+    "https://github.com/OWASP/www-project-drill"
+  ],
+  "security-resource-framework": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-security-resource-framework"
   ],
-  "www-project-mitm-guard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-mitm-guard"
-  ],
-  "www-project-watiqay": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-watiqay"
-  ],
-  "www-project-cloud-native-security-project": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloud-native-security-project"
-  ],
-  "www-project-big-data": [
-    "OWASP Foundation Web Respository",
+  "big-data": [
+    "The goal of this project is to provide security requirements for Big Data applications",
     "https://github.com/OWASP/www-project-big-data"
   ],
-  "www-project-security-qualitative-metrics": [
-    "OWASP Foundation Web Repository",
+  "security-qualitative-metrics": [
+    "The OWASP Security Qualitative Metrics is the most detailed list of metrics which evaluate security level of web projects. It shows the level of coverage of OWASP ASVS.",
     "https://github.com/OWASP/www-project-security-qualitative-metrics"
   ],
-  "www-project-cwe-toolkit": [
-    "OWASP Foundation Web Respository",
+  "cwe-toolkit": [
+    "OWASP CWE Toolkit - cwe weakness cve capec",
     "https://github.com/OWASP/www-project-cwe-toolkit"
   ],
-  "www-project-cloud-security-testing-guide": [
-    "OWASP Foundation Web Respository",
+  "cwe-tool": [
+    "OWASP Cwe Tool",
+    "https://github.com/OWASP/cwe-tool"
+  ],
+  "cloud-security-testing-guide": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-cloud-security-testing-guide"
   ],
-  "www-project-cyber-scavenger-hunt": [
-    "OWASP Foundation Web Respository",
+  "cyber-scavenger-hunt": [
+    "A simple scavenger hunt to learn about pentesting a website or web application.",
     "https://github.com/OWASP/www-project-cyber-scavenger-hunt"
   ],
-  "www-project-awscanner": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-awscanner"
+  "www-committee-education-and-training": [
+    "To educate developers and information security professionals about skills needed in the application security sector",
+    "https://github.com/OWASP/www-committee-education-and-training"
   ],
-  "www-project-asvs-graph": [
-    "OWASP Foundation Web Respository",
+  "awscanner": [
+    "OWASP Awscanner",
+    "https://github.com/OWASP/awscanner"
+  ],
+  "asvs-graph": [
+    "OWASP Application Security Verification Standard (ASVS) is a great knowledgebase. This greatly helps organizations by providing guidance as well as in generating Application Security Metrics. With OWASP ASVS-Graph, ASVS is converted to a knowledge-graph derived deep and unexplored relationships with the ASVS Data.",
     "https://github.com/OWASP/www-project-asvs-graph"
   ],
-  "www-project-securebank": [
-    "OWASP Foundation Web Respository",
+  "securebank": [
+    "SecureBank the most secure fintech banking system",
     "https://github.com/OWASP/www-project-securebank"
   ],
-  "www-project-sectudo": [
-    "OWASP Foundation Web Respository",
+  "sectudo": [
+    "Sectudo is a Mobile app that aims at imparting simplified Mobile Application Security Learning.",
     "https://github.com/OWASP/www-project-sectudo"
   ],
-  "www-project-torbot": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-torbot"
-  ],
-  "www-project-ontology-driven-threat-modeling-framework": [
-    "OWASP Foundation Web Respository",
+  "ontology-driven-threat-modeling-framework": [
+    "OWASP Ontology-driven Threat Modelling (OdTM) framework is a set of means for implementation of an ontological approach into automatic threat modelling of computer systems.",
     "https://github.com/OWASP/www-project-ontology-driven-threat-modeling-framework"
   ],
-  "www-project-damn-vulnerable-thick-client-application": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-damn-vulnerable-thick-client-application"
-  ],
-  "www-project-apicheck": [
-    "OWASP Foundation Web Respository",
+  "apicheck": [
+    "The DevSecOps toolset for HTTP APIs",
     "https://github.com/OWASP/www-project-apicheck"
   ],
-  "www-project-threat-modeling-playbook": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-threat-modeling-playbook"
-  ],
-  "www-project-androgoat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-androgoat"
-  ],
-  "www-project-forensics-testing-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-forensics-testing-guide"
-  ],
-  "www-project-scan-it": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-scan-it"
-  ],
-  "www-project-joomscan": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-joomscan"
-  ],
-  "www-project-threat-and-safeguard-matrix": [
-    "OWASP Foundation Web Respository",
+  "threat-and-safeguard-matrix": [
+    "OWASP Threat and Safeguard Matrix (TaSM) - TaSM",
     "https://github.com/OWASP/www-project-threat-and-safeguard-matrix"
   ],
-  "www-project-snow": [
-    "OWASP Foundation Web Respository",
+  "asst": [
+    "OWASP ASST (Automated Software Security Toolkit) | A Novel Open Source Web Security Scanner.",
+    "https://github.com/OWASP/ASST"
+  ],
+  "snow": [
+    "Improve privacy of applications by defending shoulder surfing",
     "https://github.com/OWASP/www-project-snow"
   ],
-  "www-project-secure-logging-benchmark": [
-    "OWASP Observability Project",
-    "https://github.com/OWASP/www-project-secure-logging-benchmark"
+  "threat-modeling-playbook": [
+    "Improve your product and software security with the OWASP Threat Modeling Playbook (OTMP)",
+    "https://github.com/OWASP/www-project-threat-modeling-playbook"
   ],
-  "www-project-cyber-defense-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cyber-defense-framework"
+  "forensics-testing-guide": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-forensics-testing-guide"
   ],
-  "www-project-cloudsheep": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cloudsheep"
+  "moncton": [
+    "OWASP Moncton - cybersecurity appsec moncton IT",
+    "https://github.com/OWASP/www-chapter-moncton"
   ],
-  "www-project-crapi": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-crapi"
+  "www-event-2021-training": [
+    "OWASP Training Events 2021",
+    "https://github.com/OWASP/www-event-2021-training"
   ],
-  "www-project-mobile-audit": [
-    "Django application that performs SAST and Malware Analysis for Android Mobile APKs",
+  "mobile-audit": [
+    "DevSecOps Tool to perform SAST and Malware analysis in Android APKs",
     "https://github.com/OWASP/www-project-mobile-audit"
   ],
-  "www-project-blockchain-distributed-infrastructure": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-blockchain-distributed-infrastructure"
+  "crapi": [
+    "crAPI will help you to understand the ten most critical API security risks. crAPI is vulnerable by design, but you'll be able to safely run it to educate/train yourself.",
+    "https://github.com/OWASP/www-project-crapi"
   ],
-  "www-project-damn-vulnerable-web-sockets": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-damn-vulnerable-web-sockets"
-  ],
-  "www-project-vulnerable-container-hub": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vulnerable-container-hub"
-  ],
-  "www-project-application-gateway": [
-    "OWASP Foundation Web Respository",
+  "application-gateway": [
+    "OWASP Application Gateway is an HTTP proxy that handles Oauth2 authentication and session management and can issue verifyable JWT tokens for downstream systems.",
     "https://github.com/OWASP/www-project-application-gateway"
   ],
-  "www-project-laravel-goat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-laravel-goat"
-  ],
-  "www-project-purpleteam": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-purpleteam"
-  ],
-  "www-project-enterprise-devsecops": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-enterprise-devsecops"
-  ],
-  "www-project-spotlight-series": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-spotlight-series"
-  ],
-  "www-project-open-appsec-tooling-api": [
-    "OWASP Foundation Web Respository",
+  "open-appsec-tooling-api": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-open-appsec-tooling-api"
   ],
-  "www-project-how-to-get-into-appsec": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-how-to-get-into-appsec"
-  ],
-  "www-project-desktop-app-security-top-10": [
-    "OWASP Foundation Web Respository",
+  "desktop-app-security-top-10": [
+    "Consists of vulnerabilities for all major desktop app platform, derived from publicaly known exploits, CVEs etc.",
     "https://github.com/OWASP/www-project-desktop-app-security-top-10"
   ],
-  "www-project-top-10-client-side-security-risks": [
-    "OWASP Foundation Web Respository",
+  "top-10-client-side-security-risks": [
+    "The client-side of browser based web applications has different security challenges than [the server-side](https://owasp.org/www-project-top-ten/).",
     "https://github.com/OWASP/www-project-top-10-client-side-security-risks"
   ],
-  "www-project-injectbot": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-injectbot"
-  ],
-  "www-project-cybersecurity-risk-register": [
-    "OWASP Foundation Web Respository",
+  "cybersecurity-risk-register": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-cybersecurity-risk-register"
   ],
-  "www-project-financial-systems-security": [
-    "OWASP Foundation Web Respository",
+  "financial-systems-security": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-financial-systems-security"
   ],
-  "www-project-appsec-minimum-requirements": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-appsec-minimum-requirements"
+  "athens": [
+    "OWASP Athens - security application-security Athens",
+    "https://github.com/OWASP/www-chapter-athens"
   ],
-  "www-project-security-culture": [
-    "OWASP Foundation Web Respository",
+  "security-culture": [
+    "A guide for establishing a security culture when building an application security program",
     "https://github.com/OWASP/www-project-security-culture"
   ],
-  "www-project-vulnerability-management-center": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vulnerability-management-center"
-  ],
-  "www-project-penetration-testing-kit": [
-    "OWASP Foundation Web Respository",
+  "penetration-testing-kit": [
+    "PTK is a cross-browser extension that helps application security practitioners to get an insight into the app and do runtime scanning for SQL, XSS, OS Command injections, and more.",
     "https://github.com/OWASP/www-project-penetration-testing-kit"
   ],
-  "www-project-developer-outreach-program": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-developer-outreach-program"
-  ],
-  "www-project-ignita": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ignita"
-  ],
-  "www-project-vulnerableapp-facade": [
-    "OWASP Foundation Web Respository for VulnerableApp-facade project. Project's codebase Repository: https://github.com/SasanLabs/VulnerableApp-facade",
-    "https://github.com/OWASP/www-project-vulnerableapp-facade"
-  ],
-  "www-project-data-security-top-10": [
-    "OWASP Foundation Web Respository",
+  "data-security-top-10": [
+    "Best practices guide for securing data, whether at rest or in motion. The guide provides information about the most major security risks for storing and moving sensitive and PII information, the challenges involved, and how to overcome them.",
     "https://github.com/OWASP/www-project-data-security-top-10"
   ],
-  "www-project-cyclonedx": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cyclonedx"
+  "www-revent-appsec-pacific-northwest-security-conference": [
+    "A very brief, one-line description of your event",
+    "https://github.com/OWASP/www-revent-appsec-pacific-northwest-security-conference"
   ],
-  "www-project-application-security-hardening": [
-    "OWASP Foundation Web Respository",
+  "www-revent-appsec-days-developer-security-summit": [
+    "A very brief, one-line description of your event",
+    "https://github.com/OWASP/www-revent-appsec-days-developer-security-summit"
+  ],
+  "www-revent-lascon": [
+    "LASCON (Lonestar Application Security Conference) is an annual conference held in Austin, TX.",
+    "https://github.com/OWASP/www-revent-lascon"
+  ],
+  "www-revent-portland-training-day": [
+    "A very brief, one-line description of your event",
+    "https://github.com/OWASP/www-revent-portland-training-day"
+  ],
+  "application-security-hardening": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-application-security-hardening"
   ],
-  "www-project-barbarus": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-barbarus"
+  "citizen-development-top10-security-risks": [
+    "The primary goal of the \"OWASP Citizen Development Top 10\" document is to provide assistance and education for organizations looking to adopt a culture of security for their Citizen Development environments. The guide provides information about what the most prominent security risks are for such applications, the challenges involved, and how to overcome them.",
+    "https://github.com/OWASP/www-project-citizen-development-top10-security-risks"
   ],
-  "www-project-port-and-service-information": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-port-and-service-information"
-  ],
-  "www-project-code-the-flag": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-code-the-flag"
-  ],
-  "www-project-it-grc": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-it-grc"
-  ],
-  "www-project-top-10-low-code-no-code-security-risks": [
-    "OWASP Low-Code/No-Code Top 10",
-    "https://github.com/OWASP/www-project-top-10-low-code-no-code-security-risks"
-  ],
-  "www-project-g0rking": [
-    "OWASP Foundation Web Repository",
-    "https://github.com/OWASP/www-project-g0rking"
-  ],
-  "www-project-open-source-security-application-platform": [
-    "OWASP/OSSAP is an Open Source Security Applications Platform.",
+  "open-source-security-application-platform": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-open-source-security-application-platform"
   ],
-  "www-project-raider": [
-    "OWASP Foundation Web Respository",
+  "raider": [
+    "A novel framework for manipulating the HTTP processes of persistent sessions",
     "https://github.com/OWASP/www-project-raider"
   ],
-  "www-project-blend": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-blend"
-  ],
-  "www-project-thick-client-security-testing-guide": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-thick-client-security-testing-guide"
-  ],
-  "www-project-vue-3-password-input": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vue-3-password-input"
-  ],
-  "www-project-wrongsecrets": [
-    "OWASP Foundation Web Respository",
+  "wrongsecrets": [
+    "Examples with how to not use secrets",
     "https://github.com/OWASP/www-project-wrongsecrets"
   ],
-  "www-project-vitcc-open-source-initiative": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-vitcc-open-source-initiative"
-  ],
-  "www-project-mutillidae-ii": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-mutillidae-ii"
-  ],
-  "www-project-nightingale": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-nightingale"
-  ],
-  "www-project-nasi-lemak": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-nasi-lemak"
-  ],
-  "www-project-javascript-security": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-javascript-security"
-  ],
-  "www-project-aegis4j": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-aegis4j"
-  ],
-  "www-project-application-security-awareness-campaigns": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-application-security-awareness-campaigns"
-  ],
-  "www-project-coraza-web-application-firewall": [
-    "OWASP Foundation Web Repository",
+  "coraza-web-application-firewall": [
+    "OWASP Coraza is a golang enterprise-grade WAF framework compatible with Modsecurity and OWASP Core Ruleset.",
     "https://github.com/OWASP/www-project-coraza-web-application-firewall"
   ],
-  "www-project-chaingoat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-chaingoat"
+  "application-security-awareness-campaigns": [
+    "Application Security Awareness posters, email templates and other material for creating awareness campaigns for your engineers.",
+    "https://github.com/OWASP/www-project-application-security-awareness-campaigns"
   ],
-  "www-project-devsecops-verification-standard": [
-    "OWASP Foundation Web Respository",
+  "www-event-2021-12-training": [
+    "OWASP Training Events 2021",
+    "https://github.com/OWASP/www-event-2021-12-training"
+  ],
+  "devsecops-verification-standard": [
+    "The DSOVS is a framework to identify gaps in implementing security within software development lifecyle",
     "https://github.com/OWASP/www-project-devsecops-verification-standard"
   ],
-  "www-project-pentext": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-pentext"
-  ],
-  "www-project-supplychaingoat": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-supplychaingoat"
-  ],
-  "www-project-toctourex": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-toctourex"
-  ],
-  "www-project-kubernetes-top-ten": [
-    "OWASP Foundation Web Respository",
+  "kubernetes-top-ten": [
+    "Welcome to the OWASP Top Ten for Kubernetes",
     "https://github.com/OWASP/www-project-kubernetes-top-ten"
   ],
-  "www-project-security-champions-guidebook": [
-    "OWASP Foundation Web Respository",
+  "security-champions-guidebook": [
+    "Our goal is to create an open-source, vendor-neutral guidebook for AppSec professionals to help them build and improve their own successful Security Champion programs.",
     "https://github.com/OWASP/www-project-security-champions-guidebook"
   ],
-  "www-project-safetypes": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-safetypes"
-  ],
-  "www-project-application-security-playbook": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-application-security-playbook"
-  ],
-  "www-project-state-of-appsec-survey": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-state-of-appsec-survey"
-  ],
-  "www-project-mimosa": [
-    "OWASP Foundation Web Respository",
+  "mimosa": [
+    "Mimosa, your companion to learn secure coding",
     "https://github.com/OWASP/www-project-mimosa"
   ],
-  "www-project-top-10-ci-cd-security-risks": [
-    "OWASP Foundation Web Respository",
+  "top-10-ci-cd-security-risks": [
+    "OWASP Top 10 CI/CD Security Risks project helps defenders identify focus areas for securing their CI/CD ecosystem.",
     "https://github.com/OWASP/www-project-top-10-ci-cd-security-risks"
   ],
-  "www-project-continuous-penetration-testing-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-continuous-penetration-testing-framework"
-  ],
-  "www-project-testability-patterns-for-web-applications": [
-    "OWASP Foundation Web Respository",
+  "testability-patterns-for-web-applications": [
+    "TestabiliTy Pattern-driven Web Application Security and Privacy Testing",
     "https://github.com/OWASP/www-project-testability-patterns-for-web-applications"
   ],
-  "www-project-vulnerable-flask-app": [
-    "OWASP Foundation Web Respository",
+  "wrongsecrets-ctf-party": [
+    "OWASP Wrongsecrets Ctf Party",
+    "https://github.com/OWASP/wrongsecrets-ctf-party"
+  ],
+  "vulnerable-flask-app": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-vulnerable-flask-app"
   ],
-  "www-project-kubernetes-scanner": [
-    "OWASP Kubernetes Scanner ",
-    "https://github.com/OWASP/www-project-kubernetes-scanner"
-  ],
-  "www-project-software-pre-execution-security-review": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-software-pre-execution-security-review"
-  ],
-  "www-project-application-security-monitoring-standard": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-application-security-monitoring-standard"
-  ],
-  "www-project-domain-protect": [
-    "OWASP Foundation Web Respository",
+  "domain-protect": [
+    "Protect against subdomain takeover",
     "https://github.com/OWASP/www-project-domain-protect"
   ],
-  "www-project-ai-security-and-privacy-guide": [
-    "OWASP Foundation Web Respository",
+  "software-pre-execution-security-review": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-software-pre-execution-security-review"
+  ],
+  "kubernetes-scanner": [
+    "Kubernetes Security and Compliance Scanner.",
+    "https://github.com/OWASP/www-project-kubernetes-scanner"
+  ],
+  "ai-security-and-privacy-guide": [
+    "Guidance on designing, creating, testing, and procuring secure and privacy-preserving AI systems",
     "https://github.com/OWASP/www-project-ai-security-and-privacy-guide"
   ],
-  "www-project-mlsecops-verification-standard": [
-    "OWASP Machine Learning Security Verification Standard Project",
-    "https://github.com/OWASP/www-project-mlsecops-verification-standard"
+  "secure-coding-practices-quick-reference-guide": [
+    "OWASP Secure Coding Practices Quick Reference Guide",
+    "https://github.com/OWASP/secure-coding-practices-quick-reference-guide"
   ],
-  "www-project-cloud-tenant-isolation": [
-    "OWASP Foundation Web Respository",
+  "cloud-tenant-isolation": [
+    "A guide for mitigating cross-tenant vulnerabilities in cloud application development",
     "https://github.com/OWASP/www-project-cloud-tenant-isolation"
   ],
-  "www-project-scrappy": [
-    "OWASP Foundation Web Respository",
+  "mlsecops-verification-standard": [
+    "The OWASP Machine Learning Security Verification Standards (MLSVS) Project is a framework of security requirements that focus on defining the security controls when designing, developing and testing machine learning systems and models.",
+    "https://github.com/OWASP/www-project-mlsecops-verification-standard"
+  ],
+  "scrappy": [
+    "ScrapPY is a Python utility for scraping manuals, documents, and other sensitive PDFs to generate targeted wordlists that can be utilized by offensive security tools to perform brute force, forced browsing, and dictionary attacks.",
     "https://github.com/OWASP/www-project-scrappy"
   ],
-  "www-project-top-25-parameters": [
-    "OWASP Foundation Web Respository",
+  "top-25-parameters": [
+    "For basic researches, top 25 vulnerability parameters that can be used in automation tools or manual recon.",
     "https://github.com/OWASP/www-project-top-25-parameters"
   ],
-  "www-project-cervantes": [
-    "OWASP Foundation Web Respository",
+  "cervantes": [
+    "Cervantes is an opensource collaborative platform for pentesters or red teams who want to save time to manage their projects, clients, vulnerabilities and reports in one place.",
     "https://github.com/OWASP/www-project-cervantes"
   ],
-  "www-project-smart-contract-top-10": [
-    "OWASP Smart Contract Top 10",
+  "smart-contract-top-10": [
+    "Welcome to the OWASP Top Ten for Smart Contracts",
     "https://github.com/OWASP/www-project-smart-contract-top-10"
   ],
-  "www-project-devsecops-top-10": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-devsecops-top-10"
-  ],
-  "www-project-ide-vulscanner": [
-    "OWASP Foundation Web Respository",
+  "ide-vulscanner": [
+    "Checks code vulnerability during implementation phase",
     "https://github.com/OWASP/www-project-ide-vulscanner"
   ],
-  "www-project-ebpfshield": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ebpfshield"
+  "devsecops-top-10": [
+    "Top 10 categories for your DevSecOps Landscape",
+    "https://github.com/OWASP/www-project-devsecops-top-10"
   ],
-  "www-project-cognito-catastrophe": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cognito-catastrophe"
-  ],
-  "www-project-devsecops": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-devsecops"
-  ],
-  "www-project-asvs-security-evaluation-templates-with-nuclei": [
-    "OWASP ASVS Security Evaluation Templates with Nuclei",
+  "asvs-security-evaluation-templates-with-nuclei": [
+    "This project aims to develop nuclei templates for evaluating OWASP Application Security Verification Standard (ASVS) on websites.",
     "https://github.com/OWASP/www-project-asvs-security-evaluation-templates-with-nuclei"
   ],
-  "www-project-machine-learning-minefield": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-machine-learning-minefield"
-  ],
-  "www-project-mobile-application-security-design-guide": [
-    "Mobile Application Security Design Guide",
-    "https://github.com/OWASP/www-project-mobile-application-security-design-guide"
-  ],
-  "www-project-data-analysis-visualization-and-ingestion-domain": [
-    "OWASP Foundation Web Respository",
+  "data-analysis-visualization-and-ingestion-domain": [
+    "A community project to support the data analysis and visualization needs of open source projects.",
     "https://github.com/OWASP/www-project-data-analysis-visualization-and-ingestion-domain"
   ],
-  "www-project-cumulus": [
-    "OWASP Foundation Web Respository",
+  "cumulus": [
+    "Cumulus. Threat Modeling the Clouds.",
     "https://github.com/OWASP/www-project-cumulus"
   ],
-  "www-project-blockchain-appsec-standard": [
-    "OWASP Foundation Web Respository",
+  "mobile-application-security-design-guide": [
+    "OWASP Www Project Mobile Application Security Design Guide",
+    "https://github.com/OWASP/www-project-mobile-application-security-design-guide"
+  ],
+  "blockchain-appsec-standard": [
+    "We focus on security of in blockchain and web3 and share our knowledge on attack vectors and defense mechanisms. We strongly encourage your contribution to these topics and content.",
     "https://github.com/OWASP/www-project-blockchain-appsec-standard"
   ],
-  "www-project-four-clover": [
-    "OWASP Foundation Web Respository",
+  "four-clover": [
+    "OWASP Four Clover is your vigilant guardian against file tampering, delivering comprehensive integrity monitoring with customizable scans and policy enforcement.",
     "https://github.com/OWASP/www-project-four-clover"
   ],
-  "www-project-top-10-for-large-language-model-applications": [
-    "OWASP Foundation Web Respository",
+  "top-10-for-large-language-model-applications": [
+    "Aims to educate developers, designers, architects, managers, and organizations about the potential security risks when deploying and managing Large Language Models (LLMs)",
     "https://github.com/OWASP/www-project-top-10-for-large-language-model-applications"
   ],
-  "www-project-open-security-information-base": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-open-security-information-base"
-  ],
-  "www-project-web-hacking-incident-database": [
-    "OWASP Foundation Web Repository",
-    "https://github.com/OWASP/www-project-web-hacking-incident-database"
-  ],
-  "www-project-kubefim": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-kubefim"
-  ],
-  "www-project-deepsecrets": [
-    "OWASP Foundation Web Respository",
+  "deepsecrets": [
+    "Secrets scanner that understands code",
     "https://github.com/OWASP/www-project-deepsecrets"
   ],
-  "www-project-security-bridge": [
-    "OWASP Foundation Web Respository",
+  "open-security-information-base": [
+    "The project delivers MkDocs macros that provide a central management of links in MkDocs documents. This includes the versioning of links inside a project, standard or a group of documents and to external sources.",
+    "https://github.com/OWASP/www-project-open-security-information-base"
+  ],
+  "security-bridge": [
+    "Security Bridge is aiming to build bridges in our community to not only talk and learn about application security but also the daily challenges we are facing that are non-technical.",
     "https://github.com/OWASP/www-project-security-bridge"
   ],
-  "www-project-llm-prompt-hacking": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-llm-prompt-hacking"
-  ],
-  "www-project-api-governance": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-api-governance"
-  ],
-  "www-project-ksecurity": [
-    "OWASP Foundation Web Respository",
+  "ksecurity": [
+    "OWASP Www Project Ksecurity",
     "https://github.com/OWASP/www-project-ksecurity"
   ],
-  "www-project-llm-verification-standard": [
-    "Project LLM Verification Standard",
-    "https://github.com/OWASP/www-project-llm-verification-standard"
-  ],
-  "www-project-iot-security-testing-guide": [
-    "OWASP IoT Security Testing Guide site repository",
+  "iot-security-testing-guide": [
+    "The OWASP IoT Security Testing Guide provides a comprehensive methodology for penetration tests in the IoT field.",
     "https://github.com/OWASP/www-project-iot-security-testing-guide"
   ],
-  "www-project-dep-scan": [
-    "OWASP Foundation Web Respository",
+  "dep-scan": [
+    "Next-generation security and risk audit tool based on known vulnerabilities, advisories, and license limitations for project dependencies.",
     "https://github.com/OWASP/www-project-dep-scan"
   ],
-  "www-project-untrust": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-untrust"
+  "llm-verification-standard": [
+    "The standard provides a basis for designing, building, and testing robust LLM backed applications",
+    "https://github.com/OWASP/www-project-llm-verification-standard"
   ],
-  "www-project-memory-safety": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-memory-safety"
-  ],
-  "www-project-ai-top-ten": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ai-top-ten"
-  ],
-  "www-project-chirps": [
-    "OWASP Foundation Web Respository",
+  "chirps": [
+    "Chirps is an open source, Django-based, Python web application that allows users to scan LLMs for Prompt Injection and search and scan vector databases for sensitive data.",
     "https://github.com/OWASP/www-project-chirps"
   ],
-  "www-project-top-10-insider-threats": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-10-insider-threats"
+  "jecrc-university": [
+    "OWASP JECRC University - Security",
+    "https://github.com/OWASP/www-chapter-jecrc-university"
   ],
-  "www-project-bullet-proof-react": [
-    "OWASP Foundation Web Respository",
+  "top-10-infrastructure-security-risks": [
+    "Most common and critical Infrastructure Security Risks",
+    "https://github.com/OWASP/www-project-top-10-infrastructure-security-risks"
+  ],
+  "offat": [
+    "Tests your API automatically for common API vulnerabilities after generating tests from provided openapi specification file.",
+    "https://github.com/OWASP/OFFAT"
+  ],
+  "bullet-proof-react": [
+    "Bullet-Proof React is a comprehensive resource engineered to enhance the security of React and Node.js applications",
     "https://github.com/OWASP/www-project-bullet-proof-react"
   ],
-  "www-project-sbom-forum": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-sbom-forum"
+  "kalyan": [
+    "OWASP Kalyan - application-security, cybersecurity",
+    "https://github.com/OWASP/www-chapter-kalyan"
   ],
-  "www-project-open-source-software-top-10": [
-    "OWASP Top 10 Open Source Software Risks",
+  "open-source-software-top-10": [
+    "Top-10 security and operational risks related to using OSS.",
     "https://github.com/OWASP/www-project-open-source-software-top-10"
   ],
-  "www-project-security-c4po": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-security-c4po"
-  ],
-  "www-project-dragon-gpt": [
-    "OWASP Foundation Web Respository",
+  "dragon-gpt": [
+    "An automatic OpenAI-powered threat modeling analysis based on OWASP Threat Dragon diagram",
     "https://github.com/OWASP/www-project-dragon-gpt"
   ],
-  "www-project-top-10-in-xr": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-top-10-in-xr"
-  ],
-  "www-project-antiforensics-project": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-antiforensics-project"
-  ],
-  "www-project-consigliere---your-sast-fixing-advisor": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-consigliere---your-sast-fixing-advisor"
-  ],
-  "www-project-product-security-capability-framework": [
-    "OWASP Foundation Web Respository",
+  "product-security-capability-framework": [
+    "The capabilities required for product teams to build secure products in a secure manner.",
     "https://github.com/OWASP/www-project-product-security-capability-framework"
   ],
-  "www-project-thick-client-application-security-verification-standard": [
-    "OWASP Thick Client Application Security Verification Standard",
+  "top-10-in-xr": [
+    "Top 10 security risks for XR",
+    "https://github.com/OWASP/www-project-top-10-in-xr"
+  ],
+  "security-c4po": [
+    "Simplify Pentest Planning, Reporting, and Findings Delivery with C4PO",
+    "https://github.com/OWASP/www-project-security-c4po"
+  ],
+  "izmir": [
+    "OWASP Izmir - owasp izmir, siber güvenlik izmir, cyber security izmir",
+    "https://github.com/OWASP/www-chapter-izmir"
+  ],
+  "thick-client-application-security-verification-standard": [
+    "This project aims to fill the gap between the web ASVS and the mobile ASVS (MASVS), whilst the MASVS can be used for thick client testing it's not a perfect fit and so we hope to produce something more appropriate.",
     "https://github.com/OWASP/www-project-thick-client-application-security-verification-standard"
   ],
-  "www-project-sapkiln": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-sapkiln"
-  ],
-  "www-project-naivesystems-analyze": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-naivesystems-analyze"
-  ],
-  "www-project-appsec-contract-builder": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-appsec-contract-builder"
-  ],
-  "www-project-de-addiction": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-de-addiction"
-  ],
-  "www-project-qraclib": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-qraclib"
-  ],
-  "www-project-pryingdeep": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-pryingdeep"
-  ],
-  "www-project-solana-programs-top-10": [
-    "OWASP Foundation Web Respository",
+  "solana-programs-top-10": [
+    "OWASP Solana Top 10 - Solana",
     "https://github.com/OWASP/www-project-solana-programs-top-10"
   ],
-  "www-project-cybersecurity-certification-course": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-cybersecurity-certification-course"
-  ],
-  "www-project-secure-pipeline-verification-standard--spvs-": [
-    "OWASP Secure Pipeline Verification Standard",
-    "https://github.com/OWASP/www-project-secure-pipeline-verification-standard--spvs-"
-  ],
-  "www-project-modsecurity": [
-    "OWASP Foundation Web Respository",
+  "modsecurity": [
+    "ModSecurity is the standard open-source web application firewall (WAF) engine.",
     "https://github.com/OWASP/www-project-modsecurity"
   ],
-  "www-project-common-lifecycle-enumeration": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-common-lifecycle-enumeration"
+  "devguard": [
+    "A usable central vulnerability management system for developers and security teams.",
+    "https://github.com/OWASP/www-project-devguard"
   ],
-  "www-project-product-security-guide": [
-    "OWASP Foundation Web Respository",
+  "product-security-guide": [
+    "The OWASP Product Security Guide project educates developers and organizations on security considerations for various products, offering a curated list of vulnerabilities and promoting awareness and solutions within the development community.",
     "https://github.com/OWASP/www-project-product-security-guide"
   ],
-  "www-project-flawfix": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-flawfix"
-  ],
-  "www-project-secure-development-and-release-framework": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-secure-development-and-release-framework"
-  ],
-  "www-project-devsecops-automation-matrix": [
-    "OWASP Foundation Web Respository",
+  "devsecops-automation-matrix": [
+    "Security Automation Framework for Humans.",
     "https://github.com/OWASP/www-project-devsecops-automation-matrix"
   ],
-  "www-project-skyshield": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-skyshield"
-  ],
-  "www-project-java-security-toolkit": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-java-security-toolkit"
-  ],
-  "www-project-privacy-toolkit": [
-    "OWASP Foundation Web Respository",
+  "privacy-toolkit": [
+    "A browser plugin for users' Privacy",
     "https://github.com/OWASP/www-project-privacy-toolkit"
   ],
-  "www-project-wi-fi-security-testing-guide": [
-    "OWASP Foundation Web Respository",
+  "wi-fi-security-testing-guide": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-wi-fi-security-testing-guide"
   ],
-  "www-project-ai-threatmaster": [
-    "OWASP Foundation Web Respository",
-    "https://github.com/OWASP/www-project-ai-threatmaster"
-  ],
-  "www-project-netryx": [
-    "Next level Java web security framework",
+  "netryx": [
+    "Advanced Java Security Framework",
     "https://github.com/OWASP/www-project-netryx"
   ],
-  "www-project-sammwise": [
-    "OWASP Foundation web repository",
+  "sammwise": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-sammwise"
   ],
-  "www-project-pentest-best-practices": [
-    "OWASP Foundation web repository",
+  "pentest-best-practices": [
+    "A very brief, one-line description of your project",
     "https://github.com/OWASP/www-project-pentest-best-practices"
+  ],
+  "top-10-for-maritime-security": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-top-10-for-maritime-security"
+  ],
+  "penetration-test-reporting-standard": [
+    "A unified, machine-readable standard for penetration test reporting to drive consistency, automation, and interoperability.",
+    "https://github.com/OWASP/www-project-penetration-test-reporting-standard"
+  ],
+  "top-10-drone-security-risks": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-top-10-drone-security-risks"
+  ],
+  "www-committee-events": [
+    "The OWASP Events Committee will support, guide, grow, and improve OWASP global, regional, and local events.",
+    "https://github.com/OWASP/www-committee-events"
+  ],
+  "operational-technology-top-10": [
+    "Top 10 Vulnerabilities Targeting Your OT Environment",
+    "https://github.com/OWASP/www-project-operational-technology-top-10"
+  ],
+  "waf-a-mole": [
+    "A guided mutation-based fuzzer for Web Application Firewalls",
+    "https://github.com/OWASP/www-project-waf-a-mole"
+  ],
+  "sap-threat-modeling-builder": [
+    "A comprehensive tool for visualizing and analyzing inter-SAP connections to identify potential security risks",
+    "https://github.com/OWASP/www-project-sap-threat-modeling-builder"
+  ],
+  "-js": [
+    "Follow OWASP's application security best practices for Node.js applications.",
+    "https://github.com/OWASP/www-project--js"
+  ],
+  "spvs": [
+    "The Secure Pipeline Verification Standard (SPVS) Project goal is to develop a comprehensive standard that guides organizations in creating and maintaining secure software pipelines, encompassing the entire development and deployment lifecycle.",
+    "https://github.com/OWASP/www-project-spvs"
+  ],
+  "smart-contract-security-verification-standard": [
+    "The standard provides a basis for designing, building, and testing robust Smart Contracts",
+    "https://github.com/OWASP/www-project-smart-contract-security-verification-standard"
+  ],
+  "abap-code-scanner": [
+    "A Python tool for scanning offline SAP ABAP source code to detect security vulnerabilities",
+    "https://github.com/OWASP/abap-code-scanner"
+  ],
+  "non-human-identities-top-10": [
+    "The primary goal of the \"OWASP Non-Human Identities Top 10\" document is to provide assistance and education for organizations looking to secure the non-human identities in their organization's environment. The guide provides information about what the most prominent security risks are for such identities, the challenges involved, and how to overcome them.",
+    "https://github.com/OWASP/www-project-non-human-identities-top-10"
+  ],
+  "open-sammy": [
+    "Open SAMMY is an open source OWASP SAMM management and implementation tool",
+    "https://github.com/OWASP/www-project-open-sammy"
+  ],
+  "infrastructure-security-testing-guide": [
+    "OWASP Infrastructure Security Testing Guide",
+    "https://github.com/OWASP/www-project-infrastructure-security-testing-guide"
+  ],
+  "dungeons-and-daemons": [
+    "OWASP® Dungeons & Daemons is a collection of open source games for promoting awareness and knowledge about application security and security practices.",
+    "https://github.com/OWASP/www-project-dungeons-and-daemons"
+  ],
+  "smart-contract-security-testing-guide": [
+    "The testing guide provides a basis for testing, suditing and securing robust Smart Contracts",
+    "https://github.com/OWASP/www-project-smart-contract-security-testing-guide"
+  ],
+  "security-champions": [
+    "OWASP Security Champions",
+    "https://github.com/OWASP/Security-Champions"
+  ],
+  "threat-model-library": [
+    "Welcome to the first, open-sourced, structured, peer-reviewed threat modeling dataset",
+    "https://github.com/OWASP/www-project-threat-model-library"
+  ],
+  "smart-contract-security-testing-guide--scstg-": [
+    "OWASP Www Project Smart Contract Security Testing Guide  Scstg ",
+    "https://github.com/OWASP/www-project-smart-contract-security-testing-guide--scstg-"
+  ],
+  "top-10-for-business-logic-abuse": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-top-10-for-business-logic-abuse"
+  ],
+  "pci-dss-toolkit": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-pci-dss-toolkit"
+  ],
+  "api-security-testing-framework": [
+    "A comprehensive automated testing framework for detecting API security vulnerabilities based on the OWASP API Security Top 10",
+    "https://github.com/OWASP/www-project-api-security-testing-framework"
+  ],
+  "faction": [
+    "Faction is a pentesting assessment collaboration framework that helps automate pentesting reports, schedule larege scale assessments, manage vulnerability tracking, and increase collaboration in your teams.",
+    "https://github.com/OWASP/www-project-faction"
+  ],
+  "hactu8": [
+    "“Preparing for SkyNet” – OWASP hactu8 is an active security testing platform for robotics, IoT, and consumer electronics, integrating LLM-powered automation with OWASP security frameworks to empower ethical hackers and security professionals.",
+    "https://github.com/OWASP/www-project-hactu8"
+  ],
+  "artificial-intelligence-vulnerability-scoring-system": [
+    "OWASP AI Vulnerability Scoring System (AIVSS) - example-tag, agentic-ai, aivss, ai-security, vulnerability-scoring",
+    "https://github.com/OWASP/www-project-artificial-intelligence-vulnerability-scoring-system"
+  ],
+  "attack-surface-management-top-10": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-attack-surface-management-top-10"
+  ],
+  "artificial-intelligence-security-verification-standard-aisvs-docs": [
+    "OWASP AI verification standard for developers and testers",
+    "https://github.com/OWASP/www-project-artificial-intelligence-security-verification-standard-aisvs-docs"
+  ],
+  "cheat-code-series": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-cheat-code-series"
+  ],
+  "genai-security-project": [
+    "OWASP Genai Security Project",
+    "https://github.com/OWASP/genai-security-project"
+  ],
+  "vxdf": [
+    "OWASP VXDF is an evidence-backed format for reporting *validated exploitable* code vulnerabilities, designed to cut through alert fatigue, provide precise actionable insights, and standardize proof of exploitability across the security ecosystem.",
+    "https://github.com/OWASP/www-project-vxdf"
+  ],
+  "university-of-guelph": [
+    "OWASP University of Guelph - OWASP University-of-Guelph Cybersecurity Canada Web-Application-Security Student-Chapter MCTI MCLC Rudraksh Gupta Ali Dehghantanha",
+    "https://github.com/OWASP/www-chapter-university-of-guelph"
+  ],
+  "secure-by-design-framework": [
+    "The OWASP Secure-by-Design Framework provides practical guidance to embed security into software architecture from the start—long before code is written.",
+    "https://github.com/OWASP/www-project-secure-by-design-framework"
+  ],
+  "ai-testing-guide": [
+    "Methodology to perform an AI System Assessment",
+    "https://github.com/OWASP/www-project-ai-testing-guide"
+  ],
+  "social-osint-agent": [
+    "An OSINT tool that uses LLMs and vision models to analyze a target's social media footprint across multiple platforms, revealing insights through natural language queries.",
+    "https://github.com/OWASP/www-project-social-osint-agent"
+  ],
+  "mqtt-guide": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-mqtt-guide"
+  ],
+  "visto": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-visto"
+  ],
+  "mcp-top-10": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-mcp-top-10"
+  ],
+  "hack-heroes": [
+    "Inspiring young people to explore cybersecurity through fun, interactive challenges",
+    "https://github.com/OWASP/www-project-hack-heroes"
+  ],
+  "top-ten-card-game": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-top-ten-card-game"
+  ],
+  "promptme": [
+    "A vulnerable application designed to demonstrate the OWASP Top 10 for Large Language Model (LLM) Applications.",
+    "https://github.com/OWASP/www-project-promptme"
+  ],
+  "universidad-politecnica-de-yucatan-student-chapter": [
+    "OWASP Universidad Politecnica de Yucatan Student Chapter - information-security",
+    "https://github.com/OWASP/www-chapter-universidad-politecnica-de-yucatan-student-chapter"
+  ],
+  "lets-threat-model": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-lets-threat-model"
+  ],
+  "threat-modelling-guide": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-threat-modelling-guide"
+  ],
+  "template": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-template"
+  ],
+  "wafcontrol": [
+    "The first modern, open-source web-based dashboard for managing ModSecurity and OWASP CRS with zero command-line complexity.",
+    "https://github.com/OWASP/www-project-wafcontrol"
+  ],
+  "top-10-the-game": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-top-10-the-game"
+  ],
+  "bilaspur": [
+    "OWASP Bilaspur - bilaspur-india security application-security",
+    "https://github.com/OWASP/www-chapter-bilaspur"
+  ],
+  "pccoe": [
+    "OWASP PCCOE - student-chapter pccoe pune cybersecurity appsec",
+    "https://github.com/OWASP/www-chapter-pccoe"
+  ],
+  "let-s-threat-model": [
+    "OWASP Www Project Let S Threat Model",
+    "https://github.com/OWASP/www-project-let-s-threat-model"
+  ],
+  "randomized-header-channel-for-csrf-protection": [
+    "A security technique that introduces randomized header channels to strengthen CSRF protection in modern architectures.",
+    "https://github.com/OWASP/www-project-randomized-header-channel-for-csrf-protection"
+  ],
+  "payment-security-testing-guide": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-payment-security-testing-guide"
+  ],
+  "secopstm": [
+    "A DevSecOps tool for generating and automating cyber-defense from Markdown threat models using Python and Ansible.",
+    "https://github.com/OWASP/www-project-secopstm"
+  ],
+  "rapid-developer-driven-threat-modeling": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-rapid-developer-driven-threat-modeling"
+  ],
+  "ot-top10-vulnerabilities-demonstrator": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-ot-top10-vulnerabilities-demonstrator"
+  ],
+  "threatatlas": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-threatatlas"
+  ],
+  "rosario": [
+    "OWASP Rosario - rosario argentina latam appsec research threat-intelligence compliance",
+    "https://github.com/OWASP/www-chapter-rosario"
+  ],
+  "sase-security": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-sase-security"
+  ],
+  "web3-wallet-security": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-web3-wallet-security"
+  ],
+  "browser-security-project": [
+    "A very brief, one-line description of your project",
+    "https://github.com/OWASP/www-project-browser-security-project"
   ]
 }
