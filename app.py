@@ -107,12 +107,14 @@ def verify_slack_signature(signing_secret, timestamp, body, signature):
 
 @app.route("/slack/events", methods=["POST"])
 def slack_events():
+    # Read the raw request body once for both signature verification and JSON parsing
+    body = request.get_data(as_text=True)
+    
     # Verify Slack signature for security
     signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
     if signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
         signature = request.headers.get("X-Slack-Signature")
-        body = request.get_data(as_text=True)
         
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/events")
@@ -120,7 +122,12 @@ def slack_events():
     else:
         logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
     
-    data = request.json
+    # Parse JSON from the already-retrieved body
+    try:
+        data = json.loads(body) if body else {}
+    except json.JSONDecodeError:
+        logging.error("Failed to parse JSON from request body")
+        return jsonify({"error": "Invalid JSON"}), 400
 
     # Respond to Slack's URL verification challenge
     if "challenge" in data:
@@ -298,12 +305,14 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle interactive button clicks"""
+    # Read the raw request body once for both signature verification and form parsing
+    body = request.get_data(as_text=True)
+    
     # Verify Slack signature for security
     signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
     if signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
         signature = request.headers.get("X-Slack-Signature")
-        body = request.get_data(as_text=True)
         
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/interactions")
@@ -312,7 +321,10 @@ def slack_interactions():
         logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
     
     try:
-        payload = json.loads(request.form["payload"])
+        # Parse form data from the already-retrieved body
+        from urllib.parse import parse_qs
+        form_data = parse_qs(body)
+        payload = json.loads(form_data.get("payload", [""])[0])
         user_id = payload["user"]["id"]
         action = payload["actions"][0]
         action_id = action["action_id"]
