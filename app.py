@@ -37,8 +37,11 @@ app = Flask(__name__)
 
 # Initialize conversation manager and project recommender
 conversation_manager = ConversationManager()
-projects_data_path = os.path.join(os.path.dirname(__file__), "data", "projects.json")
-project_recommender = ProjectRecommender(projects_data_path)
+projects_data_path = Path(__file__).parent / "data" / "projects.json"
+if not projects_data_path.is_file():
+    logging.error(f"Projects data file not found at: {projects_data_path}")
+    raise FileNotFoundError(f"Required projects data file is missing: {projects_data_path}")
+project_recommender = ProjectRecommender(str(projects_data_path))
 
 # Don't use SlackEventAdapter - we'll handle events manually
 # This allows us to work without a valid signing secret during setup
@@ -136,7 +139,7 @@ def handle_team_join_event(event):
         client.chat_postMessage(
             channel=dm_channel_id, text="Welcome to the OWASP Slack Community!", blocks=blocks
         )
-    except (KeyError, json.JSONDecodeError, TypeError) as e:
+    except json.JSONDecodeError as e:
         logging.error(f"Error sending welcome message: {e}")
 
 
@@ -184,8 +187,14 @@ def handle_message_event(message):
                     client.chat_postMessage(
                         channel=JOINS_CHANNEL_ID, text=f"<@{user}> said {text}"
                     )
-                except SlackApiError:
-                    pass  # Don't fail if monitoring channel doesn't exist
+                except SlackApiError as e:
+                    logging.warning(
+                        "Failed to post monitoring message to channel %s for user %s with text %r: %s",
+                        JOINS_CHANNEL_ID,
+                        user,
+                        text,
+                        e,
+                    )
 
                 # Handle conversational flow - pass the channel, not user_id
                 handle_dm_conversation(channel, user, text)
