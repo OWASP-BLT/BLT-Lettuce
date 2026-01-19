@@ -21,10 +21,6 @@ from src.lettuce.conversation_manager import (
 )
 from src.lettuce.project_recommender import ProjectRecommender, format_recommendations_message
 
-# Not using SlackEventAdapter - we handle events manually
-# from slackeventsapi import SlackEventAdapter
-
-
 DEPLOYS_CHANNEL_NAME = "#project-blt-lettuce-deploys"
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
 CONTRIBUTE_ID = "C04DH8HEPTR"
@@ -140,7 +136,7 @@ def handle_team_join_event(event):
         client.chat_postMessage(
             channel=dm_channel_id, text="Welcome to the OWASP Slack Community!", blocks=blocks
         )
-    except Exception as e:
+    except (KeyError, json.JSONDecodeError, TypeError) as e:
         logging.error(f"Error sending welcome message: {e}")
 
 
@@ -234,7 +230,7 @@ def slack_interactions():
         logging.info(f"Interaction: user={user_id}, action={action_id}, value={action_value}")
 
         conversation = conversation_manager.get_or_create_conversation(user_id)
-    except Exception as e:
+    except (KeyError, json.JSONDecodeError, TypeError) as e:
         logging.error(f"Error parsing interaction: {e}", exc_info=True)
         return "", 200
 
@@ -337,11 +333,13 @@ def slack_interactions():
             logging.debug("Sending message to Slack...")
             client.chat_postMessage(channel=user_id, **slack_message)
             logging.debug("Message sent successfully")
-        except Exception as e:
-            logging.error(f"Error in show_all_projects: {e}", exc_info=True)
+        except SlackApiError as e:
+            logging.error(f"Slack API error in show_all_projects: {e}", exc_info=True)
             client.chat_postMessage(
                 channel=user_id, text="Sorry, something went wrong. Please start a new search."
             )
+        except Exception as e:
+            logging.error(f"Unexpected error in show_all_projects: {e}", exc_info=True)
 
     # Handle restart
     elif action_id == "restart_conversation":

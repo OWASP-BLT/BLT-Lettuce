@@ -15,7 +15,6 @@ slackeventsapi = "^3.0.1"
 slack-sdk = "^3.27.2"
 beautifulsoup4 = "^4.12.3"
 pydantic = "^2.8.0"
-aiohttp = "^3.13.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
