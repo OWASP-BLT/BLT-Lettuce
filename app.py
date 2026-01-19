@@ -1,6 +1,9 @@
+import hashlib
+import hmac
 import json
 import logging
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 import git
@@ -44,22 +47,79 @@ if not projects_data_path.is_file():
 project_recommender = ProjectRecommender(str(projects_data_path))
 
 # Don't use SlackEventAdapter - we'll handle events manually
-# This allows us to work without a valid signing secret during setup
+# NOTE: For production, ensure SLACK_SIGNING_SECRET is set to validate requests
 client = WebClient(token=os.environ.get("SLACK_TOKEN", ""))
 
 # Send startup message if credentials are valid
-try:
-    if (
-        os.environ.get("SLACK_TOKEN")
-        and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER"
-    ):
-        client.chat_postMessage(channel=DEPLOYS_CHANNEL_NAME, text="bot started v1.9 240611-1 top")
-except SlackApiError as e:
-    logging.warning(f"Could not send startup message: {e.response['error']}")
+if (
+    os.environ.get("SLACK_TOKEN")
+    and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER"
+):
+    deploys_channel = os.environ.get("DEPLOYS_CHANNEL_NAME", DEPLOYS_CHANNEL_NAME)
+    if deploys_channel:
+        try:
+            client.chat_postMessage(
+                channel=deploys_channel,
+                text="bot started v1.9 240611-1 top",
+            )
+        except SlackApiError as e:
+            logging.warning(
+                "Could not send startup message to channel %s: %s",
+                deploys_channel,
+                e.response.get("error", "unknown_error"),
+            )
+        except Exception as e:
+            logging.warning(
+                "Unexpected error while sending startup message to channel %s: %s",
+                deploys_channel,
+                e,
+            )
+
+
+def verify_slack_signature(signing_secret, timestamp, body, signature):
+    """Verify that the request came from Slack using the signing secret."""
+    if not signing_secret or not timestamp or not signature:
+        return False
+
+    # Check timestamp to prevent replay attacks (allow 5 minutes)
+    try:
+        request_time = int(timestamp)
+        current_time = int(datetime.now(timezone.utc).timestamp())
+        if abs(current_time - request_time) > 300:
+            return False
+    except (ValueError, TypeError):
+        return False
+
+    # Calculate expected signature
+    sig_basestring = f"v0:{timestamp}:{body}"
+    expected_signature = (
+        "v0="
+        + hmac.new(
+            signing_secret.encode("utf-8"),
+            sig_basestring.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+    )
+
+    # Compare signatures using constant-time comparison
+    return hmac.compare_digest(expected_signature, signature)
 
 
 @app.route("/slack/events", methods=["POST"])
 def slack_events():
+    # Verify Slack signature for security
+    signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
+    if signing_secret:
+        timestamp = request.headers.get("X-Slack-Request-Timestamp")
+        signature = request.headers.get("X-Slack-Signature")
+        body = request.get_data(as_text=True)
+        
+        if not verify_slack_signature(signing_secret, timestamp, body, signature):
+            logging.warning("Invalid Slack signature for /slack/events")
+            return jsonify({"error": "Invalid signature"}), 403
+    else:
+        logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
+    
     data = request.json
 
     # Respond to Slack's URL verification challenge
@@ -139,7 +199,7 @@ def handle_team_join_event(event):
         client.chat_postMessage(
             channel=dm_channel_id, text="Welcome to the OWASP Slack Community!", blocks=blocks
         )
-    except json.JSONDecodeError as e:
+    except Exception as e:
         logging.error(f"Error sending welcome message: {e}")
 
 
@@ -210,25 +270,47 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
     start_keywords = ["help", "start", "project", "recommend", "find", "looking"]
 
     if conversation.state == ConversationState.INITIAL:
-        # Start conversation if user uses trigger words
-        if any(keyword in text for keyword in start_keywords):
-            slack_message = get_welcome_message()
-            client.chat_postMessage(channel=channel_id, **slack_message)
-            conversation.update_state(ConversationState.PREFERENCE_CHOICE)
-        else:
-            # Default response for non-conversation messages
-            client.chat_postMessage(
-                channel=channel_id,
-                text=(
-                    "Hello! 👋 Say 'help' or 'find project' to get "
-                    "personalized OWASP project recommendations."
-                ),
+        try:
+            # Start conversation if user uses trigger words
+            if any(keyword in text for keyword in start_keywords):
+                slack_message = get_welcome_message()
+                client.chat_postMessage(channel=channel_id, **slack_message)
+                conversation.update_state(ConversationState.PREFERENCE_CHOICE)
+            else:
+                # Default response for non-conversation messages
+                client.chat_postMessage(
+                    channel=channel_id,
+                    text=(
+                        "Hello! 👋 Say 'help' or 'find project' to get "
+                        "personalized OWASP project recommendations."
+                    ),
+                )
+        except SlackApiError as e:
+            logging.error(
+                "Slack API error while sending DM to user %s in channel %s: %s",
+                user_id,
+                channel_id,
+                e,
+                exc_info=True,
             )
 
 
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle interactive button clicks"""
+    # Verify Slack signature for security
+    signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
+    if signing_secret:
+        timestamp = request.headers.get("X-Slack-Request-Timestamp")
+        signature = request.headers.get("X-Slack-Signature")
+        body = request.get_data(as_text=True)
+        
+        if not verify_slack_signature(signing_secret, timestamp, body, signature):
+            logging.warning("Invalid Slack signature for /slack/interactions")
+            return jsonify({"error": "Invalid signature"}), 403
+    else:
+        logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
+    
     try:
         payload = json.loads(request.form["payload"])
         user_id = payload["user"]["id"]
@@ -247,126 +329,151 @@ def slack_interactions():
         return "", 200
 
     # Handle preference choice (Technology vs Mission)
-    if action_id.startswith("preference_"):
-        if action_value == "technology":
-            conversation.update_state(ConversationState.TECH_STACK, "preference", "technology")
-            slack_message = get_tech_stack_message()
+    try:
+        if action_id.startswith("preference_"):
+            if action_value == "technology":
+                conversation.update_state(ConversationState.TECH_STACK, "preference", "technology")
+                slack_message = get_tech_stack_message()
+                client.chat_postMessage(channel=user_id, **slack_message)
+            elif action_value == "mission":
+                conversation.update_state(ConversationState.MISSION_GOAL, "preference", "mission")
+                slack_message = get_mission_goal_message()
+                client.chat_postMessage(channel=user_id, **slack_message)
+
+        # Handle technology stack choice
+        elif action_id.startswith("tech_") and conversation.state == ConversationState.TECH_STACK:
+            conversation.update_state(ConversationState.TECH_DIFFICULTY, "technology", action_value)
+            slack_message = get_difficulty_message()
             client.chat_postMessage(channel=user_id, **slack_message)
-        elif action_value == "mission":
-            conversation.update_state(ConversationState.MISSION_GOAL, "preference", "mission")
-            slack_message = get_mission_goal_message()
+
+        # Handle difficulty choice
+        elif action_id.startswith("difficulty_"):
+            conversation.update_state(ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value)
+            slack_message = get_project_type_message()
             client.chat_postMessage(channel=user_id, **slack_message)
 
-    # Handle technology stack choice
-    elif action_id.startswith("tech_") and conversation.state == ConversationState.TECH_STACK:
-        conversation.update_state(ConversationState.TECH_DIFFICULTY, "technology", action_value)
-        slack_message = get_difficulty_message()
-        client.chat_postMessage(channel=user_id, **slack_message)
+        # Handle project type choice - generate tech recommendations
+        elif action_id.startswith("type_"):
+            conversation.data["project_type"] = action_value
 
-    # Handle difficulty choice
-    elif action_id.startswith("difficulty_"):
-        conversation.update_state(ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value)
-        slack_message = get_project_type_message()
-        client.chat_postMessage(channel=user_id, **slack_message)
-
-    # Handle project type choice - generate tech recommendations
-    elif action_id.startswith("type_"):
-        conversation.data["project_type"] = action_value
-
-        # Get recommendations
-        recommendations = project_recommender.recommend_tech_based(
-            technology=conversation.get_data("technology"),
-            difficulty=conversation.get_data("difficulty"),
-            project_type=action_value,
-        )
-
-        slack_message = format_recommendations_message(recommendations, conversation.data)
-        client.chat_postMessage(channel=user_id, **slack_message)
-        conversation.update_state(ConversationState.COMPLETED)
-
-    # Handle mission goal choice
-    elif action_id.startswith("mission_") and conversation.state == ConversationState.MISSION_GOAL:
-        conversation.update_state(ConversationState.MISSION_CONTRIBUTION, "goal", action_value)
-        slack_message = get_contribution_type_message()
-        client.chat_postMessage(channel=user_id, **slack_message)
-
-    # Handle contribution type choice - generate mission recommendations
-    elif action_id.startswith("contrib_"):
-        conversation.data["contribution_type"] = action_value
-
-        # Get recommendations
-        recommendations = project_recommender.recommend_mission_based(
-            goal=conversation.get_data("goal"), contribution_type=action_value
-        )
-
-        slack_message = format_recommendations_message(recommendations, conversation.data)
-        client.chat_postMessage(channel=user_id, **slack_message)
-        conversation.update_state(ConversationState.COMPLETED)
-
-    # Handle "Show All" - show all matching projects
-    elif action_id == "show_all_projects":
-        try:
-            logging.debug(f"Show All - Conversation data: {conversation.data}")
-            # Check if user selected technology or mission path
-            technology = conversation.get_data("technology")
-            difficulty = conversation.get_data("difficulty")
-            project_type = conversation.get_data("project_type")
-            goal = conversation.get_data("goal")
-            contribution_type = conversation.get_data("contribution_type")
-
-            logging.debug(f"Tech data: tech={technology}, diff={difficulty}, type={project_type}")
-            logging.debug(f"Mission data: goal={goal}, contrib={contribution_type}")
-
-            if technology:
-                logging.debug("Calling recommend_tech_based with limit=0")
-                recommendations = project_recommender.recommend_tech_based(
-                    technology=technology,
-                    difficulty=difficulty,
-                    project_type=project_type,
-                    limit=0,
-                )
-                logging.debug(f"Got {len(recommendations)} tech recommendations")
-            elif goal:
-                logging.debug("Calling recommend_mission_based with limit=0")
-                recommendations = project_recommender.recommend_mission_based(
-                    goal=goal, contribution_type=contribution_type, limit=0
-                )
-                logging.debug(f"Got {len(recommendations)} mission recommendations")
-            else:
-                logging.warning("No technology or goal found in conversation data")
-                client.chat_postMessage(
-                    channel=user_id,
-                    text="Please start a new search to get project recommendations.",
-                )
-                return "", 200
-
-            logging.debug("Formatting recommendations message...")
-            slack_message = format_recommendations_message(recommendations, conversation.data)
-            logging.debug("Sending message to Slack...")
-            client.chat_postMessage(channel=user_id, **slack_message)
-            logging.debug("Message sent successfully")
-        except SlackApiError as e:
-            logging.error(f"Slack API error in show_all_projects: {e}", exc_info=True)
-            client.chat_postMessage(
-                channel=user_id, text="Sorry, something went wrong. Please start a new search."
+            # Get recommendations
+            recommendations = project_recommender.recommend_tech_based(
+                technology=conversation.get_data("technology"),
+                difficulty=conversation.get_data("difficulty"),
+                project_type=action_value,
             )
-        except Exception as e:
-            logging.error(f"Unexpected error in show_all_projects: {e}", exc_info=True)
 
-    # Handle restart
-    elif action_id == "restart_conversation":
-        conversation.reset()
-        slack_message = get_welcome_message()
-        client.chat_postMessage(channel=user_id, **slack_message)
-        conversation.update_state(ConversationState.PREFERENCE_CHOICE)
+            slack_message = format_recommendations_message(recommendations, conversation.data)
+            client.chat_postMessage(channel=user_id, **slack_message)
+            conversation.update_state(ConversationState.COMPLETED)
 
-    # Handle end conversation
-    elif action_id == "end_conversation":
-        client.chat_postMessage(
-            channel=user_id,
-            text="Thanks for using the OWASP project finder! Feel free to message me anytime. 👋",
+        # Handle mission goal choice
+        elif action_id.startswith("mission_") and conversation.state == ConversationState.MISSION_GOAL:
+            conversation.update_state(ConversationState.MISSION_CONTRIBUTION, "goal", action_value)
+            slack_message = get_contribution_type_message()
+            client.chat_postMessage(channel=user_id, **slack_message)
+
+        # Handle contribution type choice - generate mission recommendations
+        elif action_id.startswith("contrib_"):
+            conversation.data["contribution_type"] = action_value
+
+            # Get recommendations
+            recommendations = project_recommender.recommend_mission_based(
+                goal=conversation.get_data("goal"), contribution_type=action_value
+            )
+
+            slack_message = format_recommendations_message(recommendations, conversation.data)
+            client.chat_postMessage(channel=user_id, **slack_message)
+            conversation.update_state(ConversationState.COMPLETED)
+
+        # Handle "Show All" - show all matching projects
+        elif action_id == "show_all_projects":
+            try:
+                logging.debug(f"Show All - Conversation data: {conversation.data}")
+                # Check if user selected technology or mission path
+                technology = conversation.get_data("technology")
+                difficulty = conversation.get_data("difficulty")
+                project_type = conversation.get_data("project_type")
+                goal = conversation.get_data("goal")
+                contribution_type = conversation.get_data("contribution_type")
+
+                logging.debug(f"Tech data: tech={technology}, diff={difficulty}, type={project_type}")
+                logging.debug(f"Mission data: goal={goal}, contrib={contribution_type}")
+
+                if technology:
+                    logging.debug("Calling recommend_tech_based with limit=0")
+                    recommendations = project_recommender.recommend_tech_based(
+                        technology=technology,
+                        difficulty=difficulty,
+                        project_type=project_type,
+                        limit=0,
+                    )
+                    logging.debug(f"Got {len(recommendations)} tech recommendations")
+                elif goal:
+                    logging.debug("Calling recommend_mission_based with limit=0")
+                    recommendations = project_recommender.recommend_mission_based(
+                        goal=goal, contribution_type=contribution_type, limit=0
+                    )
+                    logging.debug(f"Got {len(recommendations)} mission recommendations")
+                else:
+                    logging.warning("No technology or goal found in conversation data")
+                    client.chat_postMessage(
+                        channel=user_id,
+                        text="Please start a new search to get project recommendations.",
+                    )
+                    return "", 200
+
+                logging.debug("Formatting recommendations message...")
+                slack_message = format_recommendations_message(recommendations, conversation.data)
+                logging.debug("Sending message to Slack...")
+                client.chat_postMessage(channel=user_id, **slack_message)
+                logging.debug("Message sent successfully")
+            except SlackApiError as e:
+                logging.error(f"Slack API error in show_all_projects: {e}", exc_info=True)
+                client.chat_postMessage(
+                    channel=user_id, text="Sorry, something went wrong. Please start a new search."
+                )
+            except Exception as e:
+                logging.error(f"Unexpected error in show_all_projects: {e}", exc_info=True)
+
+        # Handle restart
+        elif action_id == "restart_conversation":
+            conversation.reset()
+            slack_message = get_welcome_message()
+            client.chat_postMessage(channel=user_id, **slack_message)
+            conversation.update_state(ConversationState.PREFERENCE_CHOICE)
+
+        # Handle end conversation
+        elif action_id == "end_conversation":
+            client.chat_postMessage(
+                channel=user_id,
+                text="Thanks for using the OWASP project finder! Feel free to message me anytime. 👋",
+            )
+            conversation_manager.end_conversation(user_id)
+    
+    except SlackApiError as e:
+        logging.error(
+            "Slack API error in interaction handler for user %s, action %s: %s",
+            user_id,
+            action_id,
+            e,
+            exc_info=True,
         )
-        conversation_manager.end_conversation(user_id)
+        try:
+            client.chat_postMessage(
+                channel=user_id,
+                text="Sorry, something went wrong. Please try again or restart the conversation.",
+            )
+        except SlackApiError:
+            pass  # If we can't send error message, just log it
+    except Exception as e:
+        logging.error(
+            "Unexpected error in interaction handler for user %s, action %s: %s",
+            user_id,
+            action_id,
+            e,
+            exc_info=True,
+        )
 
     # Acknowledge the interaction
     return "", 200

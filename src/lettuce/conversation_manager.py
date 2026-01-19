@@ -54,7 +54,14 @@ class UserConversation:
 
 
 class ConversationManager:
-    """Manages all active user conversations"""
+    """Manages all active user conversations
+    
+    NOTE: This implementation stores conversation state in memory.
+    All conversation progress will be lost if the application restarts.
+    Users in the middle of a conversation will need to start over after a restart.
+    For production use with high availability requirements, consider adding
+    persistence (e.g., Redis, database) to maintain conversation state across restarts.
+    """
 
     def __init__(self):
         self.conversations: Dict[str, UserConversation] = {}
