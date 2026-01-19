@@ -37,8 +37,11 @@ app = Flask(__name__)
 
 # Initialize conversation manager and project recommender
 conversation_manager = ConversationManager()
-projects_data_path = os.path.join(os.path.dirname(__file__), "data", "projects.json")
-project_recommender = ProjectRecommender(projects_data_path)
+projects_data_path = Path(__file__).parent / "data" / "projects.json"
+if not projects_data_path.is_file():
+    logging.error(f"Projects data file not found at: {projects_data_path}")
+    raise FileNotFoundError(f"Required projects data file is missing: {projects_data_path}")
+project_recommender = ProjectRecommender(str(projects_data_path))
 
 # Don't use SlackEventAdapter - we'll handle events manually
 # This allows us to work without a valid signing secret during setup
