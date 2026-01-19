@@ -184,8 +184,14 @@ def handle_message_event(message):
                     client.chat_postMessage(
                         channel=JOINS_CHANNEL_ID, text=f"<@{user}> said {text}"
                     )
-                except SlackApiError:
-                    pass  # Don't fail if monitoring channel doesn't exist
+                except SlackApiError as e:
+                    logging.warning(
+                        "Failed to post monitoring message to channel %s for user %s with text %r: %s",
+                        JOINS_CHANNEL_ID,
+                        user,
+                        text,
+                        e,
+                    )
 
                 # Handle conversational flow - pass the channel, not user_id
                 handle_dm_conversation(channel, user, text)
