@@ -497,4 +497,5 @@ if __name__ == "__main__":
     ngrok_url = os.getenv("NGROK_URL")
     if ngrok_url:
         print(f"🌐 Ngrok URL: {ngrok_url}")
-    app.run(debug=True, port=5000)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() in ("1", "true", "yes")
+    app.run(debug=debug, port=5000)
