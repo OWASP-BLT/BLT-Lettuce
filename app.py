@@ -230,8 +230,11 @@ def slack_interactions():
         logging.info(f"Interaction: user={user_id}, action={action_id}, value={action_value}")
 
         conversation = conversation_manager.get_or_create_conversation(user_id)
-    except (KeyError, json.JSONDecodeError, TypeError) as e:
-        logging.error(f"Error parsing interaction: {e}", exc_info=True)
+    except json.JSONDecodeError as e:
+        logging.error(f"Error parsing JSON in interaction: {e}", exc_info=True)
+        return "", 200
+    except (KeyError, TypeError) as e:
+        logging.error(f"Error parsing interaction (missing or invalid data): {e}", exc_info=True)
         return "", 200
 
     # Handle preference choice (Technology vs Mission)
