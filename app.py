@@ -136,7 +136,7 @@ def handle_team_join_event(event):
         client.chat_postMessage(
             channel=dm_channel_id, text="Welcome to the OWASP Slack Community!", blocks=blocks
         )
-    except (KeyError, json.JSONDecodeError, TypeError) as e:
+    except json.JSONDecodeError as e:
         logging.error(f"Error sending welcome message: {e}")
 
 
