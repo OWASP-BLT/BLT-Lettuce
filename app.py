@@ -50,7 +50,10 @@ client = WebClient(token=os.environ.get("SLACK_TOKEN", ""))
 
 # Send startup message if credentials are valid
 try:
-    if os.environ.get("SLACK_TOKEN") and os.environ.get("SLACK_TOKEN") != "xoxb-123-123-abcdefg":
+    if (
+        os.environ.get("SLACK_TOKEN")
+        and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER"
+    ):
         client.chat_postMessage(channel=DEPLOYS_CHANNEL_NAME, text="bot started v1.9 240611-1 top")
 except SlackApiError as e:
     logging.warning(f"Could not send startup message: {e.response['error']}")
