@@ -300,8 +300,31 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
                 e,
                 exc_info=True,
             )
-
-
+    else:
+        try:
+            # Allow trigger words to (re)start the recommendation flow mid-conversation
+            if any(keyword in text for keyword in start_keywords):
+                slack_message = get_welcome_message()
+                client.chat_postMessage(channel=channel_id, **slack_message)
+                conversation.update_state(ConversationState.PREFERENCE_CHOICE)
+            else:
+                # Fallback response when user sends text during an active conversation
+                client.chat_postMessage(
+                    channel=channel_id,
+                    text=(
+                        "I'm currently guiding you through project recommendations. "
+                        "Please use the buttons to answer the questions, or say "
+                        "'help' if you'd like to start over."
+                    ),
+                )
+        except SlackApiError as e:
+            logging.error(
+                "Slack API error while sending DM to user %s in channel %s: %s",
+                user_id,
+                channel_id,
+                e,
+                exc_info=True,
+            )
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle interactive button clicks"""
@@ -497,4 +520,5 @@ if __name__ == "__main__":
     ngrok_url = os.getenv("NGROK_URL")
     if ngrok_url:
         print(f"🌐 Ngrok URL: {ngrok_url}")
-    app.run(debug=True, port=5000)
+    debug = os.getenv("FLASK_DEBUG", "false").lower() in ("1", "true", "yes")
+    app.run(debug=debug, port=5000)
