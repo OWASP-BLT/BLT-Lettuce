@@ -5,3 +5,4 @@ __pycache__
 .secrets
 *.code-workspace
 .venv
+slack_messages.log
