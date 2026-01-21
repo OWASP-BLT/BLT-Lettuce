@@ -2,7 +2,7 @@
 Cloudflare Python Worker for BLT-Lettuce Slack Bot.
 
 This worker handles webhook events, sends welcome messages,
-and tracks stats for joins and commands.
+tracks stats for joins and commands, and provides project recommendations.
 """
 
 import hashlib
@@ -12,8 +12,27 @@ from datetime import datetime, timezone
 
 from js import Response, fetch
 
+# Import project recommender
+try:
+    from project_recommender import ProjectRecommender, load_projects_metadata
+except ImportError as e:
+    # Fallback if module not available (e.g., during initial deployment)
+    print(f"Warning: project_recommender not available: {e}")
+    ProjectRecommender = None
+    load_projects_metadata = None
+
 # Stats are stored in Cloudflare KV namespace
 # Stats structure: { "joins": int, "commands": int, "last_updated": str }
+
+# Load projects metadata for recommendations
+PROJECTS_METADATA = None
+if load_projects_metadata:
+    try:
+        PROJECTS_METADATA = load_projects_metadata()
+    except FileNotFoundError:
+        print("Warning: projects_metadata.json not found, recommendations disabled")
+    except Exception as e:
+        print(f"Error loading projects metadata: {e}")
 
 
 def get_utc_now():
@@ -198,6 +217,105 @@ async def handle_command(env, event):
     return {"ok": True, "message": "Command tracked"}
 
 
+async def handle_projects_endpoint(request):
+    """Handle GET /projects endpoint - return available categories."""
+    if not PROJECTS_METADATA or not ProjectRecommender:
+        return Response.json(
+            {"error": "Project recommendation service not available"},
+            {"status": 503},
+        )
+
+    return Response.json(
+        {
+            "technologies": PROJECTS_METADATA.get("technologies", []),
+            "missions": PROJECTS_METADATA.get("missions", []),
+            "levels": PROJECTS_METADATA.get("levels", []),
+            "types": PROJECTS_METADATA.get("types", []),
+            "total_projects": PROJECTS_METADATA.get("total_projects", 0),
+        },
+        {"headers": {"Access-Control-Allow-Origin": "*"}},
+    )
+
+
+async def handle_recommendation_request(request):
+    """Handle POST /recommend endpoint - return project recommendations."""
+    if not PROJECTS_METADATA or not ProjectRecommender:
+        return Response.json(
+            {"error": "Project recommendation service not available"},
+            {"status": 503},
+        )
+
+    try:
+        body = await request.json()
+        recommender = ProjectRecommender(PROJECTS_METADATA)
+
+        # Extract parameters
+        approach = body.get("approach", "technology")  # 'technology' or 'mission'
+        technology = body.get("technology")
+        mission = body.get("mission")
+        level = body.get("level")
+        project_type = body.get("type")
+        contribution_type = body.get("contribution_type")
+        top_n = body.get("top_n", 3)
+
+        recommendations = []
+
+        if approach == "technology" and technology:
+            # Technology-based recommendations
+            recommendations = recommender.recommend_by_technology(
+                technology=technology,
+                level=level,
+                project_type=project_type,
+                top_n=top_n,
+            )
+        elif approach == "mission" and mission:
+            # Mission-based recommendations
+            recommendations = recommender.recommend_by_mission(
+                mission=mission,
+                contribution_type=contribution_type,
+                top_n=top_n,
+            )
+        else:
+            # Fallback recommendations
+            recommendations = recommender.get_fallback_recommendations(top_n=top_n)
+
+        # Format recommendations
+        formatted = []
+        for proj in recommendations:
+            formatted.append(
+                {
+                    "name": proj.get("name"),
+                    "description": proj.get("description"),
+                    "url": proj.get("url"),
+                    "technologies": proj.get("technologies", []),
+                    "missions": proj.get("missions", []),
+                    "level": proj.get("level"),
+                    "type": proj.get("type"),
+                }
+            )
+
+        return Response.json(
+            {
+                "ok": True,
+                "approach": approach,
+                "criteria": {
+                    "technology": technology,
+                    "mission": mission,
+                    "level": level,
+                    "type": project_type,
+                },
+                "recommendations": formatted,
+            },
+            {"headers": {"Access-Control-Allow-Origin": "*"}},
+        )
+
+    except Exception as e:
+        return Response.json(
+            {"error": f"Failed to generate recommendations: {str(e)}"},
+            {"status": 400},
+        )
+
+
 def verify_slack_signature(signing_secret, timestamp, body, signature):
     """Verify that the request came from Slack using the signing secret."""
     if not signing_secret or not timestamp or not signature:
@@ -300,6 +418,13 @@ async def on_fetch(request, env):
     if "/health" in url:
         return Response.json({"status": "ok", "timestamp": get_utc_now()})
 
+    # Project recommendation endpoints
+    if "/projects" in url and method == "GET":
+        return await handle_projects_endpoint(request)
+
+    if "/recommend" in url and method == "POST":
+        return await handle_recommendation_request(request)
+
     # Default response
     return Response.json(
         {
@@ -308,6 +433,8 @@ async def on_fetch(request, env):
                 "/webhook": "POST - Slack webhook endpoint",
                 "/stats": "GET - Get current stats",
                 "/health": "GET - Health check",
+                "/projects": "GET - List available technologies, missions, and metadata",
+                "/recommend": "POST - Get project recommendations",
             },
         }
     )
