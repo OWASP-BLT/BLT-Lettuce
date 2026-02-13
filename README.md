@@ -39,9 +39,11 @@ BLT-Lettuce is an intelligent Slack bot designed for the OWASP Slack workspace. 
 
 - **👋 Welcome New Members** - Automatically sends personalized welcome messages to newcomers
 - **🔍 Project Discovery** - Interactive conversations help users find relevant OWASP projects
-- **📊 GitHub Integration** - Scans configured organizations and caches project metadata
+- **🎯 Smart Recommendations** - AI-powered project recommendations based on technology or mission
+- **📊 Rich Metadata** - 338 OWASP projects categorized by tech stack, mission, and difficulty
 - **🤖 Conversational Flow** - Asks multiple-choice questions to understand user needs
 - **⚡ Edge-Powered** - Runs on Cloudflare Workers for global, low-latency performance
+- **📈 Activity Tracking** - Tracks joins, commands, and provides analytics dashboard
 
 ---
 
@@ -125,6 +127,57 @@ View real-time statistics at our **[Stats Dashboard](https://owasp-blt.github.io
 
 ---
 
+## 🎯 Project Recommendation System
+
+BLT-Lettuce now includes an intelligent project recommendation system that helps users discover OWASP projects based on their interests and skill level.
+
+### Features
+
+- **338 OWASP Projects** - Comprehensive metadata for all OWASP projects
+- **13 Technologies** - Python, Java, JavaScript, Cloud, Mobile, and more
+- **9 Mission Types** - Learning, Tools, Documentation, CTF, and more  
+- **3 Difficulty Levels** - Beginner, Intermediate, Advanced
+- **Smart Ranking** - AI-powered relevance scoring based on user preferences
+
+### Two Discovery Approaches
+
+#### 1️⃣ Technology-Based
+Find projects by programming language or technology stack:
+```bash
+curl -X POST /recommend -d '{
+  "approach": "technology",
+  "technology": "python",
+  "level": "beginner",
+  "top_n": 3
+}'
+```
+
+#### 2️⃣ Mission-Based  
+Find projects by goal or purpose:
+```bash
+curl -X POST /recommend -d '{
+  "approach": "mission",
+  "mission": "learning",
+  "contribution_type": "code",
+  "top_n": 5
+}'
+```
+
+### Available Categories
+
+**Technologies:** api, cloud, devsecops, dotnet, go, java, javascript, mobile, php, python, rust, threat-modeling, web
+
+**Missions:** ctf, documentation, learning, research, security-tool, standard, testing, tool, vulnerable-app
+
+**Levels:** beginner, intermediate, advanced
+
+For detailed documentation, see:
+- [cloudflare-worker/README.md](cloudflare-worker/README.md) - API documentation
+- [docs/project-recommendation-implementation.md](docs/project-recommendation-implementation.md) - Implementation guide
+- [cloudflare-worker/DEPLOYMENT.md](cloudflare-worker/DEPLOYMENT.md) - Deployment guide
+
+---
+
 ## ☁️ Cloudflare Worker
 
 The bot is powered by a **Python Cloudflare Worker** that:
@@ -144,6 +197,8 @@ See [cloudflare-worker/README.md](cloudflare-worker/README.md) for setup instruc
 | `/webhook` | POST | Slack webhook for events |
 | `/stats` | GET | Returns statistics JSON |
 | `/health` | GET | Health check endpoint |
+| `/projects` | GET | Returns available categories and metadata |
+| `/recommend` | POST | Returns personalized project recommendations |
 
 ---
 

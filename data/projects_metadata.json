@@ -1,0 +1,5910 @@
+{
+  "generated_at": "2025-12-11T00:38:42.048228+00:00",
+  "total_projects": 338,
+  "projects": [
+    {
+      "id": "www-project-zap",
+      "name": "Zap",
+      "description": "OWASP Zed Attack Proxy project landing page.",
+      "url": "https://github.com/OWASP/www-project-zap",
+      "technologies": [
+        "java"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "java",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-projectchapter-example",
+      "name": "Www Projectchapter Example",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-projectchapter-example",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-security-integration-system",
+      "name": "Security Integration System",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-integration-system",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-amass",
+      "name": "Amass",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-amass",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-devsecops-maturity-model",
+      "name": "Devsecops Maturity Model",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-devsecops-maturity-model",
+      "technologies": [
+        "web",
+        "devsecops",
+        "threat-modeling"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "advanced",
+      "type": "standard",
+      "tags": [
+        "web",
+        "devsecops",
+        "threat-modeling",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-pytm",
+      "name": "Pytm",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-pytm",
+      "technologies": [
+        "python",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "python",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-patton",
+      "name": "Patton",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-patton",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-little-web-application-firewall",
+      "name": "Little Web Application Firewall",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-little-web-application-firewall",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-damn-vulnerable-crypto-wallet",
+      "name": "Damn Vulnerable Crypto Wallet",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-damn-vulnerable-crypto-wallet",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-security-busters",
+      "name": "Security Busters",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-busters",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-best-practices-in-vulnerability-disclosure-and-bug-bounty-programs",
+      "name": "Best Practices In Vulnerability Disclosure And Bug Bounty Programs",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-best-practices-in-vulnerability-disclosure-and-bug-bounty-programs",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-attack-surface-detector",
+      "name": "Attack Surface Detector",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-attack-surface-detector",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-software-component-verification-standard",
+      "name": "Software Component Verification Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-software-component-verification-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing",
+        "standard"
+      ],
+      "level": "advanced",
+      "type": "standard",
+      "tags": [
+        "web",
+        "testing",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-threatspec",
+      "name": "Threatspec",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-threatspec",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-vulnerability-management-guide",
+      "name": "Vulnerability Management Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vulnerability-management-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-docker-top-10",
+      "name": "Docker Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-docker-top-10",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "cloud",
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-information-security-metrics-bank",
+      "name": "Information Security Metrics Bank",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-information-security-metrics-bank",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-software-security-5d-framework",
+      "name": "Software Security 5D Framework",
+      "description": "OWASP Software Security 5D Framework",
+      "url": "https://github.com/OWASP/www-project-software-security-5d-framework",
+      "technologies": [],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-container-security-verification-standard",
+      "name": "Container Security Verification Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-container-security-verification-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing",
+        "standard",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "testing",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-find-security-bugs",
+      "name": "Find Security Bugs",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-find-security-bugs",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-maryam",
+      "name": "Maryam",
+      "description": "OWASP Maryam project landing page ",
+      "url": "https://github.com/OWASP/www-project-maryam",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-cloud-native-application-security-top-10",
+      "name": "Cloud Native Application Security Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-native-application-security-top-10",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-lock-it",
+      "name": "Lock It",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-lock-it",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-threat-model-cookbook",
+      "name": "Threat Model Cookbook",
+      "description": "OWASP Threat Model Cookbook Project Page",
+      "url": "https://github.com/OWASP/www-project-threat-model-cookbook",
+      "technologies": [
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-iot-analytics-4industry4",
+      "name": "Iot Analytics 4Industry4",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-iot-analytics-4industry4",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-application-security-curriculum",
+      "name": "Application Security Curriculum",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-curriculum",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-software-composition-security",
+      "name": "Software Composition Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-software-composition-security",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-d4n155",
+      "name": "D4N155",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-d4n155",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-secure-coding-dojo",
+      "name": "Secure Coding Dojo",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-secure-coding-dojo",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning"
+      ],
+      "level": "intermediate",
+      "type": "training",
+      "tags": [
+        "web",
+        "learning"
+      ]
+    },
+    {
+      "id": "www-project-jupiter",
+      "name": "Jupiter",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-jupiter",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-go-secure-coding-practices-guide",
+      "name": "Go Secure Coding Practices Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-go-secure-coding-practices-guide",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "go",
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-serverless-goat",
+      "name": "Serverless Goat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-serverless-goat",
+      "technologies": [
+        "go",
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "cloud",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-revelo",
+      "name": "Revelo",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-revelo",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-sedated",
+      "name": "Sedated",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-sedated",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-card-game",
+      "name": "Top 10 Card Game",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-card-game",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "ctf",
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "ctf",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-vulnerable-web-application",
+      "name": "Vulnerable Web Application",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vulnerable-web-application",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-wpbullet",
+      "name": "Wpbullet",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-wpbullet",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-voice-automated-application-security",
+      "name": "Voice Automated Application Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-voice-automated-application-security",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cloud-security-mentor",
+      "name": "Cloud Security Mentor",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-security-mentor",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-risk-assessment-framework",
+      "name": "Risk Assessment Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-risk-assessment-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-machine-learning-security-top-10",
+      "name": "Machine Learning Security Top 10",
+      "description": "OWASP Machine Learning Security Top 10 Project",
+      "url": "https://github.com/OWASP/www-project-machine-learning-security-top-10",
+      "technologies": [],
+      "missions": [
+        "learning",
+        "standard",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "learning",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-glue-tool",
+      "name": "Glue Tool",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-glue-tool",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-cloud-security",
+      "name": "Cloud Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-security",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-online-academy",
+      "name": "Online Academy",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-online-academy",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning"
+      ],
+      "level": "intermediate",
+      "type": "training",
+      "tags": [
+        "web",
+        "learning"
+      ]
+    },
+    {
+      "id": "www-project-qrljacker",
+      "name": "Qrljacker",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-qrljacker",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-samuraiwtf",
+      "name": "Samuraiwtf",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-samuraiwtf",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-php",
+      "name": "Php",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-php",
+      "technologies": [
+        "php",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "php",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-enterprise-security-api",
+      "name": "Enterprise Security Api",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-enterprise-security-api",
+      "technologies": [
+        "web",
+        "api"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "api",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-api-security",
+      "name": "Api Security",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-api-security",
+      "technologies": [
+        "web",
+        "api"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "api",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-nettacker",
+      "name": "Nettacker",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-nettacker",
+      "technologies": [
+        "python",
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "python",
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-zezengorri-code",
+      "name": "Zezengorri Code",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-zezengorri-code",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "go",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-learning-gateway",
+      "name": "Learning Gateway",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-learning-gateway",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning"
+      ],
+      "level": "beginner",
+      "type": "training",
+      "tags": [
+        "web",
+        "learning"
+      ]
+    },
+    {
+      "id": "www-project-seclists",
+      "name": "Seclists",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-seclists",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-security-pins",
+      "name": "Security Pins",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-pins",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-serverless-top-10",
+      "name": "Serverless Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-serverless-top-10",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "cloud",
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-blockchain-security-framework",
+      "name": "Blockchain Security Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-blockchain-security-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-security-shepherd",
+      "name": "Security Shepherd",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-shepherd",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-owtf",
+      "name": "Owtf",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-owtf",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-application-security-verification-standard",
+      "name": "Application Security Verification Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-verification-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing",
+        "standard",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "testing",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-top-ten",
+      "name": "Top Ten",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-ten",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-code-review-guide",
+      "name": "Code Review Guide",
+      "description": "OWASP Code Review Guide Web Repository",
+      "url": "https://github.com/OWASP/www-project-code-review-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-webgoat",
+      "name": "Webgoat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-webgoat",
+      "technologies": [
+        "java",
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "beginner",
+      "type": "vulnerable-app",
+      "tags": [
+        "java",
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-cheat-sheets",
+      "name": "Cheat Sheets",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cheat-sheets",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "documentation"
+      ],
+      "level": "intermediate",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-csrfguard",
+      "name": "Csrfguard",
+      "description": "The aim of this project is to protect Java applications against CSRF attacks with the use of Synchronizer Tokens",
+      "url": "https://github.com/OWASP/www-project-csrfguard",
+      "technologies": [
+        "java"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "java",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-modsecurity-core-rule-set",
+      "name": "Modsecurity Core Rule Set",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-modsecurity-core-rule-set",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-samm",
+      "name": "Samm",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-samm",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-web-security-testing-guide",
+      "name": "Web Security Testing Guide",
+      "description": "The Web Security Testing Guide (WSTG) Project produces the premier cybersecurity testing resource for web application developers and security professionals.",
+      "url": "https://github.com/OWASP/www-project-web-security-testing-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-proactive-controls",
+      "name": "Proactive Controls",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-proactive-controls",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-hackademic-challenges",
+      "name": "Hackademic Challenges",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-hackademic-challenges",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "ctf"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "ctf"
+      ]
+    },
+    {
+      "id": "www-project-ende",
+      "name": "Ende",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ende",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-o2-platform",
+      "name": "O2 Platform",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-o2-platform",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-security-knowledge-framework",
+      "name": "Security Knowledge Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-knowledge-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-top-10-privacy-risks",
+      "name": "Top 10 Privacy Risks",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-privacy-risks",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-secure-coding-practices-quick-reference-guide",
+      "name": "Secure Coding Practices Quick Reference Guide",
+      "description": "OWASP Foundation Project Web Repository for Secure Coding Practices Quick-reference Guide",
+      "url": "https://github.com/OWASP/www-project-secure-coding-practices-quick-reference-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-passfault",
+      "name": "Passfault",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-passfault",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-java-encoder",
+      "name": "Java Encoder",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-java-encoder",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-igoat-tool",
+      "name": "Igoat Tool",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-igoat-tool",
+      "technologies": [
+        "go",
+        "mobile",
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "mobile",
+        "web",
+        "tool",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-rfp-criteria",
+      "name": "Rfp Criteria",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-rfp-criteria",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-web-testing-environment",
+      "name": "Web Testing Environment",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-web-testing-environment",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing"
+      ],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-appsensor",
+      "name": "Appsensor",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-appsensor",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-json-sanitizer",
+      "name": "Json Sanitizer",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-json-sanitizer",
+      "technologies": [
+        "javascript",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "javascript",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-java-html-sanitizer",
+      "name": "Java Html Sanitizer",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-java-html-sanitizer",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-university-challenge",
+      "name": "University Challenge",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-university-challenge",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "ctf"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "ctf"
+      ]
+    },
+    {
+      "id": "www-project-wafec",
+      "name": "Wafec",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-wafec",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-hacking-lab",
+      "name": "Hacking Lab",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-hacking-lab",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-bug-logging-tool",
+      "name": "Bug Logging Tool",
+      "description": "OWASP BLT (Bug Logging Tool)",
+      "url": "https://github.com/OWASP/www-project-bug-logging-tool",
+      "technologies": [],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-cornucopia",
+      "name": "Cornucopia",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cornucopia",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-fuer-entwickler",
+      "name": "Top 10 Fuer Entwickler",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-fuer-entwickler",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-juice-shop",
+      "name": "Juice Shop",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-juice-shop",
+      "technologies": [
+        "javascript",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "beginner",
+      "type": "vulnerable-app",
+      "tags": [
+        "javascript",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-media-archive",
+      "name": "Media Archive",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-media-archive",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-dependency-track",
+      "name": "Dependency Track",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dependency-track",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-webgoat-php",
+      "name": "Webgoat Php",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-webgoat-php",
+      "technologies": [
+        "java",
+        "go",
+        "php",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "beginner",
+      "type": "vulnerable-app",
+      "tags": [
+        "java",
+        "go",
+        "php",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-vulnerable-web-applications-directory",
+      "name": "Vulnerable Web Applications Directory",
+      "description": "The OWASP Vulnerable Web Applications Directory (VWAD) Project - OWASP Web Site",
+      "url": "https://github.com/OWASP/www-project-vulnerable-web-applications-directory",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-benchmark",
+      "name": "Benchmark",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-benchmark",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-node.js-goat",
+      "name": "Node.Js Goat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-node.js-goat",
+      "technologies": [
+        "javascript",
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "javascript",
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-automated-threats-to-web-applications",
+      "name": "Automated Threats To Web Applications",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-automated-threats-to-web-applications",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-belva",
+      "name": "Belva",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-belva",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-rat",
+      "name": "Rat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-rat",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-zsc-tool",
+      "name": "Zsc Tool",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-zsc-tool",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-defectdojo",
+      "name": "Defectdojo",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-defectdojo",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning"
+      ],
+      "level": "intermediate",
+      "type": "training",
+      "tags": [
+        "web",
+        "learning"
+      ]
+    },
+    {
+      "id": "www-project-security-logging",
+      "name": "Security Logging",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-logging",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-threat-dragon",
+      "name": "Threat Dragon",
+      "description": "OWASP Foundation Threat Dragon Project Web Repository",
+      "url": "https://github.com/OWASP/www-project-threat-dragon",
+      "technologies": [
+        "go",
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "go",
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-game-security-framework",
+      "name": "Game Security Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-game-security-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "ctf",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "tool",
+        "ctf",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-webspa",
+      "name": "Webspa",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-webspa",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-off-the-record-4-java",
+      "name": "Off The Record 4 Java",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-off-the-record-4-java",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-web-mapper",
+      "name": "Web Mapper",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-web-mapper",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-deepviolet-tls-ssl-scanner",
+      "name": "Deepviolet Tls Ssl Scanner",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-deepviolet-tls-ssl-scanner",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-vbscan",
+      "name": "Vbscan",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vbscan",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-internet-of-things-top-10",
+      "name": "Internet Of Things Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-internet-of-things-top-10",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-code-pulse",
+      "name": "Code Pulse",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-code-pulse",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-secure-medical-device-deployment-standard",
+      "name": "Secure Medical Device Deployment Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-secure-medical-device-deployment-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-jotp",
+      "name": "Jotp",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-jotp",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-incident-response",
+      "name": "Incident Response",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-incident-response",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-pyttacker",
+      "name": "Pyttacker",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-pyttacker",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-appsec-pipeline",
+      "name": "Appsec Pipeline",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-appsec-pipeline",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "devsecops"
+      ]
+    },
+    {
+      "id": "www-project-secure-headers",
+      "name": "Secure Headers",
+      "description": "The OWASP Secure Headers Project",
+      "url": "https://github.com/OWASP/www-project-secure-headers",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-php-security-training",
+      "name": "Php Security Training",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-php-security-training",
+      "technologies": [
+        "php",
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "php",
+        "web",
+        "learning",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-mobile-app-security",
+      "name": "Mobile App Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mobile-app-security",
+      "technologies": [
+        "mobile",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "mobile",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-mth3l3m3nt-framework",
+      "name": "Mth3L3M3Nt Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mth3l3m3nt-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-seraphimdroid",
+      "name": "Seraphimdroid",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-seraphimdroid",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-o-saft",
+      "name": "O Saft",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-o-saft",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-reverse-engineering-and-code-modification-prevention",
+      "name": "Reverse Engineering And Code Modification Prevention",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-reverse-engineering-and-code-modification-prevention",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-snakes-and-ladders",
+      "name": "Snakes And Ladders",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-snakes-and-ladders",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-python-security",
+      "name": "Python Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-python-security",
+      "technologies": [
+        "python",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "python",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-knowledge-based-authentication-performance-metrics",
+      "name": "Knowledge Based Authentication Performance Metrics",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-knowledge-based-authentication-performance-metrics",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-dependency-check",
+      "name": "Dependency Check",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dependency-check",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-anti-ransomware-guide",
+      "name": "Anti Ransomware Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-anti-ransomware-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-embedded-application-security",
+      "name": "Embedded Application Security",
+      "description": "OWASP Embedded Application Security Project",
+      "url": "https://github.com/OWASP/www-project-embedded-application-security",
+      "technologies": [],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-podcast",
+      "name": "Podcast",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-podcast",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-broken-web-applications",
+      "name": "Broken Web Applications",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-broken-web-applications",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-virtual-patching-best-practices",
+      "name": "Virtual Patching Best Practices",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-virtual-patching-best-practices",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-vicnum",
+      "name": "Vicnum",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vicnum",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-ctf",
+      "name": "Ctf",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ctf",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "ctf"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "ctf"
+      ]
+    },
+    {
+      "id": "www-project-.net",
+      "name": ".Net",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-.net",
+      "technologies": [
+        "dotnet",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "dotnet",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-mobile-security",
+      "name": "Mobile Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mobile-security",
+      "technologies": [
+        "mobile",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "mobile",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-python-honeypot",
+      "name": "Python Honeypot",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-python-honeypot",
+      "technologies": [
+        "python",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "python",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-dvsa",
+      "name": "Dvsa",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dvsa",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-cloud-testing-guide",
+      "name": "Cloud Testing Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-testing-guide",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "cloud",
+        "web",
+        "learning",
+        "documentation",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-intelligent-intrusion-detection-system",
+      "name": "Intelligent Intrusion Detection System",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-intelligent-intrusion-detection-system",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-auth",
+      "name": "Auth",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-auth",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-securecodebox",
+      "name": "Securecodebox",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-securecodebox",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-google-assistant",
+      "name": "Google Assistant",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-google-assistant",
+      "technologies": [
+        "go"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "go"
+      ]
+    },
+    {
+      "id": "www-project-securityrat",
+      "name": "Securityrat",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-securityrat",
+      "technologies": [],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-devslop",
+      "name": "Devslop",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-devslop",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-mobile-top-10",
+      "name": "Mobile Top 10",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-mobile-top-10",
+      "technologies": [
+        "mobile"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "mobile",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-securetea",
+      "name": "Securetea",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-securetea",
+      "technologies": [
+        "python"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "python"
+      ]
+    },
+    {
+      "id": "www-project-internet-of-things",
+      "name": "Internet Of Things",
+      "description": "The OWASP home for the Internet of Things project",
+      "url": "https://github.com/OWASP/www-project-internet-of-things",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-honeypot",
+      "name": "Honeypot",
+      "description": "The goal of the OWASP Honeypot Project is to identify emerging attacks against web applications and report them to the community, in order to facilitate protection against such targeted attacks.",
+      "url": "https://github.com/OWASP/www-project-honeypot",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "go",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-seeker",
+      "name": "Seeker",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-seeker",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-integration-standards",
+      "name": "Integration Standards",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-integration-standards",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-sidekek",
+      "name": "Sidekek",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-sidekek",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-timegap-theory",
+      "name": "Timegap Theory",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-timegap-theory",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-antisamy",
+      "name": "Antisamy",
+      "description": "None",
+      "url": "https://github.com/OWASP/www-project-antisamy",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-csrfprotector",
+      "name": "Csrfprotector",
+      "description": "OWASP CSRFProtector Project Landing Page",
+      "url": "https://github.com/OWASP/www-project-csrfprotector",
+      "technologies": [],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cyber-defense-matrix",
+      "name": "Cyber Defense Matrix",
+      "description": "Documentation on the Cyber Defense Matrix",
+      "url": "https://github.com/OWASP/www-project-cyber-defense-matrix",
+      "technologies": [],
+      "missions": [
+        "documentation"
+      ],
+      "level": "intermediate",
+      "type": "documentation",
+      "tags": [
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-developer-guide",
+      "name": "Developer Guide",
+      "description": "OWASP Project Developer Guide - Document and Project Web pages",
+      "url": "https://github.com/OWASP/www-project-developer-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation"
+      ]
+    },
+    {
+      "id": "www-project-iot-security-verification-standard",
+      "name": "Iot Security Verification Standard",
+      "description": "OWASP IoT Security Verification Standard",
+      "url": "https://github.com/OWASP/www-project-iot-security-verification-standard",
+      "technologies": [],
+      "missions": [
+        "testing",
+        "standard",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "testing",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-sso",
+      "name": "Sso",
+      "description": "OWASP Foundation SSO Web Repository",
+      "url": "https://github.com/OWASP/www-project-sso",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-threat-model",
+      "name": "Threat Model",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-threat-model",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-thick-client-top-10",
+      "name": "Thick Client Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-thick-client-top-10",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-vulnerableapp",
+      "name": "Vulnerableapp",
+      "description": "OWASP Foundation Web Respository for VulnerableApp project. Project's codebase Repository: https://github.com/SasanLabs/VulnerableApp",
+      "url": "https://github.com/OWASP/www-project-vulnerableapp",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-redteam-toolkit",
+      "name": "Redteam Toolkit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-redteam-toolkit",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-automotive-emb-60",
+      "name": "Automotive Emb 60",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-automotive-emb-60",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-jvmxray",
+      "name": "Jvmxray",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-jvmxray",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-secureflag-open-platform",
+      "name": "Secureflag Open Platform",
+      "description": "OWASP SecureFlag Open Platform",
+      "url": "https://github.com/OWASP/www-project-secureflag-open-platform",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-pygoat",
+      "name": "Pygoat",
+      "description": "OWASP Pygoat Web Respository",
+      "url": "https://github.com/OWASP/www-project-pygoat",
+      "technologies": [
+        "python",
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "python",
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-core-business-application-security",
+      "name": "Core Business Application Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-core-business-application-security",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-access-log-parser",
+      "name": "Access Log Parser",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-access-log-parser",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cyber-controls-matrix",
+      "name": "Cyber Controls Matrix",
+      "description": "OWASP Cyber Controls Matrix (OCCM)",
+      "url": "https://github.com/OWASP/www-project-cyber-controls-matrix",
+      "technologies": [],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": []
+    },
+    {
+      "id": "www-project-winfim.net",
+      "name": "Winfim.Net",
+      "description": "WinFIM.NET - File Integrity Monitoring For Windows",
+      "url": "https://github.com/OWASP/www-project-winfim.net",
+      "technologies": [
+        "dotnet"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "dotnet"
+      ]
+    },
+    {
+      "id": "www-project-devsecops-guideline",
+      "name": "Devsecops Guideline",
+      "description": "The OWASP DevSecOps Guideline explains how we can implement a secure pipeline and use best practices and introduce tools that we can use in this matter. Also, the project is trying to help us promote the shift-left security culture in our development process.",
+      "url": "https://github.com/OWASP/www-project-devsecops-guideline",
+      "technologies": [
+        "devsecops"
+      ],
+      "missions": [
+        "learning",
+        "tool",
+        "documentation",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "devsecops",
+        "learning",
+        "tool",
+        "documentation",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-dpd",
+      "name": "Dpd",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dpd",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cyber-security-enterprise-operations-architecture",
+      "name": "Cyber Security Enterprise Operations Architecture",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cyber-security-enterprise-operations-architecture",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-drill",
+      "name": "Drill",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-drill",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-android-security-inspector-toolkit",
+      "name": "Android Security Inspector Toolkit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-android-security-inspector-toolkit",
+      "technologies": [
+        "mobile",
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "mobile",
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-kubernetes-security-testing-guide",
+      "name": "Kubernetes Security Testing Guide",
+      "description": "OWASP Kubernetes Security Testing Guide",
+      "url": "https://github.com/OWASP/www-project-kubernetes-security-testing-guide",
+      "technologies": [
+        "cloud"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-security-resource-framework",
+      "name": "Security Resource Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-resource-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-mitm-guard",
+      "name": "Mitm Guard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mitm-guard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-watiqay",
+      "name": "Watiqay",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-watiqay",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cloud-native-security-project",
+      "name": "Cloud Native Security Project",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-native-security-project",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-big-data",
+      "name": "Big Data",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-big-data",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-security-qualitative-metrics",
+      "name": "Security Qualitative Metrics",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-security-qualitative-metrics",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cwe-toolkit",
+      "name": "Cwe Toolkit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cwe-toolkit",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-cloud-security-testing-guide",
+      "name": "Cloud Security Testing Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-security-testing-guide",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cyber-scavenger-hunt",
+      "name": "Cyber Scavenger Hunt",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cyber-scavenger-hunt",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-awscanner",
+      "name": "Awscanner",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-awscanner",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-asvs-graph",
+      "name": "Asvs Graph",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-asvs-graph",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-securebank",
+      "name": "Securebank",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-securebank",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-sectudo",
+      "name": "Sectudo",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-sectudo",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-torbot",
+      "name": "Torbot",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-torbot",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-ontology-driven-threat-modeling-framework",
+      "name": "Ontology Driven Threat Modeling Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ontology-driven-threat-modeling-framework",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "threat-modeling",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-damn-vulnerable-thick-client-application",
+      "name": "Damn Vulnerable Thick Client Application",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-damn-vulnerable-thick-client-application",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-apicheck",
+      "name": "Apicheck",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-apicheck",
+      "technologies": [
+        "web",
+        "api"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "api"
+      ]
+    },
+    {
+      "id": "www-project-threat-modeling-playbook",
+      "name": "Threat Modeling Playbook",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-threat-modeling-playbook",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-androgoat",
+      "name": "Androgoat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-androgoat",
+      "technologies": [
+        "go",
+        "mobile",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "mobile",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-forensics-testing-guide",
+      "name": "Forensics Testing Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-forensics-testing-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing"
+      ],
+      "level": "beginner",
+      "type": "documentation",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-scan-it",
+      "name": "Scan It",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-scan-it",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-joomscan",
+      "name": "Joomscan",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-joomscan",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-threat-and-safeguard-matrix",
+      "name": "Threat And Safeguard Matrix",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-threat-and-safeguard-matrix",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-snow",
+      "name": "Snow",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-snow",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-secure-logging-benchmark",
+      "name": "Secure Logging Benchmark",
+      "description": "OWASP Observability Project",
+      "url": "https://github.com/OWASP/www-project-secure-logging-benchmark",
+      "technologies": [
+        "java"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "java"
+      ]
+    },
+    {
+      "id": "www-project-cyber-defense-framework",
+      "name": "Cyber Defense Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cyber-defense-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-cloudsheep",
+      "name": "Cloudsheep",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloudsheep",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "cloud",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-crapi",
+      "name": "Crapi",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-crapi",
+      "technologies": [
+        "web",
+        "api"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "api"
+      ]
+    },
+    {
+      "id": "www-project-mobile-audit",
+      "name": "Mobile Audit",
+      "description": "Django application that performs SAST and Malware Analysis for Android Mobile APKs",
+      "url": "https://github.com/OWASP/www-project-mobile-audit",
+      "technologies": [
+        "go",
+        "mobile"
+      ],
+      "missions": [
+        "research",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "go",
+        "mobile",
+        "research",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-blockchain-distributed-infrastructure",
+      "name": "Blockchain Distributed Infrastructure",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-blockchain-distributed-infrastructure",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-damn-vulnerable-web-sockets",
+      "name": "Damn Vulnerable Web Sockets",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-damn-vulnerable-web-sockets",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-vulnerable-container-hub",
+      "name": "Vulnerable Container Hub",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vulnerable-container-hub",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-application-gateway",
+      "name": "Application Gateway",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-gateway",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-laravel-goat",
+      "name": "Laravel Goat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-laravel-goat",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-purpleteam",
+      "name": "Purpleteam",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-purpleteam",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-enterprise-devsecops",
+      "name": "Enterprise Devsecops",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-enterprise-devsecops",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [],
+      "level": "advanced",
+      "type": "project",
+      "tags": [
+        "web",
+        "devsecops"
+      ]
+    },
+    {
+      "id": "www-project-spotlight-series",
+      "name": "Spotlight Series",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-spotlight-series",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-open-appsec-tooling-api",
+      "name": "Open Appsec Tooling Api",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-open-appsec-tooling-api",
+      "technologies": [
+        "web",
+        "api"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "api",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-how-to-get-into-appsec",
+      "name": "How To Get Into Appsec",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-how-to-get-into-appsec",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-desktop-app-security-top-10",
+      "name": "Desktop App Security Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-desktop-app-security-top-10",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-top-10-client-side-security-risks",
+      "name": "Top 10 Client Side Security Risks",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-client-side-security-risks",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-injectbot",
+      "name": "Injectbot",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-injectbot",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cybersecurity-risk-register",
+      "name": "Cybersecurity Risk Register",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cybersecurity-risk-register",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-financial-systems-security",
+      "name": "Financial Systems Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-financial-systems-security",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-appsec-minimum-requirements",
+      "name": "Appsec Minimum Requirements",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-appsec-minimum-requirements",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-security-culture",
+      "name": "Security Culture",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-culture",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-vulnerability-management-center",
+      "name": "Vulnerability Management Center",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vulnerability-management-center",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-penetration-testing-kit",
+      "name": "Penetration Testing Kit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-penetration-testing-kit",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing"
+      ],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-developer-outreach-program",
+      "name": "Developer Outreach Program",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-developer-outreach-program",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-ignita",
+      "name": "Ignita",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ignita",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-vulnerableapp-facade",
+      "name": "Vulnerableapp Facade",
+      "description": "OWASP Foundation Web Respository for VulnerableApp-facade project. Project's codebase Repository: https://github.com/SasanLabs/VulnerableApp-facade",
+      "url": "https://github.com/OWASP/www-project-vulnerableapp-facade",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-data-security-top-10",
+      "name": "Data Security Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-data-security-top-10",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cyclonedx",
+      "name": "Cyclonedx",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cyclonedx",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-application-security-hardening",
+      "name": "Application Security Hardening",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-hardening",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-barbarus",
+      "name": "Barbarus",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-barbarus",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-port-and-service-information",
+      "name": "Port And Service Information",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-port-and-service-information",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-code-the-flag",
+      "name": "Code The Flag",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-code-the-flag",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-it-grc",
+      "name": "It Grc",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-it-grc",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-low-code-no-code-security-risks",
+      "name": "Top 10 Low Code No Code Security Risks",
+      "description": "OWASP Low-Code/No-Code Top 10",
+      "url": "https://github.com/OWASP/www-project-top-10-low-code-no-code-security-risks",
+      "technologies": [],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-g0rking",
+      "name": "G0Rking",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-g0rking",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-open-source-security-application-platform",
+      "name": "Open Source Security Application Platform",
+      "description": "OWASP/OSSAP is an Open Source Security Applications Platform.",
+      "url": "https://github.com/OWASP/www-project-open-source-security-application-platform",
+      "technologies": [],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-raider",
+      "name": "Raider",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-raider",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-blend",
+      "name": "Blend",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-blend",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-thick-client-security-testing-guide",
+      "name": "Thick Client Security Testing Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-thick-client-security-testing-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-vue-3-password-input",
+      "name": "Vue 3 Password Input",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vue-3-password-input",
+      "technologies": [
+        "javascript",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "javascript",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-wrongsecrets",
+      "name": "Wrongsecrets",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-wrongsecrets",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-vitcc-open-source-initiative",
+      "name": "Vitcc Open Source Initiative",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vitcc-open-source-initiative",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-mutillidae-ii",
+      "name": "Mutillidae Ii",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mutillidae-ii",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-nightingale",
+      "name": "Nightingale",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-nightingale",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-nasi-lemak",
+      "name": "Nasi Lemak",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-nasi-lemak",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-javascript-security",
+      "name": "Javascript Security",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-javascript-security",
+      "technologies": [
+        "java",
+        "javascript",
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "java",
+        "javascript",
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-aegis4j",
+      "name": "Aegis4J",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-aegis4j",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-application-security-awareness-campaigns",
+      "name": "Application Security Awareness Campaigns",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-awareness-campaigns",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-coraza-web-application-firewall",
+      "name": "Coraza Web Application Firewall",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-coraza-web-application-firewall",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-chaingoat",
+      "name": "Chaingoat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-chaingoat",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-devsecops-verification-standard",
+      "name": "Devsecops Verification Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-devsecops-verification-standard",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [
+        "testing",
+        "standard"
+      ],
+      "level": "advanced",
+      "type": "standard",
+      "tags": [
+        "web",
+        "devsecops",
+        "testing",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-pentext",
+      "name": "Pentext",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-pentext",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-supplychaingoat",
+      "name": "Supplychaingoat",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-supplychaingoat",
+      "technologies": [
+        "go",
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "go",
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-toctourex",
+      "name": "Toctourex",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-toctourex",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-kubernetes-top-ten",
+      "name": "Kubernetes Top Ten",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-kubernetes-top-ten",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "cloud",
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-security-champions-guidebook",
+      "name": "Security Champions Guidebook",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-champions-guidebook",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-safetypes",
+      "name": "Safetypes",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-safetypes",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-application-security-playbook",
+      "name": "Application Security Playbook",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-playbook",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-state-of-appsec-survey",
+      "name": "State Of Appsec Survey",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-state-of-appsec-survey",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-mimosa",
+      "name": "Mimosa",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-mimosa",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-ci-cd-security-risks",
+      "name": "Top 10 Ci Cd Security Risks",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-ci-cd-security-risks",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "devsecops",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-continuous-penetration-testing-framework",
+      "name": "Continuous Penetration Testing Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-continuous-penetration-testing-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "testing"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-testability-patterns-for-web-applications",
+      "name": "Testability Patterns For Web Applications",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-testability-patterns-for-web-applications",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing"
+      ],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "testing"
+      ]
+    },
+    {
+      "id": "www-project-vulnerable-flask-app",
+      "name": "Vulnerable Flask App",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-vulnerable-flask-app",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "vulnerable-app"
+      ],
+      "level": "intermediate",
+      "type": "vulnerable-app",
+      "tags": [
+        "web",
+        "vulnerable-app"
+      ]
+    },
+    {
+      "id": "www-project-kubernetes-scanner",
+      "name": "Kubernetes Scanner",
+      "description": "OWASP Kubernetes Scanner ",
+      "url": "https://github.com/OWASP/www-project-kubernetes-scanner",
+      "technologies": [
+        "cloud"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "cloud",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-software-pre-execution-security-review",
+      "name": "Software Pre Execution Security Review",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-software-pre-execution-security-review",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-application-security-monitoring-standard",
+      "name": "Application Security Monitoring Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-application-security-monitoring-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-domain-protect",
+      "name": "Domain Protect",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-domain-protect",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-ai-security-and-privacy-guide",
+      "name": "Ai Security And Privacy Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ai-security-and-privacy-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-mlsecops-verification-standard",
+      "name": "Mlsecops Verification Standard",
+      "description": "OWASP Machine Learning Security Verification Standard Project",
+      "url": "https://github.com/OWASP/www-project-mlsecops-verification-standard",
+      "technologies": [],
+      "missions": [
+        "learning",
+        "testing",
+        "standard",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "learning",
+        "testing",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-cloud-tenant-isolation",
+      "name": "Cloud Tenant Isolation",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cloud-tenant-isolation",
+      "technologies": [
+        "cloud",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "cloud",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-scrappy",
+      "name": "Scrappy",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-scrappy",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-25-parameters",
+      "name": "Top 25 Parameters",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-25-parameters",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cervantes",
+      "name": "Cervantes",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cervantes",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-smart-contract-top-10",
+      "name": "Smart Contract Top 10",
+      "description": "OWASP Smart Contract Top 10",
+      "url": "https://github.com/OWASP/www-project-smart-contract-top-10",
+      "technologies": [],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-devsecops-top-10",
+      "name": "Devsecops Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-devsecops-top-10",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "devsecops",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-ide-vulscanner",
+      "name": "Ide Vulscanner",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ide-vulscanner",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-ebpfshield",
+      "name": "Ebpfshield",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ebpfshield",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-cognito-catastrophe",
+      "name": "Cognito Catastrophe",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cognito-catastrophe",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-devsecops",
+      "name": "Devsecops",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-devsecops",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "devsecops"
+      ]
+    },
+    {
+      "id": "www-project-asvs-security-evaluation-templates-with-nuclei",
+      "name": "Asvs Security Evaluation Templates With Nuclei",
+      "description": "OWASP ASVS Security Evaluation Templates with Nuclei",
+      "url": "https://github.com/OWASP/www-project-asvs-security-evaluation-templates-with-nuclei",
+      "technologies": [],
+      "missions": [
+        "standard",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-machine-learning-minefield",
+      "name": "Machine Learning Minefield",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-machine-learning-minefield",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning"
+      ],
+      "level": "beginner",
+      "type": "training",
+      "tags": [
+        "web",
+        "learning"
+      ]
+    },
+    {
+      "id": "www-project-mobile-application-security-design-guide",
+      "name": "Mobile Application Security Design Guide",
+      "description": "Mobile Application Security Design Guide",
+      "url": "https://github.com/OWASP/www-project-mobile-application-security-design-guide",
+      "technologies": [
+        "mobile"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "mobile",
+        "learning",
+        "documentation",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-data-analysis-visualization-and-ingestion-domain",
+      "name": "Data Analysis Visualization And Ingestion Domain",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-data-analysis-visualization-and-ingestion-domain",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "research"
+      ],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "research"
+      ]
+    },
+    {
+      "id": "www-project-cumulus",
+      "name": "Cumulus",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cumulus",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-blockchain-appsec-standard",
+      "name": "Blockchain Appsec Standard",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-blockchain-appsec-standard",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-four-clover",
+      "name": "Four Clover",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-four-clover",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-for-large-language-model-applications",
+      "name": "Top 10 For Large Language Model Applications",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-for-large-language-model-applications",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "threat-modeling",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-open-security-information-base",
+      "name": "Open Security Information Base",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-open-security-information-base",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-web-hacking-incident-database",
+      "name": "Web Hacking Incident Database",
+      "description": "OWASP Foundation Web Repository",
+      "url": "https://github.com/OWASP/www-project-web-hacking-incident-database",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-kubefim",
+      "name": "Kubefim",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-kubefim",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-deepsecrets",
+      "name": "Deepsecrets",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-deepsecrets",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-security-bridge",
+      "name": "Security Bridge",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-bridge",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-llm-prompt-hacking",
+      "name": "Llm Prompt Hacking",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-llm-prompt-hacking",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-api-governance",
+      "name": "Api Governance",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-api-governance",
+      "technologies": [
+        "go",
+        "web",
+        "api"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "go",
+        "web",
+        "api"
+      ]
+    },
+    {
+      "id": "www-project-ksecurity",
+      "name": "Ksecurity",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ksecurity",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-llm-verification-standard",
+      "name": "Llm Verification Standard",
+      "description": "Project LLM Verification Standard",
+      "url": "https://github.com/OWASP/www-project-llm-verification-standard",
+      "technologies": [],
+      "missions": [
+        "testing",
+        "standard"
+      ],
+      "level": "advanced",
+      "type": "standard",
+      "tags": [
+        "testing",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-iot-security-testing-guide",
+      "name": "Iot Security Testing Guide",
+      "description": "OWASP IoT Security Testing Guide site repository",
+      "url": "https://github.com/OWASP/www-project-iot-security-testing-guide",
+      "technologies": [],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-dep-scan",
+      "name": "Dep Scan",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dep-scan",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-untrust",
+      "name": "Untrust",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-untrust",
+      "technologies": [
+        "rust",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "rust",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-memory-safety",
+      "name": "Memory Safety",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-memory-safety",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-ai-top-ten",
+      "name": "Ai Top Ten",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ai-top-ten",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-chirps",
+      "name": "Chirps",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-chirps",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-top-10-insider-threats",
+      "name": "Top 10 Insider Threats",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-insider-threats",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "threat-modeling",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-bullet-proof-react",
+      "name": "Bullet Proof React",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-bullet-proof-react",
+      "technologies": [
+        "javascript",
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "javascript",
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-sbom-forum",
+      "name": "Sbom Forum",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-sbom-forum",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-open-source-software-top-10",
+      "name": "Open Source Software Top 10",
+      "description": "OWASP Top 10 Open Source Software Risks",
+      "url": "https://github.com/OWASP/www-project-open-source-software-top-10",
+      "technologies": [],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-security-c4po",
+      "name": "Security C4Po",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-security-c4po",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-dragon-gpt",
+      "name": "Dragon Gpt",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-dragon-gpt",
+      "technologies": [
+        "go",
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "go",
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-top-10-in-xr",
+      "name": "Top 10 In Xr",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-top-10-in-xr",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-antiforensics-project",
+      "name": "Antiforensics Project",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-antiforensics-project",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-consigliere---your-sast-fixing-advisor",
+      "name": "Consigliere   Your Sast Fixing Advisor",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-consigliere---your-sast-fixing-advisor",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-product-security-capability-framework",
+      "name": "Product Security Capability Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-product-security-capability-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-thick-client-application-security-verification-standard",
+      "name": "Thick Client Application Security Verification Standard",
+      "description": "OWASP Thick Client Application Security Verification Standard",
+      "url": "https://github.com/OWASP/www-project-thick-client-application-security-verification-standard",
+      "technologies": [],
+      "missions": [
+        "testing",
+        "standard",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "testing",
+        "standard",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-sapkiln",
+      "name": "Sapkiln",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-sapkiln",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-naivesystems-analyze",
+      "name": "Naivesystems Analyze",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-naivesystems-analyze",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-appsec-contract-builder",
+      "name": "Appsec Contract Builder",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-appsec-contract-builder",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-de-addiction",
+      "name": "De Addiction",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-de-addiction",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-qraclib",
+      "name": "Qraclib",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-qraclib",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-pryingdeep",
+      "name": "Pryingdeep",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-pryingdeep",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-solana-programs-top-10",
+      "name": "Solana Programs Top 10",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-solana-programs-top-10",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-cybersecurity-certification-course",
+      "name": "Cybersecurity Certification Course",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-cybersecurity-certification-course",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-secure-pipeline-verification-standard--spvs-",
+      "name": "Secure Pipeline Verification Standard  Spvs ",
+      "description": "OWASP Secure Pipeline Verification Standard",
+      "url": "https://github.com/OWASP/www-project-secure-pipeline-verification-standard--spvs-",
+      "technologies": [
+        "devsecops"
+      ],
+      "missions": [
+        "testing",
+        "standard"
+      ],
+      "level": "advanced",
+      "type": "standard",
+      "tags": [
+        "devsecops",
+        "testing",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-modsecurity",
+      "name": "Modsecurity",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-modsecurity",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-common-lifecycle-enumeration",
+      "name": "Common Lifecycle Enumeration",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-common-lifecycle-enumeration",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-product-security-guide",
+      "name": "Product Security Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-product-security-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-flawfix",
+      "name": "Flawfix",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-flawfix",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-secure-development-and-release-framework",
+      "name": "Secure Development And Release Framework",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-secure-development-and-release-framework",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-devsecops-automation-matrix",
+      "name": "Devsecops Automation Matrix",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-devsecops-automation-matrix",
+      "technologies": [
+        "web",
+        "devsecops"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "devsecops"
+      ]
+    },
+    {
+      "id": "www-project-skyshield",
+      "name": "Skyshield",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-skyshield",
+      "technologies": [
+        "web"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web"
+      ]
+    },
+    {
+      "id": "www-project-java-security-toolkit",
+      "name": "Java Security Toolkit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-java-security-toolkit",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "java",
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-privacy-toolkit",
+      "name": "Privacy Toolkit",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-privacy-toolkit",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "tool"
+      ],
+      "level": "intermediate",
+      "type": "tool",
+      "tags": [
+        "web",
+        "tool"
+      ]
+    },
+    {
+      "id": "www-project-wi-fi-security-testing-guide",
+      "name": "Wi Fi Security Testing Guide",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-wi-fi-security-testing-guide",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ],
+      "level": "beginner",
+      "type": "tool",
+      "tags": [
+        "web",
+        "learning",
+        "documentation",
+        "testing",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-ai-threatmaster",
+      "name": "Ai Threatmaster",
+      "description": "OWASP Foundation Web Respository",
+      "url": "https://github.com/OWASP/www-project-ai-threatmaster",
+      "technologies": [
+        "web",
+        "threat-modeling"
+      ],
+      "missions": [],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "threat-modeling"
+      ]
+    },
+    {
+      "id": "www-project-netryx",
+      "name": "Netryx",
+      "description": "Next level Java web security framework",
+      "url": "https://github.com/OWASP/www-project-netryx",
+      "technologies": [
+        "java",
+        "web"
+      ],
+      "missions": [
+        "tool",
+        "security-tool"
+      ],
+      "level": "advanced",
+      "type": "tool",
+      "tags": [
+        "java",
+        "web",
+        "tool",
+        "security-tool"
+      ]
+    },
+    {
+      "id": "www-project-sammwise",
+      "name": "Sammwise",
+      "description": "OWASP Foundation web repository",
+      "url": "https://github.com/OWASP/www-project-sammwise",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "standard"
+      ],
+      "level": "intermediate",
+      "type": "standard",
+      "tags": [
+        "web",
+        "standard"
+      ]
+    },
+    {
+      "id": "www-project-pentest-best-practices",
+      "name": "Pentest Best Practices",
+      "description": "OWASP Foundation web repository",
+      "url": "https://github.com/OWASP/www-project-pentest-best-practices",
+      "technologies": [
+        "web"
+      ],
+      "missions": [
+        "testing"
+      ],
+      "level": "intermediate",
+      "type": "project",
+      "tags": [
+        "web",
+        "testing"
+      ]
+    }
+  ],
+  "technologies": [
+    "api",
+    "cloud",
+    "devsecops",
+    "dotnet",
+    "go",
+    "java",
+    "javascript",
+    "mobile",
+    "php",
+    "python",
+    "rust",
+    "threat-modeling",
+    "web"
+  ],
+  "missions": [
+    "ctf",
+    "documentation",
+    "learning",
+    "research",
+    "security-tool",
+    "standard",
+    "testing",
+    "tool",
+    "vulnerable-app"
+  ],
+  "levels": [
+    "beginner",
+    "intermediate",
+    "advanced"
+  ],
+  "types": [
+    "documentation",
+    "project",
+    "standard",
+    "tool",
+    "training",
+    "vulnerable-app"
+  ]
+}
