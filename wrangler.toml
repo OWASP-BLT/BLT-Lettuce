@@ -1,5 +1,5 @@
-name = "blt-lettuce-worker"
-main = "worker.py"
+name = "blt-lettuce"
+main = "cloudflare-worker/worker.py"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["python_workers"]
 
@@ -9,7 +9,7 @@ compatibility_flags = ["python_workers"]
 # Then replace the placeholder ID below with the actual namespace ID from the output
 [[kv_namespaces]]
 binding = "STATS_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"  # Required: Update this before deployment
+id = "31b010f5f5a34d3884c4c20d5a8afb46"  # Required: Update this before deployment
 
 # Environment variables (secrets should be set via wrangler secret put)
 # Required secrets:

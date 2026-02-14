@@ -42,18 +42,20 @@ A Cloudflare Python Worker that handles Slack webhooks, sends welcome messages t
    wrangler kv:namespace create "STATS_KV"
    ```
 
-4. Update `wrangler.toml` with the KV namespace ID from the previous command.
+4. Update `wrangler.toml` in the repository root with the KV namespace ID from the previous command.
 
-5. Set up secrets:
+5. Set up secrets (from the repository root):
    ```bash
    wrangler secret put SLACK_TOKEN
    wrangler secret put SIGNING_SECRET
    ```
 
-6. Deploy the worker:
+6. Deploy the worker (from the repository root):
    ```bash
    wrangler deploy
    ```
+
+**Note:** All wrangler commands should be run from the repository root, where the `wrangler.toml` file is located.
 
 ## Configuration
 
