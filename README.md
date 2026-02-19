@@ -245,9 +245,10 @@ We welcome contributions from everyone! Here's how to get started:
    git checkout -b feature/your-feature-name
    ```
 4. **Make Changes** - Follow our coding standards (enforced by pre-commit hooks)
-5. **Test Your Changes**
+5. **Test Your Changes** - The Cloudflare Worker can be tested locally using Wrangler
    ```bash
-   poetry run pytest
+   cd cloudflare-worker
+   wrangler dev
    ```
 6. **Commit with Conventional Commits**
    ```bash
@@ -266,17 +267,23 @@ Watch our [contribution walkthrough video](https://www.loom.com/share/4b0f414ed3
 
 ## 🧑‍💻 Development
 
-### Running Tests
+### Local Development
+
+Test the Cloudflare Worker locally:
 
 ```bash
-poetry run pytest
+cd cloudflare-worker
+wrangler dev
 ```
 
 ### Code Formatting
 
+The project uses Ruff for Python code formatting (for the stats scraper):
+
 ```bash
-poetry run ruff check --fix .
-poetry run ruff format .
+pip install ruff
+ruff check --fix .
+ruff format .
 ```
 
 ### Pre-commit Hooks
