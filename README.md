@@ -217,19 +217,17 @@ BLT-Lettuce/
 │   ├── wrangler.toml       # Worker configuration
 │   └── README.md           # Worker documentation
 ├── manifest.yaml           # Slack App manifest for easy setup
+├── scripts/
+│   ├── scrape_stats.py     # Stats scraper for GitHub Pages
+│   └── requirements.txt    # Scraper dependencies
 ├── docs/
-│   └── index.html          # GitHub Pages dashboard (reference)
-├── app.py                  # Legacy Flask application (kept for reference)
+│   └── index.html          # GitHub Pages dashboard
 ├── data/
 │   ├── projects.json       # OWASP project metadata cache
-│   └── repos.json          # Repository categorization
-├── src/lettuce/            # Bot plugins and modules (for reference)
-├── tests/                  # Test suite
-├── pyproject.toml          # Python dependencies
+│   ├── repos.json          # Repository categorization
+│   └── stats.json          # Bot statistics
 └── README.md               # This file
 ```
-
-**Note**: The primary application is now the Cloudflare Worker in `cloudflare-worker/`. The Flask app (`app.py`) and related plugins are kept for historical reference and may be removed in a future release. All new development should focus on the Cloudflare Worker implementation.
 
 ---
 
