@@ -217,19 +217,17 @@ BLT-Lettuce/
 │   ├── wrangler.toml       # Worker configuration
 │   └── README.md           # Worker documentation
 ├── manifest.yaml           # Slack App manifest for easy setup
+├── scripts/
+│   ├── scrape_stats.py     # Stats scraper for GitHub Pages
+│   └── requirements.txt    # Scraper dependencies
 ├── docs/
-│   └── index.html          # GitHub Pages dashboard (reference)
-├── app.py                  # Legacy Flask application (kept for reference)
+│   └── index.html          # GitHub Pages dashboard
 ├── data/
 │   ├── projects.json       # OWASP project metadata cache
-│   └── repos.json          # Repository categorization
-├── src/lettuce/            # Bot plugins and modules (for reference)
-├── tests/                  # Test suite
-├── pyproject.toml          # Python dependencies
+│   ├── repos.json          # Repository categorization
+│   └── stats.json          # Bot statistics
 └── README.md               # This file
 ```
-
-**Note**: The primary application is now the Cloudflare Worker in `cloudflare-worker/`. The Flask app (`app.py`) and related plugins are kept for historical reference and may be removed in a future release. All new development should focus on the Cloudflare Worker implementation.
 
 ---
 
@@ -247,9 +245,10 @@ We welcome contributions from everyone! Here's how to get started:
    git checkout -b feature/your-feature-name
    ```
 4. **Make Changes** - Follow our coding standards (enforced by pre-commit hooks)
-5. **Test Your Changes**
+5. **Test Your Changes** - The Cloudflare Worker can be tested locally using Wrangler
    ```bash
-   poetry run pytest
+   cd cloudflare-worker
+   wrangler dev
    ```
 6. **Commit with Conventional Commits**
    ```bash
@@ -268,17 +267,23 @@ Watch our [contribution walkthrough video](https://www.loom.com/share/4b0f414ed3
 
 ## 🧑‍💻 Development
 
-### Running Tests
+### Local Development
+
+Test the Cloudflare Worker locally:
 
 ```bash
-poetry run pytest
+cd cloudflare-worker
+wrangler dev
 ```
 
 ### Code Formatting
 
+The project uses Ruff for Python code formatting (for the stats scraper):
+
 ```bash
-poetry run ruff check --fix .
-poetry run ruff format .
+pip install ruff
+ruff check --fix .
+ruff format .
 ```
 
 ### Pre-commit Hooks
