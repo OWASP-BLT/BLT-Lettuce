@@ -106,20 +106,44 @@ async def increment_commands(env):
     return stats
 
 
-async def log_activity_to_d1(env, workspace_id, activity_type, user_id=None, username=None, workspace_name=None, details=None, success=True, error_message=None):
+async def log_activity_to_d1(
+    env,
+    workspace_id,
+    activity_type,
+    user_id=None,
+    username=None,
+    workspace_name=None,
+    details=None,
+    success=True,
+    error_message=None,
+):
     """Log activity to D1 database."""
     try:
         # Ensure table exists
         await env.DB.prepare(
             "CREATE TABLE IF NOT EXISTS slack_bot_activity (id INTEGER PRIMARY KEY AUTOINCREMENT, workspace_id TEXT, workspace_name TEXT, activity_type TEXT, user_id TEXT, username TEXT, details TEXT, success INTEGER, error_message TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP)"
         ).run()
-        
+
         details_json = json.dumps(details) if details else "{}"
-        await env.DB.prepare(
-            "INSERT INTO slack_bot_activity (workspace_id, workspace_name, activity_type, user_id, username, details, success, error_message) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        ).bind(workspace_id, workspace_name, activity_type, user_id, username, details_json, 1 if success else 0, error_message).run()
+        await (
+            env.DB.prepare(
+                "INSERT INTO slack_bot_activity (workspace_id, workspace_name, activity_type, user_id, username, details, success, error_message) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+            )
+            .bind(
+                workspace_id,
+                workspace_name,
+                activity_type,
+                user_id,
+                username,
+                details_json,
+                1 if success else 0,
+                error_message,
+            )
+            .run()
+        )
     except Exception as e:
         print(f"Failed to log activity to D1: {e}")
+
 
 async def log_chatbot_to_d1(env, question, answer):
     """Log chatbot interaction to D1 database."""
@@ -128,10 +152,12 @@ async def log_chatbot_to_d1(env, question, answer):
         await env.DB.prepare(
             "CREATE TABLE IF NOT EXISTS chat_bot_log (id INTEGER PRIMARY KEY AUTOINCREMENT, question TEXT, answer TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP)"
         ).run()
-        
-        await env.DB.prepare(
-            "INSERT INTO chat_bot_log (question, answer) VALUES (?, ?)"
-        ).bind(question, answer).run()
+
+        await (
+            env.DB.prepare("INSERT INTO chat_bot_log (question, answer) VALUES (?, ?)")
+            .bind(question, answer)
+            .run()
+        )
     except Exception as e:
         print(f"Failed to log chatbot to D1: {e}")
 
@@ -219,7 +245,7 @@ async def handle_team_join(env, event):
         workspace_id=event.get("team_id", "unknown"),
         activity_type="team_join",
         user_id=user_id,
-        details={"event_data": event}
+        details={"event_data": event},
     )
 
     # Increment joins counter
@@ -231,7 +257,9 @@ async def handle_team_join(env, event):
     # Post a message in the private joins channel (if configured)
     if joins_channel:
         try:
-            await send_slack_message(env, joins_channel, f"<@{user_id}> joined the team.")
+            await send_slack_message(
+                env, joins_channel, f"<@{user_id}> joined the team."
+            )
         except Exception:
             pass  # Don't fail if we can't post to joins channel
 
@@ -246,7 +274,9 @@ async def handle_team_join(env, event):
 
     # Format welcome message
     welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
-    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}]
+    blocks = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}
+    ]
 
     # Send welcome message
     result = await send_slack_message(
@@ -283,7 +313,8 @@ async def handle_message_event(env, event):
         subtype is None
         and "#contribute" not in message_text
         and any(
-            keyword in message_text for keyword in ("contribute", "contributing", "contributes")
+            keyword in message_text
+            for keyword in ("contribute", "contributing", "contributes")
         )
     ):
         response_text = (
@@ -298,7 +329,9 @@ async def handle_message_event(env, event):
         # Log to joins channel (if configured)
         if joins_channel:
             try:
-                await send_slack_message(env, joins_channel, f"<@{user}> said {message_text}")
+                await send_slack_message(
+                    env, joins_channel, f"<@{user}> said {message_text}"
+                )
             except Exception:
                 pass
 
@@ -313,14 +346,13 @@ async def handle_message_event(env, event):
 async def handle_discover_command(env, event):
     """Handle the /discover command."""
     search_term = event.get("text", "").strip()
-    user_id = event.get("user_id")
 
     try:
         # Fetch projects from BLT API
         response = await fetch(f"{BLT_MAIN_API_URL}/api/v1/projects/")
         if not response.ok:
             return {"text": "⚠️ Failed to fetch projects from BLT API."}
-        
+
         data = await response.json()
         projects = data.get("projects", []) if isinstance(data, dict) else data
 
@@ -332,8 +364,12 @@ async def handle_discover_command(env, event):
             name = project.get("name", "").lower()
             desc = project.get("description", "").lower()
             tags = [t.lower() for t in project.get("tags", [])]
-            
-            if not search_term or (search_term.lower() in name or search_term.lower() in desc or any(search_term.lower() in t for t in tags)):
+
+            if not search_term or (
+                search_term.lower() in name
+                or search_term.lower() in desc
+                or any(search_term.lower() in t for t in tags)
+            ):
                 matched.append(project)
 
         if not matched:
@@ -347,26 +383,30 @@ async def handle_discover_command(env, event):
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"🔍 *Found {len(matched)} projects matching '{search_term}':*" if search_term else "*Here are some OWASP projects:*"
-                }
+                    "text": f"🔍 *Found {len(matched)} projects matching '{search_term}':*"
+                    if search_term
+                    else "*Here are some OWASP projects:*",
+                },
             },
-            {"type": "divider"}
+            {"type": "divider"},
         ]
 
         for project in matched:
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*<{project.get('url', '#')}|{project.get('name')}>*\n{project.get('description', 'No description bytes available.')[:150]}..."
-                },
-                "accessory": {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "View Details"},
-                    "url": project.get("url", "#"),
-                    "action_id": "view_project"
+            blocks.append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"*<{project.get('url', '#')}|{project.get('name')}>*\n{project.get('description', 'No description bytes available.')[:150]}...",
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "View Details"},
+                        "url": project.get("url", "#"),
+                        "action_id": "view_project",
+                    },
                 }
-            })
+            )
 
         return {"blocks": blocks}
 
@@ -374,44 +414,55 @@ async def handle_discover_command(env, event):
         print(f"Error in handle_discover_command: {e}")
         return {"text": "⚠️ An error occurred while discovering projects."}
 
+
 async def handle_stats_command(env, event):
     """Handle the /stats command by querying D1."""
     team_id = event.get("team_id")
     try:
         # Query D1 for activity counts
-        activities = await env.DB.prepare(
-            "SELECT activity_type, COUNT(*) as count FROM slack_bot_activity WHERE workspace_id = ? GROUP BY activity_type"
-        ).bind(team_id).all()
-        
+        activities = (
+            await env.DB.prepare(
+                "SELECT activity_type, COUNT(*) as count FROM slack_bot_activity WHERE workspace_id = ? GROUP BY activity_type"
+            )
+            .bind(team_id)
+            .all()
+        )
+
         stats_map = {row["activity_type"]: row["count"] for row in activities.results}
-        
+
         total_joins = stats_map.get("team_join", 0)
         total_commands = stats_map.get("command", 0)
-        
+
         blocks = [
             {
                 "type": "header",
-                "text": {"type": "plain_text", "text": "📊 Workspace Statistics"}
+                "text": {"type": "plain_text", "text": "📊 Workspace Statistics"},
             },
             {
                 "type": "section",
                 "fields": [
                     {"type": "mrkdwn", "text": f"*Members Welcomed:*\n{total_joins}"},
-                    {"type": "mrkdwn", "text": f"*Commands Run:*\n{total_commands}"}
-                ]
-            }
+                    {"type": "mrkdwn", "text": f"*Commands Run:*\n{total_commands}"},
+                ],
+            },
         ]
-        
+
         return {"blocks": blocks}
     except Exception as e:
         print(f"Error in handle_stats_command: {e}")
         return {"text": "⚠️ Failed to retrieve statistics."}
 
+
 async def handle_contrib_command(env, event):
     """Handle the /contrib command."""
     contribute_id = getattr(env, "CONTRIBUTE_ID", DEFAULT_CONTRIBUTE_ID)
-    text = f"🚀 Want to contribute? Check out <#{contribute_id}> for guidelines and open issues!" if contribute_id else "🚀 Want to contribute? Check out the OWASP projects on GitHub!"
+    text = (
+        f"🚀 Want to contribute? Check out <#{contribute_id}> for guidelines and open issues!"
+        if contribute_id
+        else "🚀 Want to contribute? Check out the OWASP projects on GitHub!"
+    )
     return {"text": text}
+
 
 async def handle_blt_command(env, event):
     """Handle the /blt command."""
@@ -439,7 +490,7 @@ async def handle_command(env, event):
         workspace_name=team_domain,
         activity_type="command",
         user_id=user_id,
-        details={"command": command, "text": text}
+        details={"command": command, "text": text},
     )
 
     # Increment commands counter
@@ -501,7 +552,10 @@ def is_homepage_request(url, method):
         path.endswith("/")
         or "/index" in path
         or last_segment == ""
-        or ("." not in last_segment and last_segment not in ["webhook", "stats", "health"])
+        or (
+            "." not in last_segment
+            and last_segment not in ["webhook", "stats", "health"]
+        )
     )
 
 
@@ -891,7 +945,7 @@ async def on_fetch(request, env):
         try:
             # Get content type
             content_type = request.headers.get("Content-Type", "")
-            
+
             # Get raw body for signature verification
             body_text = await request.text()
 
@@ -900,17 +954,20 @@ async def on_fetch(request, env):
             timestamp = request.headers.get("X-Slack-Request-Timestamp")
             signature = request.headers.get("X-Slack-Signature")
 
-            if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
+            if not verify_slack_signature(
+                signing_secret, timestamp, body_text, signature
+            ):
                 return Response.json({"error": "Invalid signature"}, {"status": 401})
 
             # Parse body based on content type
             if "application/x-www-form-urlencoded" in content_type:
                 # Slack Commands or Interactions
                 from urllib.parse import parse_qs
+
                 form_data = parse_qs(body_text)
                 # Convert list values to single values where appropriate
                 data = {k: v[0] for k, v in form_data.items()}
-                
+
                 if "payload" in data:
                     # Interaction (button click, etc.)
                     interaction_payload = json.loads(data["payload"])
@@ -920,10 +977,12 @@ async def on_fetch(request, env):
                         workspace_id=interaction_payload.get("team", {}).get("id"),
                         activity_type="interaction",
                         user_id=interaction_payload.get("user", {}).get("id"),
-                        details=interaction_payload
+                        details=interaction_payload,
                     )
-                    return Response.json({"ok": True, "message": "Interaction received"})
-                
+                    return Response.json(
+                        {"ok": True, "message": "Interaction received"}
+                    )
+
                 # It's a slash command
                 result = await handle_command(env, data)
                 return Response.json(result)
