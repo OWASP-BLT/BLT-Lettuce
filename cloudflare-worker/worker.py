@@ -13,6 +13,9 @@ from datetime import datetime, timezone
 
 from js import Headers, Response, fetch
 
+# BLT Main API URL
+BLT_MAIN_API_URL = "https://owaspblt.org"
+
 # Channel IDs - these can be configured via environment variables
 # NOTE: These are OWASP-specific defaults. For other organizations:
 # - Either set these via environment variables (see wrangler.toml)
@@ -103,6 +106,36 @@ async def increment_commands(env):
     return stats
 
 
+async def log_activity_to_d1(env, workspace_id, activity_type, user_id=None, username=None, workspace_name=None, details=None, success=True, error_message=None):
+    """Log activity to D1 database."""
+    try:
+        # Ensure table exists
+        await env.DB.prepare(
+            "CREATE TABLE IF NOT EXISTS slack_bot_activity (id INTEGER PRIMARY KEY AUTOINCREMENT, workspace_id TEXT, workspace_name TEXT, activity_type TEXT, user_id TEXT, username TEXT, details TEXT, success INTEGER, error_message TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        ).run()
+        
+        details_json = json.dumps(details) if details else "{}"
+        await env.DB.prepare(
+            "INSERT INTO slack_bot_activity (workspace_id, workspace_name, activity_type, user_id, username, details, success, error_message) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ).bind(workspace_id, workspace_name, activity_type, user_id, username, details_json, 1 if success else 0, error_message).run()
+    except Exception as e:
+        print(f"Failed to log activity to D1: {e}")
+
+async def log_chatbot_to_d1(env, question, answer):
+    """Log chatbot interaction to D1 database."""
+    try:
+        # Ensure table exists
+        await env.DB.prepare(
+            "CREATE TABLE IF NOT EXISTS chat_bot_log (id INTEGER PRIMARY KEY AUTOINCREMENT, question TEXT, answer TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP)"
+        ).run()
+        
+        await env.DB.prepare(
+            "INSERT INTO chat_bot_log (question, answer) VALUES (?, ?)"
+        ).bind(question, answer).run()
+    except Exception as e:
+        print(f"Failed to log chatbot to D1: {e}")
+
+
 async def get_bot_user_id(env):
     """Get the bot's user ID from Slack API."""
     slack_token = getattr(env, "SLACK_TOKEN", None)
@@ -179,6 +212,15 @@ async def handle_team_join(env, event):
     user_id = event.get("user", {}).get("id")
     if not user_id:
         return {"error": "No user ID in event"}
+
+    # Log activity to D1
+    await log_activity_to_d1(
+        env,
+        workspace_id=event.get("team_id", "unknown"),
+        activity_type="team_join",
+        user_id=user_id,
+        details={"event_data": event}
+    )
 
     # Increment joins counter
     await increment_joins(env)
@@ -268,11 +310,151 @@ async def handle_message_event(env, event):
     return {"ok": True, "message": "No action taken"}
 
 
+async def handle_discover_command(env, event):
+    """Handle the /discover command."""
+    search_term = event.get("text", "").strip()
+    user_id = event.get("user_id")
+
+    try:
+        # Fetch projects from BLT API
+        response = await fetch(f"{BLT_MAIN_API_URL}/api/v1/projects/")
+        if not response.ok:
+            return {"text": "⚠️ Failed to fetch projects from BLT API."}
+        
+        data = await response.json()
+        projects = data.get("projects", []) if isinstance(data, dict) else data
+
+        if not projects:
+            return {"text": "No projects found."}
+
+        matched = []
+        for project in projects:
+            name = project.get("name", "").lower()
+            desc = project.get("description", "").lower()
+            tags = [t.lower() for t in project.get("tags", [])]
+            
+            if not search_term or (search_term.lower() in name or search_term.lower() in desc or any(search_term.lower() in t for t in tags)):
+                matched.append(project)
+
+        if not matched:
+            return {"text": f"No projects found matching '{search_term}'."}
+
+        # Limit to 5 projects for brevity in Slack
+        matched = matched[:5]
+
+        blocks = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"🔍 *Found {len(matched)} projects matching '{search_term}':*" if search_term else "*Here are some OWASP projects:*"
+                }
+            },
+            {"type": "divider"}
+        ]
+
+        for project in matched:
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*<{project.get('url', '#')}|{project.get('name')}>*\n{project.get('description', 'No description bytes available.')[:150]}..."
+                },
+                "accessory": {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "View Details"},
+                    "url": project.get("url", "#"),
+                    "action_id": "view_project"
+                }
+            })
+
+        return {"blocks": blocks}
+
+    except Exception as e:
+        print(f"Error in handle_discover_command: {e}")
+        return {"text": "⚠️ An error occurred while discovering projects."}
+
+async def handle_stats_command(env, event):
+    """Handle the /stats command by querying D1."""
+    team_id = event.get("team_id")
+    try:
+        # Query D1 for activity counts
+        activities = await env.DB.prepare(
+            "SELECT activity_type, COUNT(*) as count FROM slack_bot_activity WHERE workspace_id = ? GROUP BY activity_type"
+        ).bind(team_id).all()
+        
+        stats_map = {row["activity_type"]: row["count"] for row in activities.results}
+        
+        total_joins = stats_map.get("team_join", 0)
+        total_commands = stats_map.get("command", 0)
+        
+        blocks = [
+            {
+                "type": "header",
+                "text": {"type": "plain_text", "text": "📊 Workspace Statistics"}
+            },
+            {
+                "type": "section",
+                "fields": [
+                    {"type": "mrkdwn", "text": f"*Members Welcomed:*\n{total_joins}"},
+                    {"type": "mrkdwn", "text": f"*Commands Run:*\n{total_commands}"}
+                ]
+            }
+        ]
+        
+        return {"blocks": blocks}
+    except Exception as e:
+        print(f"Error in handle_stats_command: {e}")
+        return {"text": "⚠️ Failed to retrieve statistics."}
+
+async def handle_contrib_command(env, event):
+    """Handle the /contrib command."""
+    contribute_id = getattr(env, "CONTRIBUTE_ID", DEFAULT_CONTRIBUTE_ID)
+    text = f"🚀 Want to contribute? Check out <#{contribute_id}> for guidelines and open issues!" if contribute_id else "🚀 Want to contribute? Check out the OWASP projects on GitHub!"
+    return {"text": text}
+
+async def handle_blt_command(env, event):
+    """Handle the /blt command."""
+    text = (
+        ":information_source: *How to use the /blt command:*\n\n"
+        "• `/blt projects` - Discover OWASP projects.\n"
+        "• `/blt stats` - View workspace stats.\n"
+        "• `/blt contribute` - Get contribution info."
+    )
+    return {"text": text}
+
+
 async def handle_command(env, event):
     """Handle a command event."""
+    command = event.get("command")
+    user_id = event.get("user_id")
+    team_id = event.get("team_id")
+    team_domain = event.get("team_domain")
+    text = event.get("text", "").strip()
+
+    # Log command activity to D1
+    await log_activity_to_d1(
+        env,
+        workspace_id=team_id,
+        workspace_name=team_domain,
+        activity_type="command",
+        user_id=user_id,
+        details={"command": command, "text": text}
+    )
+
     # Increment commands counter
     await increment_commands(env)
-    return {"ok": True, "message": "Command tracked"}
+
+    if command == "/discover":
+        return await handle_discover_command(env, event)
+    elif command == "/stats":
+        return await handle_stats_command(env, event)
+    elif command == "/contrib":
+        return await handle_contrib_command(env, event)
+    elif command == "/blt":
+        return await handle_blt_command(env, event)
+
+    return {"ok": True, "message": f"Command {command} tracked"}
 
 
 def verify_slack_signature(signing_secret, timestamp, body, signature):
@@ -707,38 +889,70 @@ async def on_fetch(request, env):
     # Webhook endpoint for Slack events
     if "/webhook" in url and method == "POST":
         try:
+            # Get content type
+            content_type = request.headers.get("Content-Type", "")
+            
             # Get raw body for signature verification
             body_text = await request.text()
 
-            # Verify Slack signature (skip for url_verification)
-            body_json = json.loads(body_text)
-            if body_json.get("type") != "url_verification":
-                signing_secret = getattr(env, "SIGNING_SECRET", None)
-                timestamp = request.headers.get("X-Slack-Request-Timestamp")
-                signature = request.headers.get("X-Slack-Signature")
+            # Verify Slack signature
+            signing_secret = getattr(env, "SIGNING_SECRET", None)
+            timestamp = request.headers.get("X-Slack-Request-Timestamp")
+            signature = request.headers.get("X-Slack-Signature")
 
-                if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
-                    return Response.json({"error": "Invalid signature"}, {"status": 401})
+            if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
+                return Response.json({"error": "Invalid signature"}, {"status": 401})
 
-            # Handle Slack URL verification challenge
-            if body_json.get("type") == "url_verification":
-                return Response.json({"challenge": body_json.get("challenge")})
-
-            # Handle events
-            event = body_json.get("event", {})
-            event_type = event.get("type")
-
-            if event_type == "team_join":
-                result = await handle_team_join(env, event)
+            # Parse body based on content type
+            if "application/x-www-form-urlencoded" in content_type:
+                # Slack Commands or Interactions
+                from urllib.parse import parse_qs
+                form_data = parse_qs(body_text)
+                # Convert list values to single values where appropriate
+                data = {k: v[0] for k, v in form_data.items()}
+                
+                if "payload" in data:
+                    # Interaction (button click, etc.)
+                    interaction_payload = json.loads(data["payload"])
+                    # Log interaction to D1
+                    await log_activity_to_d1(
+                        env,
+                        workspace_id=interaction_payload.get("team", {}).get("id"),
+                        activity_type="interaction",
+                        user_id=interaction_payload.get("user", {}).get("id"),
+                        details=interaction_payload
+                    )
+                    return Response.json({"ok": True, "message": "Interaction received"})
+                
+                # It's a slash command
+                result = await handle_command(env, data)
                 return Response.json(result)
 
-            if event_type == "message":
-                result = await handle_message_event(env, event)
-                return Response.json(result)
+            elif "application/json" in content_type:
+                # Events API
+                body_json = json.loads(body_text)
 
-            if event_type == "app_mention" or body_json.get("command"):
-                result = await handle_command(env, event)
-                return Response.json(result)
+                # Handle Slack URL verification challenge
+                if body_json.get("type") == "url_verification":
+                    return Response.json({"challenge": body_json.get("challenge")})
+
+                # Handle events
+                event = body_json.get("event", {})
+                event_type = event.get("type")
+
+                if event_type == "team_join":
+                    result = await handle_team_join(env, event)
+                    return Response.json(result)
+
+                if event_type == "message":
+                    result = await handle_message_event(env, event)
+                    return Response.json(result)
+
+                if event_type == "app_mention":
+                    result = await handle_command(env, event)
+                    return Response.json(result)
+
+            return Response.json({"ok": True, "message": "Event received"})
 
             return Response.json({"ok": True, "message": "Event received"})
 
