@@ -30,41 +30,58 @@ def get_utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
-# Welcome message template
-WELCOME_MESSAGE = (
-    ":tada: *Welcome to the OWASP Slack Community, <@{user_id}>!* :tada:\n\n"
-    "We're thrilled to have you here! Whether you're new to OWASP or a "
-    "long-time contributor, this Slack workspace is the perfect place to "
-    "connect, collaborate, and stay informed about all things OWASP.\n\n"
-    ":small_blue_diamond: *Get Involved:*\n"
-    "• Check out the *#contribute* channel to find ways to get involved "
-    "with OWASP projects and initiatives.\n"
-    "• Explore individual project channels, which are named *#project-name*, "
-    "to dive into specific projects that interest you.\n"
-    "• Join our chapter channels, named *#chapter-name*, to connect with "
-    "local OWASP members in your area.\n\n"
-    ":small_blue_diamond: *Stay Updated:*\n"
-    "• Visit *#newsroom* for the latest updates and announcements.\n"
-    "• Follow *#external-activities* for news about OWASP's engagement "
-    "with the wider security community.\n\n"
-    ":small_blue_diamond: *Connect and Learn:*\n"
-    "• *#jobs*: Looking for new opportunities? Check out the latest "
-    "job postings here.\n"
-    "• *#leaders*: Connect with OWASP leaders and stay informed about "
-    "leadership activities.\n"
-    "• *#project-committee*: Engage with the committee overseeing "
-    "OWASP projects.\n"
-    "• *#gsoc*: Stay updated on Google Summer of Code initiatives.\n"
-    "• *#github-admins*: Get support and discuss issues related to "
-    "OWASP's GitHub repositories.\n"
-    "• *#learning*: Share and find resources to expand your knowledge "
-    "in the field of application security.\n\n"
-    "We're excited to see the amazing contributions you'll make. If you "
-    "have any questions or need assistance, don't hesitate to ask. Let's "
-    "work together to make software security visible and improve the "
-    "security of the software we all rely on.\n\n"
-    "Welcome aboard! :rocket:"
-)
+def _load_welcome_message():
+    """Load the welcome message template from welcome_message.txt.
+
+    The welcome_message.txt file at the project root is the single source of
+    truth for the join message. It is bundled with the worker at deploy time
+    via the [[rules]] entry in wrangler.toml and read here at module load.
+    A hardcoded fallback is used only when the file cannot be found (e.g.
+    during unit testing outside of the Cloudflare runtime).
+    """
+    try:
+        with open("welcome_message.txt", "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return (
+            ":tada: *Welcome to the OWASP Slack Community, <@{user_id}>!* :tada:\n\n"
+            "We're thrilled to have you here! Whether you're new to OWASP or a "
+            "long-time contributor, this Slack workspace is the perfect place to "
+            "connect, collaborate, and stay informed about all things OWASP.\n\n"
+            ":small_blue_diamond: *Get Involved:*\n"
+            "• Check out the *#contribute* channel to find ways to get involved "
+            "with OWASP projects and initiatives.\n"
+            "• Explore individual project channels, which are named *#project-name*, "
+            "to dive into specific projects that interest you.\n"
+            "• Join our chapter channels, named *#chapter-name*, to connect with "
+            "local OWASP members in your area.\n\n"
+            ":small_blue_diamond: *Stay Updated:*\n"
+            "• Visit *#newsroom* for the latest updates and announcements.\n"
+            "• Follow *#external-activities* for news about OWASP's engagement "
+            "with the wider security community.\n\n"
+            ":small_blue_diamond: *Connect and Learn:*\n"
+            "• *#jobs*: Looking for new opportunities? Check out the latest "
+            "job postings here.\n"
+            "• *#leaders*: Connect with OWASP leaders and stay informed about "
+            "leadership activities.\n"
+            "• *#project-committee*: Engage with the committee overseeing "
+            "OWASP projects.\n"
+            "• *#gsoc*: Stay updated on Google Summer of Code initiatives.\n"
+            "• *#github-admins*: Get support and discuss issues related to "
+            "OWASP's GitHub repositories.\n"
+            "• *#learning*: Share and find resources to expand your knowledge "
+            "in the field of application security.\n\n"
+            "We're excited to see the amazing contributions you'll make. If you "
+            "have any questions or need assistance, don't hesitate to ask. Let's "
+            "work together to make software security visible and improve the "
+            "security of the software we all rely on.\n\n"
+            "Welcome aboard! :rocket:"
+        )
+
+
+# Welcome message template - loaded from welcome_message.txt at the project root.
+# To update the join message, edit welcome_message.txt only.
+WELCOME_MESSAGE = _load_welcome_message()
 
 
 async def get_stats(env):
@@ -504,6 +521,89 @@ def get_homepage_html():
               🚀 Deployed version 1.9<br />
               📝 Latest commit: "Fix bug in welcome message"
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- API Endpoints Documentation -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8" id="api">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">API Endpoints</h2>
+        <p class="text-gray-600 text-center mb-6">The bot is powered by a Cloudflare Python Worker. Below are the available HTTP endpoints.</p>
+        <div class="overflow-x-auto mb-8">
+          <table class="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-3 text-left font-semibold text-gray-700 border-b">Endpoint</th>
+                <th class="px-4 py-3 text-left font-semibold text-gray-700 border-b">Method</th>
+                <th class="px-4 py-3 text-left font-semibold text-gray-700 border-b">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-red-600">/</td>
+                <td class="px-4 py-3"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">GET</span></td>
+                <td class="px-4 py-3 text-gray-600">This homepage dashboard with live stats.</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-red-600">/webhook</td>
+                <td class="px-4 py-3"><span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-medium">POST</span></td>
+                <td class="px-4 py-3 text-gray-600">
+                  Slack webhook endpoint. Receives all Slack events (verified via HMAC signature). Handles
+                  <code class="bg-gray-100 px-1 rounded">team_join</code> by sending the welcome DM from
+                  <code class="bg-gray-100 px-1 rounded">welcome_message.txt</code>,
+                  <code class="bg-gray-100 px-1 rounded">message</code> events for keyword detection, and
+                  Slack URL-verification challenges.
+                  <br /><span class="text-xs text-gray-500 mt-1 inline-block">Requires: <code class="bg-gray-100 px-1 rounded">SLACK_TOKEN</code> + <code class="bg-gray-100 px-1 rounded">SIGNING_SECRET</code> worker secrets.</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-red-600">/stats</td>
+                <td class="px-4 py-3"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">GET</span></td>
+                <td class="px-4 py-3 text-gray-600">Returns <code class="bg-gray-100 px-1 rounded">{"joins", "commands", "last_updated"}</code> as JSON from Cloudflare KV.</td>
+              </tr>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3 font-mono text-red-600">/health</td>
+                <td class="px-4 py-3"><span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-medium">GET</span></td>
+                <td class="px-4 py-3 text-gray-600">Health check — returns <code class="bg-gray-100 px-1 rounded">{"status": "ok"}</code> with a UTC timestamp.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- team_join welcome flow detail -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
+          <h3 class="text-lg font-bold text-gray-900 mb-3">
+            <span class="bg-red-50 text-red-600 px-2 py-0.5 rounded font-mono text-sm border border-red-100 mr-2">POST /webhook</span>
+            team_join flow
+          </h3>
+          <p class="text-gray-600 text-sm mb-4">
+            When a new member joins the Slack workspace, Slack posts a <code class="bg-gray-100 px-1 rounded">team_join</code>
+            event to <code class="bg-gray-100 px-1 rounded">/webhook</code>. The worker verifies the request signature,
+            increments the join counter in KV, optionally posts a notification to the configured joins channel,
+            and then sends a personalised welcome DM to the new user using the message defined in
+            <code class="bg-gray-100 px-1 rounded">welcome_message.txt</code>.
+          </p>
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="font-semibold text-gray-700 mb-2">Required Worker Secrets</p>
+              <ul class="space-y-1 text-gray-600">
+                <li><code class="bg-white border border-gray-200 px-2 py-0.5 rounded text-red-600">SLACK_TOKEN</code> — Bot User OAuth Token (<code>xoxb-…</code>)</li>
+                <li><code class="bg-white border border-gray-200 px-2 py-0.5 rounded text-red-600">SIGNING_SECRET</code> — Slack App Signing Secret</li>
+              </ul>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 mb-2">Optional Worker Secrets</p>
+              <ul class="space-y-1 text-gray-600">
+                <li><code class="bg-white border border-gray-200 px-2 py-0.5 rounded text-red-600">JOINS_CHANNEL_ID</code> — Channel for join notifications</li>
+                <li><code class="bg-white border border-gray-200 px-2 py-0.5 rounded text-red-600">CONTRIBUTE_ID</code> — Channel for contribution guides</li>
+                <li><code class="bg-white border border-gray-200 px-2 py-0.5 rounded text-red-600">DEPLOYS_CHANNEL</code> — Channel for deploy alerts</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mt-4 bg-gray-900 text-green-400 rounded-lg p-4 text-xs font-mono">
+            <p class="text-gray-400 mb-1"># Set secrets once with the Wrangler CLI:</p>
+            <p>wrangler secret put SLACK_TOKEN</p>
+            <p>wrangler secret put SIGNING_SECRET</p>
           </div>
         </div>
       </section>

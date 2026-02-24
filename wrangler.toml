@@ -9,15 +9,26 @@ compatibility_flags = ["python_workers"]
 # Then replace the placeholder ID below with the actual namespace ID from the output
 # we will be using D1
 
-# Environment variables (secrets should be set via wrangler secret put)
-# Required secrets:
-#   wrangler secret put SLACK_TOKEN        # Your Slack Bot User OAuth Token
-#   wrangler secret put SIGNING_SECRET     # Your Slack App Signing Secret
+# Bundle welcome_message.txt so that the Python worker can read it with open()
+# at runtime.  welcome_message.txt is the single source of truth for the join
+# welcome message sent to every new team member via the team_join webhook event.
+[[rules]]
+type = "Text"
+globs = ["welcome_message.txt"]
+
+# ---------------------------------------------------------------------------
+# Secrets — set these once via the Wrangler CLI before deploying.
+# Never commit real tokens to source control.
 #
-# Optional secrets (for custom channel IDs):
-#   wrangler secret put JOINS_CHANNEL_ID   # Channel ID where join notifications are posted
-#   wrangler secret put CONTRIBUTE_ID      # Channel ID for contribution guidelines
-#   wrangler secret put DEPLOYS_CHANNEL    # Channel for deployment notifications
+# Required (the /webhook endpoint will not function without these):
+#   wrangler secret put SLACK_TOKEN        # Bot User OAuth Token  (xoxb-…)
+#   wrangler secret put SIGNING_SECRET     # Slack App Signing Secret
+#
+# Optional (enable extra channel features; safe to omit for fresh installs):
+#   wrangler secret put JOINS_CHANNEL_ID   # Channel ID for join notifications
+#   wrangler secret put CONTRIBUTE_ID      # Channel ID for contribution guides
+#   wrangler secret put DEPLOYS_CHANNEL    # Channel name for deploy alerts
+# ---------------------------------------------------------------------------
 
 [vars]
 ENVIRONMENT = "production"
