@@ -8,6 +8,11 @@ compatibility_flags = ["python_workers"]
 #   wrangler kv:namespace create "STATS_KV"
 # Then replace the placeholder ID below with the actual namespace ID from the output
 # we will be using D1
+[[d1_databases]]
+binding = "DB" 
+database_name = "blt-lettuce-db"
+database_id = "your-database-id-here" # Placeholder for user to fill
+migrations_dir = "migrations"
 
 # Environment variables (secrets should be set via wrangler secret put)
 # Required secrets:
