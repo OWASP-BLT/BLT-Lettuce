@@ -51,9 +51,11 @@ A Cloudflare Python Worker that serves as the complete backend for the BLT-Lettu
 
 5. Set up required secrets:
    ```bash
-   wrangler secret put SLACK_TOKEN       # Your Bot User OAuth Token
-   wrangler secret put SIGNING_SECRET    # Your Signing Secret
+   wrangler secret put SLACK_TOKEN       # Your Bot User OAuth Token (xoxb-…)
+   wrangler secret put SIGNING_SECRET    # Your Slack App Signing Secret
    ```
+   These two secrets are **required** — the `/webhook` endpoint (and therefore
+   all `team_join` welcome messages) will not function without them.
 
 6. (Optional) Set up custom channel IDs:
    ```bash
@@ -128,6 +130,19 @@ curl -X POST https://your-worker.workers.dev/webhook \
   -H "Content-Type: application/json" \
   -d '{"type": "url_verification", "challenge": "test123"}'
 ```
+
+## Welcome Message
+
+The welcome DM sent on every `team_join` event is loaded from
+**`welcome_message.txt`** at the project root — that file is the single source
+of truth.  The file is bundled into the worker at deploy time via the
+`[[rules]]` entry in `wrangler.toml` and read with Python's built-in `open()`
+at module load time.
+
+To update the join message, edit `welcome_message.txt` only and redeploy.
+The `{user_id}` placeholder in the file is replaced at runtime using Python's
+`str.format(user_id=...)` — for example `"<@{user_id}>"` becomes `"<@U012AB3CD>"`.
+Only the `user_id` variable is substituted; no other format fields are used.
 
 ## Homepage
 
