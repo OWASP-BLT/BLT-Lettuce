@@ -7,14 +7,18 @@ compatibility_flags = ["python_workers"]
 # To create this namespace, run:
 #   wrangler kv:namespace create "STATS_KV"
 # Then replace the placeholder ID below with the actual namespace ID from the output
-[[kv_namespaces]]
-binding = "STATS_KV"
-id = "31b010f5f5a34d3884c4c20d5a8afb46"  # Required: Update this before deployment
+# we will be using D1
 
 # Environment variables (secrets should be set via wrangler secret put)
 # Required secrets:
-#   wrangler secret put SLACK_TOKEN
-#   wrangler secret put SIGNING_SECRET
+#   wrangler secret put SLACK_TOKEN        # Your Slack Bot User OAuth Token
+#   wrangler secret put SIGNING_SECRET     # Your Slack App Signing Secret
+#
+# Optional secrets (for custom channel IDs):
+#   wrangler secret put JOINS_CHANNEL_ID   # Channel ID where join notifications are posted
+#   wrangler secret put CONTRIBUTE_ID      # Channel ID for contribution guidelines
+#   wrangler secret put DEPLOYS_CHANNEL    # Channel for deployment notifications
 
 [vars]
 ENVIRONMENT = "production"
+VERSION = "2.0.0"

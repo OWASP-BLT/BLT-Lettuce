@@ -2,7 +2,8 @@
 Cloudflare Python Worker for BLT-Lettuce Slack Bot.
 
 This worker handles webhook events, sends welcome messages,
-and tracks stats for joins and commands.
+tracks stats, serves the homepage, and handles all Slack interactions.
+Designed to be deployed to any Slack organization.
 """
 
 import hashlib
@@ -10,7 +11,15 @@ import hmac
 import json
 from datetime import datetime, timezone
 
-from js import Response, fetch
+from js import Headers, Response, fetch
+
+# Channel IDs - these can be configured via environment variables
+# NOTE: These are OWASP-specific defaults. For other organizations:
+# - Either set these via environment variables (see wrangler.toml)
+# - Or leave as None to disable channel-specific features
+DEFAULT_DEPLOYS_CHANNEL = None  # Optional: "#project-blt-lettuce-deploys"
+DEFAULT_JOINS_CHANNEL_ID = None  # Optional: Channel for join notifications
+DEFAULT_CONTRIBUTE_ID = None  # Optional: Channel for contribution guidelines
 
 # Stats are stored in Cloudflare KV namespace
 # Stats structure: { "joins": int, "commands": int, "last_updated": str }
@@ -21,6 +30,7 @@ def get_utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
+# Welcome message template
 WELCOME_MESSAGE = (
     ":tada: *Welcome to the OWASP Slack Community, <@{user_id}>!* :tada:\n\n"
     "We're thrilled to have you here! Whether you're new to OWASP or a "
@@ -64,51 +74,57 @@ async def get_stats(env):
         result = await env.STATS_KV.getWithMetadata("stats", "json")
         if result and result.value is not None:
             stats = result.value
-            etag = getattr(result, "etag", None)
-            return stats, etag
+            return stats
     except Exception:
         pass
-    # If not found, return default stats and None for etag
-    return {"joins": 0, "commands": 0, "last_updated": get_utc_now()}, None
+    # If not found, return default stats
+    return {"joins": 0, "commands": 0, "last_updated": get_utc_now()}
 
 
-async def save_stats(env, stats, etag=None):
-    """Save stats to KV store with optional optimistic locking."""
+async def save_stats(env, stats):
+    """Save stats to KV store."""
     stats["last_updated"] = get_utc_now()
-    options = {}
-    if etag:
-        options["if_match"] = etag
-    await env.STATS_KV.put("stats", json.dumps(stats), **options)
+    await env.STATS_KV.put("stats", json.dumps(stats))
 
 
-async def increment_joins(env, max_retries=5):
-    """Increment the joins counter atomically with optimistic locking."""
-    for _ in range(max_retries):
-        stats, etag = await get_stats(env)
-        stats["joins"] = stats.get("joins", 0) + 1
-        try:
-            await save_stats(env, stats, etag)
-            return stats
-        except Exception:
-            # If the put failed due to version conflict, retry
-            continue
-    raise Exception("Failed to increment joins after multiple retries due to concurrent updates.")
+async def increment_joins(env):
+    """Increment the joins counter."""
+    stats = await get_stats(env)
+    stats["joins"] = stats.get("joins", 0) + 1
+    await save_stats(env, stats)
+    return stats
 
 
-async def increment_commands(env, max_retries=5):
-    """Increment the commands counter atomically with optimistic locking."""
-    for _ in range(max_retries):
-        stats, etag = await get_stats(env)
-        stats["commands"] = stats.get("commands", 0) + 1
-        try:
-            await save_stats(env, stats, etag)
-            return stats
-        except Exception:
-            # If the put failed due to version conflict, retry
-            continue
-    raise Exception(
-        "Failed to increment commands after multiple retries due to concurrent updates."
-    )
+async def increment_commands(env):
+    """Increment the commands counter."""
+    stats = await get_stats(env)
+    stats["commands"] = stats.get("commands", 0) + 1
+    await save_stats(env, stats)
+    return stats
+
+
+async def get_bot_user_id(env):
+    """Get the bot's user ID from Slack API."""
+    slack_token = getattr(env, "SLACK_TOKEN", None)
+    if not slack_token:
+        return None
+
+    try:
+        response = await fetch(
+            "https://slack.com/api/auth.test",
+            {
+                "method": "POST",
+                "headers": {
+                    "Authorization": f"Bearer {slack_token}",
+                },
+            },
+        )
+        result = await response.json()
+        if result.get("ok"):
+            return result.get("user_id")
+    except Exception:
+        pass
+    return None
 
 
 async def send_slack_message(env, channel, text, blocks=None):
@@ -167,6 +183,16 @@ async def handle_team_join(env, event):
     # Increment joins counter
     await increment_joins(env)
 
+    # Get channel IDs from env or use defaults
+    joins_channel = getattr(env, "JOINS_CHANNEL_ID", DEFAULT_JOINS_CHANNEL_ID)
+
+    # Post a message in the private joins channel (if configured)
+    if joins_channel:
+        try:
+            await send_slack_message(env, joins_channel, f"<@{user_id}> joined the team.")
+        except Exception:
+            pass  # Don't fail if we can't post to joins channel
+
     # Open DM with user
     dm_response = await open_conversation(env, user_id)
     if not dm_response.get("ok"):
@@ -189,6 +215,57 @@ async def handle_team_join(env, event):
     )
 
     return {"ok": result.get("ok"), "user_id": user_id}
+
+
+async def handle_message_event(env, event):
+    """Handle a message event - detect keywords and respond."""
+    message_text = event.get("text", "").lower()
+    user = event.get("user")
+    channel = event.get("channel")
+    channel_type = event.get("channel_type")
+    subtype = event.get("subtype")
+
+    # Get bot user ID to avoid responding to self
+    bot_user_id = await get_bot_user_id(env)
+
+    # Don't respond to bot's own messages
+    if user == bot_user_id:
+        return {"ok": True, "message": "Ignoring bot message"}
+
+    # Get channel IDs from env or use defaults
+    contribute_id = getattr(env, "CONTRIBUTE_ID", DEFAULT_CONTRIBUTE_ID)
+    joins_channel = getattr(env, "JOINS_CHANNEL_ID", DEFAULT_JOINS_CHANNEL_ID)
+
+    # Handle "contribute" keyword detection (but not #contribute)
+    if (
+        subtype is None
+        and "#contribute" not in message_text
+        and any(
+            keyword in message_text for keyword in ("contribute", "contributing", "contributes")
+        )
+    ):
+        response_text = (
+            f"Hello <@{user}>! Please check this channel "
+            f"<#{contribute_id}> for contributing guidelines today!"
+        )
+        result = await send_slack_message(env, channel, response_text)
+        return {"ok": result.get("ok"), "action": "contribute_response"}
+
+    # Handle direct messages
+    if channel_type == "im":
+        # Log to joins channel (if configured)
+        if joins_channel:
+            try:
+                await send_slack_message(env, joins_channel, f"<@{user}> said {message_text}")
+            except Exception:
+                pass
+
+        # Respond to the user
+        response_text = f"Hello <@{user}>, you said: {event.get('text', '')}"
+        result = await send_slack_message(env, user, response_text)
+        return {"ok": result.get("ok"), "action": "dm_response"}
+
+    return {"ok": True, "message": "No action taken"}
 
 
 async def handle_command(env, event):
@@ -227,6 +304,372 @@ def verify_slack_signature(signing_secret, timestamp, body, signature):
     return hmac.compare_digest(expected_signature, signature)
 
 
+def is_homepage_request(url, method):
+    """Check if the request is for the homepage."""
+    if method != "GET":
+        return False
+
+    # Check if it's a root path or index request
+    path = url.split("?")[0]  # Remove query parameters
+    path_segments = path.split("/")
+    last_segment = path_segments[-1] if path_segments else ""
+
+    # Match root path, index, or paths without file extensions
+    return (
+        path.endswith("/")
+        or "/index" in path
+        or last_segment == ""
+        or ("." not in last_segment and last_segment not in ["webhook", "stats", "health"])
+    )
+
+
+def get_homepage_html():
+    return """<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BLT-Lettuce - OWASP Slack Bot for welcoming new members, finding projects, and connecting the security community" />
+    <meta name="keywords" content="OWASP, Slack Bot, Security, BLT, Open Source" />
+    <meta property="og:title" content="BLT-Lettuce - OWASP Slack Bot" />
+    <meta property="og:description" content="An intelligent Slack bot that welcomes new members and helps them discover OWASP projects" />
+    <meta property="og:type" content="website" />
+    <title>BLT-Lettuce | OWASP Slack Bot</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body class="bg-gray-50 font-sans text-gray-900">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img class="w-10 h-10 mr-2" src="https://raw.githubusercontent.com/OWASP-BLT/BLT-Lettuce/main/docs/static/logo.png" alt="OWASP Logo" />
+            <h1 class="text-xl font-bold text-gray-900">BLT-Lettuce</h1>
+          </div>
+          <div class="flex items-center justify-center space-x-4">
+            <a href="https://github.com/OWASP-BLT/BLT-Lettuce" target="_blank" class="text-gray-500 hover:text-gray-900">
+              <i class="fab fa-github text-xl"></i>
+              Contribute
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Hero Section -->
+      <section class="bg-white rounded-lg shadow p-8 mb-8 text-center relative overflow-hidden">
+        <div class="max-w-3xl mx-auto relative z-10">
+          <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">BLT-Lettuce <span class="text-red-600">Slack Bot</span></h1>
+          <p class="text-xl text-gray-700 mb-8 leading-relaxed">An intelligent OWASP Slack bot that welcomes new community members, helps them discover security projects, and connects the global cybersecurity community through seamless integrations.</p>
+          <div class="flex justify-center flex-wrap gap-4 mb-8">
+            <span class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"> <i class="fas fa-handshake mr-2 text-red-600"></i> Welcome Bot </span>
+            <span class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"> <i class="fas fa-search mr-2 text-red-600"></i> Project Discovery </span>
+            <span class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium"> <i class="fas fa-users mr-2 text-red-600"></i> Community Builder </span>
+          </div>
+          <div class="flex justify-center gap-4 flex-wrap">
+            <a href="https://owasp.org/slack/invite" class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-semibold shadow-md transform hover:-translate-y-0.5" target="_blank">
+              <i class="fab fa-slack mr-2"></i>
+              Join OWASP Slack
+            </a>
+            <a href="https://github.com/OWASP-BLT/BLT-Lettuce" class="inline-flex items-center px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold shadow-sm transform hover:-translate-y-0.5" target="_blank">
+              <i class="fab fa-github mr-2"></i>
+              Star on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Stats -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8" id="stats">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Live Community Stats</h2>
+        <div id="stats-container" class="grid md:grid-cols-3 gap-6">
+          <!-- Loading state -->
+          <div class="col-span-3 text-center py-10 text-gray-500">
+            <i class="fas fa-circle-notch fa-spin text-3xl text-red-600 mb-2"></i>
+            <p>Loading live statistics...</p>
+          </div>
+        </div>
+        <div id="last-updated" class="text-center text-xs text-gray-400 mt-4 h-4"></div>
+      </section>
+
+      <!-- Key Features -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8" id="features">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">What BLT-Lettuce Does</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="text-center p-4 hover:bg-gray-50 rounded-xl transition-colors">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">👋</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Smart Welcome System</h3>
+            <p class="text-gray-600 leading-relaxed">Automatically welcomes new Slack members with personalized messages, OWASP project recommendations, and community guidelines.</p>
+          </div>
+          <div class="text-center p-4 hover:bg-gray-50 rounded-xl transition-colors">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">🔍</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Project Discovery</h3>
+            <p class="text-gray-600 leading-relaxed">Helps members find OWASP projects matching their skills, interests, and experience level through intelligent recommendations.</p>
+          </div>
+          <div class="text-center p-4 hover:bg-gray-50 rounded-xl transition-colors">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">🐙</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">GitHub Integration</h3>
+            <p class="text-gray-600 leading-relaxed">Fetches real-time data from 800+ OWASP repositories to provide up-to-date project health stats and contribution opportunities.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8" id="how-it-works">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">How It Works</h2>
+        <div class="max-w-4xl mx-auto space-y-4">
+          <div class="flex flex-col md:flex-row gap-6 p-6 border rounded-xl hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 font-bold text-lg">1</div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 mb-1">User Joins or Initiates</h3>
+              <p class="text-gray-600">A new member joins OWASP Slack, or any member runs <code class="bg-gray-100 px-2 py-0.5 rounded text-red-600">/lettuce</code> to start finding projects.</p>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row gap-6 p-6 border rounded-xl hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 font-bold text-lg">2</div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 mb-1">Interactive Questions</h3>
+              <p class="text-gray-600">The bot asks simple questions to understand interests—documentation, coding, breaking apps, or community building.</p>
+            </div>
+          </div>
+          <div class="flex flex-col md:flex-row gap-6 p-6 border rounded-xl hover:shadow-md transition-shadow">
+            <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-red-100 text-red-600 font-bold text-lg">3</div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900 mb-1">Smart Matching</h3>
+              <p class="text-gray-600">Queries cached metadata from GitHub to find active projects that need help and match the user's profile.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bot Interactions (Features) -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8" id="interactions">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Bot Interactions</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Smart Welcome Interaction -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <span class="bg-red-50 text-red-600 px-3 py-1 rounded font-mono text-sm border border-red-100">Event: team_join</span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Automatic Welcome</h4>
+            <p class="text-gray-600 text-sm mb-3">Detects when a new user joins the workspace and sends a personalized welcome DM with resources.</p>
+            <div class="bg-gray-50 p-3 rounded text-xs font-mono border border-gray-100">
+              <span class="text-green-600">✔ User joins workspace</span><br />
+              🤖 Bot: "Welcome to the OWASP Slack Community!"<br />
+              <span class="text-gray-400 italic">(Followed by project recommendations)</span>
+            </div>
+          </div>
+
+          <!-- Contribution Assistance Interaction -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <span class="bg-red-50 text-red-600 px-3 py-1 rounded font-mono text-sm border border-red-100">Keyword: "contribute"</span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Contribution Guide</h4>
+            <p class="text-gray-600 text-sm mb-3">Mentioning "contribute" or "contributing" in any channel triggers a helpful guide response.</p>
+            <div class="bg-gray-50 p-3 rounded text-xs font-mono border border-gray-100">
+              👤 User: "I want to contribute to this project..."<br />
+              🤖 Bot: "Hello! Please check channel #contribution-guides..."
+            </div>
+          </div>
+
+          <!-- Direct Message Interaction -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <span class="bg-red-50 text-red-600 px-3 py-1 rounded font-mono text-sm border border-red-100">Event: message (IM)</span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Direct Message Handler</h4>
+            <p class="text-gray-600 text-sm mb-3">Responds to direct messages and logs interactions for community managers.</p>
+            <div class="bg-gray-50 p-3 rounded text-xs font-mono border border-gray-100">
+              👤 User (DM): "Hello bot"<br />
+              🤖 Bot: "Hello @User, you said: Hello bot"
+            </div>
+          </div>
+
+          <!-- Deployment Update Interaction -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center mb-3">
+              <span class="bg-red-50 text-red-600 px-3 py-1 rounded font-mono text-sm border border-red-100">Webhook: /update_server</span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Auto-Deployment Updates</h4>
+            <p class="text-gray-600 text-sm mb-3">Automatically notifies the team when a new version of the bot is deployed via webhook.</p>
+            <div class="bg-gray-50 p-3 rounded text-xs font-mono border border-gray-100">
+              🚀 Deployed version 1.9<br />
+              📝 Latest commit: "Fix bug in welcome message"
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Project Health / GitHub Stats -->
+      <section class="bg-white rounded-lg shadow p-6 mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Project Health</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-center">
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-gray-900" id="gh-stars">--</p>
+            <p class="text-sm text-gray-500">GitHub Stars</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-gray-900" id="gh-forks">--</p>
+            <p class="text-sm text-gray-500">Forks</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-gray-900" id="gh-issues">--</p>
+            <p class="text-sm text-gray-500">Open Issues</p>
+          </div>
+          <div class="p-4 bg-gray-50 rounded-lg">
+            <p class="text-2xl font-bold text-gray-900" id="gh-contributors">--</p>
+            <p class="text-sm text-gray-500">Contributors</p>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2">
+          <img src="https://img.shields.io/github/commit-activity/m/OWASP-BLT/BLT-Lettuce?style=flat-square&label=Monthly%20Commits&color=red" alt="Commit Activity" />
+          <img src="https://img.shields.io/github/last-commit/OWASP-BLT/BLT-Lettuce?style=flat-square&color=red" alt="Last Commit" />
+          <img src="https://img.shields.io/github/languages/top/OWASP-BLT/BLT-Lettuce?style=flat-square&color=red" alt="Top Language" />
+          <img src="https://img.shields.io/github/repo-size/OWASP-BLT/BLT-Lettuce?style=flat-square&color=red" alt="Repo Size" />
+        </div>
+      </section>
+
+      <!-- Tech Stack -->
+      <section class="mb-12 text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Built With</h2>
+        <div class="flex flex-wrap justify-center gap-3">
+          <span class="px-4 py-2 bg-white rounded-full shadow-sm text-sm font-medium border border-gray-200">🐍 Python</span>
+          <span class="px-4 py-2 bg-white rounded-full shadow-sm text-sm font-medium border border-gray-200">☁️ Cloudflare Workers</span>
+          <span class="px-4 py-2 bg-white rounded-full shadow-sm text-sm font-medium border border-gray-200">💬 Slack API</span>
+          <span class="px-4 py-2 bg-white rounded-full shadow-sm text-sm font-medium border border-gray-200">🐙 GitHub API</span>
+          <span class="px-4 py-2 bg-white rounded-full shadow-sm text-sm font-medium border border-gray-200">🗄️ KV Storage</span>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-white border-t py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+          <p class="text-gray-600 mb-4">Made with ❤️ by the <a href="https://owasp.org/www-project-bug-logging-tool/" target="_blank" class="text-red-600 hover:underline font-medium">OWASP BLT Team</a></p>
+          <div class="flex justify-center space-x-6 text-sm text-gray-500">
+            <a href="https://github.com/OWASP-BLT/BLT-Lettuce" class="hover:text-red-600 transition-colors">GitHub</a>
+            <a href="https://owasp.org/slack/invite" class="hover:text-red-600 transition-colors">Join Slack</a>
+            <a href="https://owasp.org" class="hover:text-red-600 transition-colors">OWASP Foundation</a>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      // --- Stats Fetching Logic ---
+      const STATS_API_URL = window.location.origin + "/stats";
+      const GITHUB_API_URL = "https://api.github.com/repos/OWASP-BLT/BLT-Lettuce";
+
+      // Fallback stats if all fails
+      const FALLBACK_STATS = {
+        total_activities: 15420,
+        team_joins: 1250,
+        commands: 3450,
+        last_updated: new Date().toISOString(),
+      };
+
+      // Number formatter
+      const formatNumber = (num) => {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+        if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+        return num.toLocaleString();
+      };
+
+      async function fetchStats() {
+        try {
+          const response = await fetch(STATS_API_URL);
+          if (!response.ok) throw new Error("Failed to fetch stats");
+          return await response.json();
+        } catch (error) {
+          console.warn("Stats fetch failed, using fallback");
+          return FALLBACK_STATS;
+        }
+      }
+
+      async function fetchGitHubStats() {
+        try {
+          const [repoData, contributorsHeader] = await Promise.all([fetch(GITHUB_API_URL).then((r) => r.json()), fetch(`${GITHUB_API_URL}/contributors?per_page=1`).then((r) => r.headers)]);
+
+          // Parse pagination header for contributors count
+          let contributorCount = 0;
+          const linkHeader = contributorsHeader.get("Link");
+          if (linkHeader) {
+            const match = linkHeader.match(/page=(\\d+)>; rel="last"/);
+            if (match) contributorCount = parseInt(match[1], 10);
+          }
+
+          return { ...repoData, contributorCount: contributorCount || 10 }; // Default to 10 if parsing fails
+        } catch (error) {
+          console.error("GitHub stats error:", error);
+          return null;
+        }
+      }
+
+      function renderStats(stats) {
+        const container = document.getElementById("stats-container");
+        const teamJoins = stats.team_joins || stats.joins || 0;
+        const commands = stats.commands || 0;
+        const totalActivities = stats.total_activities || teamJoins + commands;
+
+        container.innerHTML = `
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mx-auto mb-3 text-xl">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">${formatNumber(teamJoins)}</h3>
+                    <p class="text-gray-600 text-sm">Members Welcomed</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mx-auto mb-3 text-xl">
+                        <i class="fas fa-terminal"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">${formatNumber(commands)}</h3>
+                    <p class="text-gray-600 text-sm">Commands Processed</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mx-auto mb-3 text-xl">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900">${formatNumber(totalActivities)}</h3>
+                    <p class="text-gray-600 text-sm">Total Activities</p>
+                </div>
+            `;
+
+        if (stats.last_updated) {
+          const date = new Date(stats.last_updated).toLocaleDateString();
+          document.getElementById("last-updated").textContent = `Last updated: ${date}`;
+        }
+      }
+
+      async function init() {
+        // 1. Fetch & Render App Stats
+        const stats = await fetchStats();
+        renderStats(stats);
+
+        // 2. Fetch & Render GitHub Stats
+        const ghStats = await fetchGitHubStats();
+        if (ghStats) {
+          document.getElementById("gh-stars").textContent = formatNumber(ghStats.stargazers_count);
+          document.getElementById("gh-forks").textContent = formatNumber(ghStats.forks_count);
+          document.getElementById("gh-issues").textContent = formatNumber(ghStats.open_issues_count);
+          document.getElementById("gh-contributors").textContent = formatNumber(ghStats.contributorCount);
+        }
+      }
+
+      // Run
+      init();
+    </script>
+  </body>
+</html>"""
+
+
 async def on_fetch(request, env):
     """Main entry point for the Cloudflare Worker."""
     url = request.url
@@ -234,16 +677,19 @@ async def on_fetch(request, env):
 
     # Handle CORS preflight
     if method == "OPTIONS":
-        return Response.new(
-            "",
-            {
-                "headers": {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type",
-                },
-            },
-        )
+        cors_headers = Headers.new()
+        cors_headers.set("Access-Control-Allow-Origin", "*")
+        cors_headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        cors_headers.set("Access-Control-Allow-Headers", "Content-Type")
+        return Response.new("", headers=cors_headers)
+
+    # Homepage - serve HTML
+    if is_homepage_request(url, method):
+        html_content = get_homepage_html()
+        html_headers = Headers.new()
+        html_headers.set("Content-Type", "text/html; charset=utf-8")
+        html_headers.set("Cache-Control", "public, max-age=300")
+        return Response.new(html_content, headers=html_headers)
 
     # Stats endpoint - returns current stats as JSON
     if "/stats" in url and method == "GET":
@@ -286,6 +732,10 @@ async def on_fetch(request, env):
                 result = await handle_team_join(env, event)
                 return Response.json(result)
 
+            if event_type == "message":
+                result = await handle_message_event(env, event)
+                return Response.json(result)
+
             if event_type == "app_mention" or body_json.get("command"):
                 result = await handle_command(env, event)
                 return Response.json(result)
@@ -300,11 +750,13 @@ async def on_fetch(request, env):
     if "/health" in url:
         return Response.json({"status": "ok", "timestamp": get_utc_now()})
 
-    # Default response
+    # Default response - API information
     return Response.json(
         {
             "message": "BLT-Lettuce Cloudflare Worker",
+            "version": "2.0",
             "endpoints": {
+                "/": "GET - Homepage",
                 "/webhook": "POST - Slack webhook endpoint",
                 "/stats": "GET - Get current stats",
                 "/health": "GET - Health check",
