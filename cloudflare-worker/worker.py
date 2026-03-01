@@ -68,7 +68,7 @@ WELCOME_MESSAGE = (
 
 
 async def get_stats(env):
-    """Get current stats and version from KV store."""
+    """Get current stats from KV store."""
     try:
         # Use getWithMetadata to get the value and its metadata (including version/etag)
         result = await env.STATS_KV.getWithMetadata("stats", "json")
@@ -273,6 +273,234 @@ async def handle_command(env, event):
     # Increment commands counter
     await increment_commands(env)
     return {"ok": True, "message": "Command tracked"}
+
+
+async def handle_poll_command(env, command_text, user_id, channel_id):
+    """
+    Handle /blt_poll slash command.
+    Usage: /blt_poll Question | option1 | option2 | option3
+    """
+    try:
+        import time
+
+        # Parse command text: "Question | option1 | option2 | ..."
+        parts = [p.strip() for p in command_text.split("|")]
+
+        if len(parts) < 3:
+            return {
+                "response_type": "ephemeral",
+                "text": (
+                    "❌ Invalid poll format.\n"
+                    "Usage: `/blt_poll Question | option1 | option2 | option3`\n\n"
+                ),
+            }
+
+        question = parts[0]
+        options = parts[1:]
+
+        if len(options) > 5:
+            return {
+                "response_type": "ephemeral",
+                "text": "❌ Maximum 5 options allowed per poll.",
+            }
+
+        # Create poll metadata and store in KV
+        poll_id = f"poll_{channel_id}_{user_id}_{int(time.time())}"
+        poll_data = {
+            "id": poll_id,
+            "question": question,
+            "options": {str(i): {"text": opt, "votes": 0} for i, opt in enumerate(options)},
+            "created_by": user_id,
+            "channel_id": channel_id,
+            "votes": {},  # user_id -> option_index mapping
+        }
+
+        # Store poll in KV (expires in 24 hours)
+        try:
+            kv = getattr(env, "STATS_KV", None)
+            if kv:
+                await kv.put(
+                    poll_id,
+                    json.dumps(poll_data),
+                    expiration_ttl=86400,
+                )
+            else:
+                print("Warning: STATS_KV not available")
+        except Exception as e:
+            print(f"Failed to store poll in KV: {e}")
+            import traceback
+
+            traceback.print_exc()
+
+        # Build interactive poll message
+        blocks = [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"📊 *{question}*\n_Poll by <@{user_id}>_",
+                },
+            }
+        ]
+
+        # Add option buttons (numbered emoji + button)
+        emoji_map = {0: "1️⃣", 1: "2️⃣", 2: "3️⃣", 3: "4️⃣", 4: "5️⃣"}
+
+        for i, option in enumerate(options):
+            blocks.append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"{emoji_map[i]} {option}\n0 votes",
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Vote"},
+                        "value": f"{poll_id}_{i}",
+                        "action_id": f"poll_vote_{poll_id}_{i}",
+                    },
+                }
+            )
+
+        # Increment command counter
+        await increment_commands(env)
+
+        # Return the poll message for posting to channel
+        return {
+            "response_type": "in_channel",
+            "text": f"📊 {question}",
+            "blocks": blocks,
+        }
+
+    except Exception as e:
+        print(f"poll command error: {e}")
+        print(f"Error type: {type(e).__name__}")
+        import traceback
+
+        print(f"Traceback: {traceback.format_exc()}")
+        return {
+            "response_type": "ephemeral",
+            "text": f"❌ Error creating poll: {str(e)}",
+        }
+
+
+def _build_poll_blocks(poll_data):
+    """Render poll blocks with current vote counts."""
+    question = poll_data.get("question", "Poll")
+    user_id = poll_data.get("created_by", "")
+    options = poll_data.get("options", {})
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"📊 *{question}*\n_Poll by <@{user_id}>_",
+            },
+        }
+    ]
+
+    emoji_map = {0: "1️⃣", 1: "2️⃣", 2: "3️⃣", 3: "4️⃣", 4: "5️⃣"}
+    for i, opt in options.items():
+        idx = int(i)
+        blocks.append(
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"{emoji_map.get(idx, '')} {opt['text']}\n{opt.get('votes', 0)} votes",
+                },
+                "accessory": {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Vote"},
+                    "value": f"{poll_data.get('id')}_{idx}",
+                    "action_id": f"poll_vote_{poll_data.get('id')}_{idx}",
+                },
+            }
+        )
+
+    return blocks
+
+
+async def handle_poll_vote(env, payload):
+    """Handle interactive button clicks for poll voting."""
+    try:
+        import json as json_lib
+
+        actions = payload.get("actions", [])
+        if not actions:
+            return {"response_type": "ephemeral", "text": "No action found."}
+
+        action = actions[0]
+        value = action.get("value", "")
+        user_id = payload.get("user", {}).get("id")
+        response_url = payload.get("response_url")
+
+        if "_" not in value:
+            return {"response_type": "ephemeral", "text": "Invalid poll vote payload."}
+
+        poll_id, option_idx = value.rsplit("_", 1)
+        option_idx = int(option_idx)
+
+        # Load poll
+        kv = getattr(env, "STATS_KV", None)
+        if not kv:
+            return {"response_type": "ephemeral", "text": "KV storage not available."}
+
+        poll_json = await kv.get(poll_id)
+        if not poll_json:
+            return {"response_type": "ephemeral", "text": "Poll not found or expired."}
+
+        poll_data = json_lib.loads(poll_json)
+
+        # Remove previous vote
+        if user_id in poll_data.get("votes", {}):
+            old_idx = poll_data["votes"][user_id]
+            poll_data["options"][str(old_idx)]["votes"] = max(
+                0, poll_data["options"][str(old_idx)].get("votes", 0) - 1
+            )
+
+        # Add new vote
+        poll_data.setdefault("votes", {})[user_id] = option_idx
+        poll_data["options"][str(option_idx)]["votes"] = (
+            poll_data["options"][str(option_idx)].get("votes", 0) + 1
+        )
+
+        # Save back
+        await kv.put(poll_id, json_lib.dumps(poll_data), expiration_ttl=86400)
+
+        # Build updated message
+        updated_blocks = _build_poll_blocks(poll_data)
+        question = poll_data.get("question", "Poll")
+
+        # Send update to response_url if available
+        if response_url:
+            try:
+                update_payload = {
+                    "replace_original": True,
+                    "text": f"📊 {question}",
+                    "blocks": updated_blocks,
+                }
+                response = await fetch(
+                    response_url,
+                    method="POST",
+                    headers={"Content-Type": "application/json"},
+                    body=json_lib.dumps(update_payload),
+                )
+                print(f"Update response status: {response.status}")
+            except Exception as e:
+                print(f"Error sending update to response_url: {e}")
+
+        # Acknowledge the interaction immediately (required by Slack)
+        return {"text": ""}
+
+    except Exception as e:
+        print(f"poll vote error: {e}")
+        import traceback
+
+        traceback.print_exc()
+        return {"response_type": "ephemeral", "text": f"Error recording vote: {e}"}
 
 
 def verify_slack_signature(signing_secret, timestamp, body, signature):
@@ -709,13 +937,29 @@ async def on_fetch(request, env):
         try:
             # Get raw body for signature verification
             body_text = await request.text()
+            content_type = request.headers.get("content-type", "")
 
-            # Verify Slack signature (skip for url_verification)
-            body_json = json.loads(body_text)
+            # Parse content type
+            if "application/x-www-form-urlencoded" in content_type:
+                import urllib.parse
+
+                parsed = urllib.parse.parse_qs(body_text)
+                body_json = {k: v[0] if v else "" for k, v in parsed.items()}
+                # If this is an interactive payload, decode JSON inside 'payload'
+                if "payload" in body_json:
+                    body_json = json.loads(body_json.get("payload", "{}"))
+            else:
+                body_json = json.loads(body_text)
+
             if body_json.get("type") != "url_verification":
                 signing_secret = getattr(env, "SIGNING_SECRET", None)
-                timestamp = request.headers.get("X-Slack-Request-Timestamp")
-                signature = request.headers.get("X-Slack-Signature")
+                # Some gateways lowercase header names; check both.
+                timestamp = request.headers.get(
+                    "X-Slack-Request-Timestamp"
+                ) or request.headers.get("x-slack-request-timestamp")
+                signature = request.headers.get("X-Slack-Signature") or request.headers.get(
+                    "x-slack-signature"
+                )
 
                 if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
                     return Response.json({"error": "Invalid signature"}, {"status": 401})
@@ -723,6 +967,28 @@ async def on_fetch(request, env):
             # Handle Slack URL verification challenge
             if body_json.get("type") == "url_verification":
                 return Response.json({"challenge": body_json.get("challenge")})
+
+            # Handle interactive actions (e.g., poll votes) - check this BEFORE slash commands
+            if body_json.get("type") == "block_actions":
+                print(f"Handling block_actions for user {body_json.get('user', {}).get('id')}")
+                result = await handle_poll_vote(env, body_json)
+                print(f"Poll vote result: {result}")
+                return Response.json(result)
+
+            # Handle slash commands
+            if body_json.get("type") == "slash_commands" or body_json.get("command"):
+                command = body_json.get("command")
+                command_text = body_json.get("text", "")
+                user_id = body_json.get("user_id")
+                channel_id = body_json.get("channel_id")
+
+                if command == "/blt_poll":
+                    result = await handle_poll_command(env, command_text, user_id, channel_id)
+                    return Response.json(result)
+
+                # Handle other commands
+                result = await handle_command(env, {})
+                return Response.json(result)
 
             # Handle events
             event = body_json.get("event", {})
