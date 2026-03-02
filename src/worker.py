@@ -395,7 +395,7 @@ async def handle_discover_command(env, event):
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": f"*<{project.get('url', '#')}|{project.get('name')}>*\n{project.get('description', 'No description available.')[:150]}...",
+                        "text": f"*<{project.get('url', '#')}|{project.get('name')}>*\n{project.get('description', 'No description available.')[:150]}{'...' if len(project.get('description', '')) > 150 else ''}",
                     },
                     "accessory": {
                         "type": "button",
