@@ -746,6 +746,52 @@ async def on_fetch(request, env):
             # Return sanitized error message to avoid exposing internal details
             return Response.json({"error": "Internal server error"}, {"status": 500})
 
+    # Slack interactivity endpoint - forward to Flask backend
+    if "/slack/interactivity" in url and method == "POST":
+        backend_url = getattr(env, "BACKEND_URL", None)
+        if not backend_url:
+            return Response.json({"error": "BACKEND_URL not configured"}, {"status": 503})
+        try:
+            body_text = await request.text()
+            headers = {
+                "Content-Type": request.headers.get("Content-Type", "application/x-www-form-urlencoded"),
+                "X-Slack-Signature": request.headers.get("X-Slack-Signature", ""),
+                "X-Slack-Request-Timestamp": request.headers.get("X-Slack-Request-Timestamp", ""),
+            }
+            backend_response = await fetch(
+                f"{backend_url}/slack/interactivity",
+                {"method": "POST", "headers": headers, "body": body_text},
+            )
+            response_text = await backend_response.text()
+            resp_headers = Headers.new()
+            resp_headers.set("Content-Type", "text/plain")
+            return Response.new(response_text, {"status": backend_response.status, "headers": resp_headers})
+        except Exception:
+            return Response.json({"error": "Failed to forward interactivity request"}, {"status": 502})
+
+    # Slack slash commands endpoint - forward to Flask backend
+    if "/slack/commands" in url and method == "POST":
+        backend_url = getattr(env, "BACKEND_URL", None)
+        if not backend_url:
+            return Response.json({"error": "BACKEND_URL not configured"}, {"status": 503})
+        try:
+            body_text = await request.text()
+            headers = {
+                "Content-Type": request.headers.get("Content-Type", "application/x-www-form-urlencoded"),
+                "X-Slack-Signature": request.headers.get("X-Slack-Signature", ""),
+                "X-Slack-Request-Timestamp": request.headers.get("X-Slack-Request-Timestamp", ""),
+            }
+            backend_response = await fetch(
+                f"{backend_url}/slack/commands",
+                {"method": "POST", "headers": headers, "body": body_text},
+            )
+            response_text = await backend_response.text()
+            resp_headers = Headers.new()
+            resp_headers.set("Content-Type", "text/plain")
+            return Response.new(response_text, {"status": backend_response.status, "headers": resp_headers})
+        except Exception:
+            return Response.json({"error": "Failed to forward command request"}, {"status": 502})
+
     # Health check endpoint
     if "/health" in url:
         return Response.json({"status": "ok", "timestamp": get_utc_now()})
@@ -758,6 +804,8 @@ async def on_fetch(request, env):
             "endpoints": {
                 "/": "GET - Homepage",
                 "/webhook": "POST - Slack webhook endpoint",
+                "/slack/interactivity": "POST - Slack interactive components",
+                "/slack/commands": "POST - Slack slash commands",
                 "/stats": "GET - Get current stats",
                 "/health": "GET - Health check",
             },

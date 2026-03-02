@@ -5,6 +5,7 @@ to guide users through Technology-based or Mission-based project discovery.
 """
 
 import json
+import logging
 import os
 import re
 
@@ -14,52 +15,11 @@ from machine.plugins.decorators import action, command
 from machine.storage import PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
 
-# Technology options
-TECHNOLOGIES = [
-    "python", "java", "javascript", "mobile", "cloud-native", "threat-modeling", "devsecops"
-]
-
-# Difficulty levels
-DIFFICULTY_LEVELS = ["beginner", "intermediate", "advanced"]
-
-# Project types
-PROJECT_TYPES = ["tools", "code", "docs", "training"]
-
-# Mission/Goal options
-MISSIONS = [
-    "learn-appsec",
-    "contribute-code",
-    "documentation",
-    "gsoc-prep",
-    "research",
-    "devsecops",
-    "ctf",
-]
-
-# Contribution types
-CONTRIBUTION_TYPES = ["code", "documentation", "design", "research"]
-
-# Project keywords for technology mapping
-TECH_KEYWORDS = {
-    "python": ["python", "django", "flask", "pygoat", "pytm", "honeypot"],
-    "java": ["java", "webgoat", "encoder", "benchmark", "esapi"],
-    "javascript": ["javascript", "js", "node", "juice-shop", "nodejs"],
-    "mobile": ["mobile", "android", "ios", "igoat", "androgoat", "seraphimdroid"],
-    "cloud-native": ["cloud", "kubernetes", "container", "docker", "serverless", "aws"],
-    "threat-modeling": ["threat", "dragon", "pytm", "threatspec"],
-    "devsecops": ["devsecops", "pipeline", "ci-cd", "securecodebox", "defectdojo"],
-}
-
-# Project keywords for mission mapping
-MISSION_KEYWORDS = {
-    "learn-appsec": ["webgoat", "juice-shop", "security-shepherd", "training", "curriculum"],
-    "contribute-code": ["tool", "scanner", "framework"],
-    "documentation": ["guide", "cheat-sheets", "testing-guide", "standard"],
-    "gsoc-prep": ["gsoc", "student", "beginner"],
-    "research": ["research", "framework", "standard"],
-    "devsecops": ["devsecops", "pipeline", "automation"],
-    "ctf": ["ctf", "hackademic", "shepherd", "juice-shop"],
-}
+from lettuce.recommendation_engine import (
+    build_recommendations_blocks,
+    get_mission_recommendations as _get_mission_recommendations,
+    get_tech_recommendations as _get_tech_recommendations,
+)
 
 
 class RecommendationsPlugin(MachineBasePlugin):
@@ -255,7 +215,11 @@ class RecommendationsPlugin(MachineBasePlugin):
         """Handle difficulty selection - Step 3: Ask project type."""
         channel_id = action.payload.channel.id
         value = action.payload.actions[0].value
-        tech, difficulty = value.split("|")
+        try:
+            tech, difficulty = value.split("|")
+        except ValueError:
+            logging.warning("Invalid action_value for rec_diff_: %r", value)
+            return
 
         blocks = [
             {
@@ -314,13 +278,22 @@ class RecommendationsPlugin(MachineBasePlugin):
         """Handle project type selection - Show technology-based recommendations."""
         channel_id = action.payload.channel.id
         value = action.payload.actions[0].value
-        tech, difficulty, project_type = value.split("|")
+        try:
+            tech, difficulty, project_type = value.split("|")
+        except ValueError:
+            logging.warning("Invalid action_value for rec_type_: %r", value)
+            return
 
-        # Get recommendations based on selections
-        recommendations = self._get_tech_recommendations(tech, difficulty, project_type)
-
-        await self._send_recommendations(
-            channel_id, recommendations, tech, difficulty, project_type
+        # Get recommendations and send using shared engine
+        recommendations = _get_tech_recommendations(self.project_data, tech, difficulty, project_type)
+        context_text = (
+            f"_Based on: {tech.title()} | {difficulty.title()} | {project_type.title()}_"
+        )
+        blocks = build_recommendations_blocks(recommendations, context_text)
+        await self.web_client.chat_postMessage(
+            channel=channel_id,
+            text=f"Here are your recommended OWASP projects for {tech}!",
+            blocks=blocks,
         )
 
     # ==========================================
@@ -465,318 +438,27 @@ class RecommendationsPlugin(MachineBasePlugin):
         """Handle contribution type selection - Show mission-based recommendations."""
         channel_id = action.payload.channel.id
         value = action.payload.actions[0].value
-        mission, contribution = value.split("|")
+        try:
+            mission, contribution = value.split("|")
+        except ValueError:
+            logging.warning("Invalid action_value for rec_contrib_: %r", value)
+            return
 
         # Get recommendations based on selections
-        recommendations = self._get_mission_recommendations(mission, contribution)
-
-        await self._send_mission_recommendations(
-            channel_id, recommendations, mission, contribution
-        )
-
-    # ==========================================
-    # Recommendation Logic
-    # ==========================================
-
-    def _get_tech_recommendations(self, tech, difficulty, project_type):
-        """Get project recommendations based on technology, difficulty, and type.
-
-        Args:
-            tech: Selected technology (python, java, etc.)
-            difficulty: Selected difficulty (beginner, intermediate, advanced)
-            project_type: Selected project type (tools, code, docs, training)
-
-        Returns:
-            list: List of tuples (project_name, description, url, score)
-        """
-        keywords = TECH_KEYWORDS.get(tech, [])
-        type_keywords = {
-            "tools": ["tool", "scanner", "checker", "detector"],
-            "code": ["code", "app", "goat", "vulnerable"],
-            "docs": ["guide", "standard", "cheat", "top-10", "documentation"],
-            "training": ["training", "curriculum", "security-shepherd", "webgoat", "juice-shop"],
-        }
-
-        scored_projects = []
-
-        for project_name, project_info in self.project_data.items():
-            description = project_info[0] if isinstance(project_info, list) else ""
-            url = ""
-            if isinstance(project_info, list) and len(project_info) > 1:
-                url = project_info[1]
-
-            score = 0
-            project_lower = project_name.lower()
-            desc_lower = description.lower() if description else ""
-
-            # Match technology keywords
-            for keyword in keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 10
-
-            # Match project type keywords
-            for keyword in type_keywords.get(project_type, []):
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 5
-
-            # Difficulty scoring (beginner-friendly projects)
-            if difficulty == "beginner":
-                beginner_keywords = ["webgoat", "juice-shop", "training", "curriculum", "beginner"]
-                for keyword in beginner_keywords:
-                    if keyword in project_lower or keyword in desc_lower:
-                        score += 3
-            elif difficulty == "advanced":
-                advanced_keywords = ["framework", "enterprise", "standard", "verification"]
-                for keyword in advanced_keywords:
-                    if keyword in project_lower or keyword in desc_lower:
-                        score += 3
-
-            if score > 0:
-                scored_projects.append((project_name, description, url, score))
-
-        # Sort by score descending
-        scored_projects.sort(key=lambda x: x[3], reverse=True)
-
-        return scored_projects[:5]
-
-    def _get_mission_recommendations(self, mission, contribution):
-        """Get project recommendations based on mission and contribution type.
-
-        Args:
-            mission: Selected mission/goal
-            contribution: Selected contribution type
-
-        Returns:
-            list: List of tuples (project_name, description, url, score)
-        """
-        keywords = MISSION_KEYWORDS.get(mission, [])
-        contrib_keywords = {
-            "code": ["tool", "app", "scanner", "framework"],
-            "documentation": ["guide", "standard", "cheat", "documentation"],
-            "design": ["design", "ui", "frontend"],
-            "research": ["research", "top-10", "standard", "framework"],
-        }
-
-        scored_projects = []
-
-        for project_name, project_info in self.project_data.items():
-            description = project_info[0] if isinstance(project_info, list) else ""
-            url = ""
-            if isinstance(project_info, list) and len(project_info) > 1:
-                url = project_info[1]
-
-            score = 0
-            project_lower = project_name.lower()
-            desc_lower = description.lower() if description else ""
-
-            # Match mission keywords
-            for keyword in keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 10
-
-            # Match contribution type keywords
-            for keyword in contrib_keywords.get(contribution, []):
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 5
-
-            if score > 0:
-                scored_projects.append((project_name, description, url, score))
-
-        # Sort by score descending
-        scored_projects.sort(key=lambda x: x[3], reverse=True)
-
-        return scored_projects[:5]
-
-    async def _send_recommendations(
-        self, channel_id, recommendations, tech, difficulty, project_type
-    ):
-        """Send technology-based project recommendations to the user."""
-        if not recommendations:
-            # Fallback logic
-            await self._send_fallback(channel_id, "technology")
-            return
-
+        recommendations = _get_mission_recommendations(self.project_data, mission, contribution)
         context_text = (
-            f"_Based on: {tech.title()} | {difficulty.title()} | {project_type.title()}_"
+            f"_Based on: {mission.replace('-', ' ').title()} | {contribution.title()}_"
         )
-        blocks = [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": (
-                        f":star: *Recommended Projects (Top {len(recommendations)})*\n"
-                        f"{context_text}"
-                    ),
-                },
-            },
-            {"type": "divider"},
-        ]
-
-        for i, (name, description, url, _) in enumerate(recommendations, 1):
-            display_name = name.replace("www-project-", "").replace("-", " ").title()
-            desc_text = description if description and description != "None" else "OWASP Project"
-
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*{i}. {display_name}*\n{desc_text}\n<{url}|:link: View Project>",
-                },
-            })
-
-        blocks.append({"type": "divider"})
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": ":rocket: *Want me to help you get started contributing?*",
-            },
-        })
-        blocks.append({
-            "type": "actions",
-            "block_id": "final_actions",
-            "elements": [
-                {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "Try Different Filters"},
-                    "value": "restart",
-                    "action_id": "rec_restart",
-                },
-            ],
-        })
-
-        await self.web_client.chat_postMessage(
-            channel=channel_id,
-            text=f"Here are your recommended OWASP projects for {tech}!",
-            blocks=blocks,
-        )
-
-    async def _send_mission_recommendations(
-        self, channel_id, recommendations, mission, contribution
-    ):
-        """Send mission-based project recommendations to the user."""
-        if not recommendations:
-            # Fallback logic
-            await self._send_fallback(channel_id, "mission")
-            return
-
-        blocks = [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": (
-                        f":star: *Recommended Projects (Top {len(recommendations)})*\n"
-                        f"_Based on: {mission.replace('-', ' ').title()} | {contribution.title()}_"
-                    ),
-                },
-            },
-            {"type": "divider"},
-        ]
-
-        for i, (name, description, url, _) in enumerate(recommendations, 1):
-            display_name = name.replace("www-project-", "").replace("-", " ").title()
-            desc_text = description if description and description != "None" else "OWASP Project"
-
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*{i}. {display_name}*\n{desc_text}\n<{url}|:link: View Project>",
-                },
-            })
-
-        blocks.append({"type": "divider"})
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": ":rocket: *Want me to help you get started contributing?*",
-            },
-        })
-        blocks.append({
-            "type": "actions",
-            "block_id": "final_actions_mission",
-            "elements": [
-                {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "Try Different Filters"},
-                    "value": "restart",
-                    "action_id": "rec_restart",
-                },
-            ],
-        })
-
+        blocks = build_recommendations_blocks(recommendations, context_text)
         await self.web_client.chat_postMessage(
             channel=channel_id,
             text=f"Here are your recommended OWASP projects for {mission}!",
             blocks=blocks,
         )
 
-    async def _send_fallback(self, channel_id, path_type):
-        """Send fallback recommendations when no matches are found."""
-        # Popular/beginner-friendly projects as fallback
-        fallback_projects = [
-            (
-                "OWASP Juice Shop",
-                "Modern web app for security training",
-                "https://github.com/OWASP/www-project-juice-shop"
-            ),
-            (
-                "OWASP WebGoat",
-                "Deliberately insecure application",
-                "https://github.com/OWASP/www-project-webgoat"
-            ),
-            (
-                "OWASP Cheat Sheets",
-                "Security cheat sheets",
-                "https://github.com/OWASP/www-project-cheat-sheets"
-            ),
-        ]
-
-        blocks = [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": (
-                        ":thinking_face: *I couldn't find exact matches, "
-                        "but here are popular OWASP projects:*"
-                    ),
-                },
-            },
-            {"type": "divider"},
-        ]
-
-        for i, (name, description, url) in enumerate(fallback_projects, 1):
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*{i}. {name}*\n{description}\n<{url}|:link: View Project>",
-                },
-            })
-
-        blocks.append({"type": "divider"})
-        blocks.append({
-            "type": "actions",
-            "block_id": "fallback_actions",
-            "elements": [
-                {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "Try Different Filters"},
-                    "value": "restart",
-                    "action_id": "rec_restart",
-                },
-            ],
-        })
-
-        await self.web_client.chat_postMessage(
-            channel=channel_id,
-            text="Here are some popular OWASP projects to get you started!",
-            blocks=blocks,
-        )
+    # ==========================================
+    # Recommendation Logic (delegated to shared engine)
+    # ==========================================
 
     @action(action_id="rec_restart", block_id=None)
     async def handle_restart(self, action):

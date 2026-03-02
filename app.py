@@ -1,6 +1,9 @@
+import hashlib
+import hmac
 import json
 import logging
 import os
+import sys
 from pathlib import Path
 
 import git
@@ -9,6 +12,14 @@ from flask import Flask, jsonify, request
 from slack import WebClient
 from slack_sdk.errors import SlackApiError
 from slackeventsapi import SlackEventAdapter
+
+# Allow importing from src/lettuce when running directly
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
+from lettuce.recommendation_engine import (  # noqa: E402
+    build_recommendations_blocks,
+    get_mission_recommendations as _get_mission_recommendations,
+    get_tech_recommendations as _get_tech_recommendations,
+)
 
 DEPLOYS_CHANNEL_NAME = "#project-blt-lettuce-deploys"
 JOINS_CHANNEL_ID = "C06RMMRMGHE"
@@ -23,28 +34,6 @@ try:
         PROJECT_DATA = json.load(f)
 except FileNotFoundError:
     PROJECT_DATA = {}
-
-# Technology keywords for filtering
-TECH_KEYWORDS = {
-    "python": ["python", "django", "flask", "pygoat", "pytm", "honeypot"],
-    "java": ["java", "webgoat", "encoder", "benchmark", "esapi"],
-    "javascript": ["javascript", "js", "node", "juice-shop", "nodejs"],
-    "mobile": ["mobile", "android", "ios", "igoat", "androgoat", "seraphimdroid"],
-    "cloud-native": ["cloud", "kubernetes", "container", "docker", "serverless", "aws"],
-    "threat-modeling": ["threat", "dragon", "pytm", "threatspec"],
-    "devsecops": ["devsecops", "pipeline", "ci-cd", "securecodebox", "defectdojo"],
-}
-
-# Mission keywords for filtering
-MISSION_KEYWORDS = {
-    "learn-appsec": ["webgoat", "juice-shop", "security-shepherd", "training", "curriculum"],
-    "contribute-code": ["tool", "scanner", "framework"],
-    "documentation": ["guide", "cheat-sheets", "testing-guide", "standard"],
-    "gsoc-prep": ["gsoc", "student", "beginner"],
-    "research": ["research", "top-10", "standard", "framework"],
-    "devsecops": ["devsecops", "pipeline", "automation"],
-    "ctf": ["ctf", "hackademic", "shepherd", "juice-shop"],
-}
 
 logging.basicConfig(
     filename="slack_messages.log",
@@ -64,197 +53,55 @@ client.chat_postMessage(
 
 
 def get_tech_recommendations(tech, difficulty, project_type):
-    """Get project recommendations based on technology, difficulty, and type."""
-    keywords = TECH_KEYWORDS.get(tech, [])
-    type_keywords = {
-        "tools": ["tool", "scanner", "checker", "detector"],
-        "code": ["code", "app", "goat", "vulnerable"],
-        "docs": ["guide", "standard", "cheat", "top-10", "documentation"],
-        "training": ["training", "curriculum", "security-shepherd", "webgoat", "juice-shop"],
-    }
-
-    scored_projects = []
-
-    for project_name, project_info in PROJECT_DATA.items():
-        description = project_info[0] if isinstance(project_info, list) else ""
-        url = project_info[1] if isinstance(project_info, list) and len(project_info) > 1 else ""
-
-        score = 0
-        project_lower = project_name.lower()
-        desc_lower = description.lower() if description else ""
-
-        # Match technology keywords
-        for keyword in keywords:
-            if keyword in project_lower or keyword in desc_lower:
-                score += 10
-
-        # Match project type keywords
-        for keyword in type_keywords.get(project_type, []):
-            if keyword in project_lower or keyword in desc_lower:
-                score += 5
-
-        # Difficulty scoring
-        if difficulty == "beginner":
-            beginner_keywords = ["webgoat", "juice-shop", "training", "curriculum", "beginner"]
-            for keyword in beginner_keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 3
-        elif difficulty == "advanced":
-            advanced_keywords = ["framework", "enterprise", "standard", "verification"]
-            for keyword in advanced_keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 3
-
-        if score > 0:
-            scored_projects.append((project_name, description, url, score))
-
-    scored_projects.sort(key=lambda x: x[3], reverse=True)
-    return scored_projects[:5]
+    """Wrapper to get technology-based recommendations using the global project data."""
+    return _get_tech_recommendations(PROJECT_DATA, tech, difficulty, project_type)
 
 
 def get_mission_recommendations(mission, contribution):
-    """Get project recommendations based on mission and contribution type."""
-    keywords = MISSION_KEYWORDS.get(mission, [])
-    contrib_keywords = {
-        "code": ["tool", "app", "scanner", "framework"],
-        "documentation": ["guide", "standard", "cheat", "documentation"],
-        "design": ["design", "ui", "frontend"],
-        "research": ["research", "top-10", "standard", "framework"],
-    }
-
-    scored_projects = []
-
-    for project_name, project_info in PROJECT_DATA.items():
-        description = project_info[0] if isinstance(project_info, list) else ""
-        url = project_info[1] if isinstance(project_info, list) and len(project_info) > 1 else ""
-
-        score = 0
-        project_lower = project_name.lower()
-        desc_lower = description.lower() if description else ""
-
-        # Match mission keywords
-        for keyword in keywords:
-            if keyword in project_lower or keyword in desc_lower:
-                score += 10
-
-        # Match contribution type keywords
-        for keyword in contrib_keywords.get(contribution, []):
-            if keyword in project_lower or keyword in desc_lower:
-                score += 5
-
-        if score > 0:
-            scored_projects.append((project_name, description, url, score))
-
-    scored_projects.sort(key=lambda x: x[3], reverse=True)
-    return scored_projects[:5]
+    """Wrapper to get mission-based recommendations using the global project data."""
+    return _get_mission_recommendations(PROJECT_DATA, mission, contribution)
 
 
-def build_recommendations_blocks(recommendations, context_text):
-    """Build Slack blocks for displaying recommendations."""
-    if not recommendations:
-        return build_fallback_blocks()
+def verify_slack_signature(signing_secret, request_obj):
+    """Verify that the request came from Slack using the signing secret.
 
-    blocks = [
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": (
-                    f":star: *Recommended Projects (Top {len(recommendations)})*\n"
-                    f"{context_text}"
-                ),
-            },
-        },
-        {"type": "divider"},
-    ]
+    Args:
+        signing_secret: The app's signing secret from env.
+        request_obj: The Flask request object.
 
-    for i, (name, description, url, _) in enumerate(recommendations, 1):
-        display_name = name.replace("www-project-", "").replace("-", " ").title()
-        desc_text = description if description and description != "None" else "OWASP Project"
+    Returns:
+        bool: True if the signature is valid, False otherwise.
+    """
+    timestamp = request_obj.headers.get("X-Slack-Request-Timestamp", "")
+    signature = request_obj.headers.get("X-Slack-Signature", "")
 
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"*{i}. {display_name}*\n{desc_text}\n<{url}|:link: View Project>",
-            },
-        })
+    if not signing_secret or not timestamp or not signature:
+        return False
 
-    blocks.append({"type": "divider"})
-    blocks.append({
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": ":rocket: *Want me to help you get started contributing?*",
-        },
-    })
-    blocks.append({
-        "type": "actions",
-        "block_id": "final_actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {"type": "plain_text", "text": "Try Different Filters"},
-                "value": "restart",
-                "action_id": "rec_restart",
-            },
-        ],
-    })
+    try:
+        import time
+        if abs(time.time() - int(timestamp)) > 300:
+            return False
+    except (ValueError, TypeError):
+        return False
 
-    return blocks
-
-
-def build_fallback_blocks():
-    """Build fallback blocks when no matches are found."""
-    fallback_projects = [
-        ("OWASP Juice Shop", "Modern web app for security training",
-         "https://github.com/OWASP/www-project-juice-shop"),
-        ("OWASP WebGoat", "Deliberately insecure application",
-         "https://github.com/OWASP/www-project-webgoat"),
-        ("OWASP Cheat Sheets", "Security cheat sheets",
-         "https://github.com/OWASP/www-project-cheat-sheets"),
-    ]
-
-    blocks = [
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": ":thinking_face: *I couldn't find exact matches, here are popular:*",
-            },
-        },
-        {"type": "divider"},
-    ]
-
-    for i, (name, description, url) in enumerate(fallback_projects, 1):
-        blocks.append({
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": f"*{i}. {name}*\n{description}\n<{url}|:link: View Project>",
-            },
-        })
-
-    blocks.append({"type": "divider"})
-    blocks.append({
-        "type": "actions",
-        "block_id": "fallback_actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {"type": "plain_text", "text": "Try Different Filters"},
-                "value": "restart",
-                "action_id": "rec_restart",
-            },
-        ],
-    })
-
-    return blocks
+    sig_basestring = f"v0:{timestamp}:{request_obj.get_data(as_text=True)}"
+    expected = "v0=" + hmac.new(
+        signing_secret.encode("utf-8"),
+        sig_basestring.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return hmac.compare_digest(expected, signature)
 
 
 @app.route("/slack/interactivity", methods=["POST"])
 def handle_interactivity():
     """Handle interactive button clicks from Slack."""
+    signing_secret = os.environ.get("SIGNING_SECRET", "")
+    if signing_secret and not verify_slack_signature(signing_secret, request):
+        logging.warning("Invalid Slack signature on /slack/interactivity")
+        return jsonify({"error": "Invalid signature"}), 401
+
     try:
         payload = json.loads(request.form.get("payload", "{}"))
     except json.JSONDecodeError:
@@ -454,7 +301,11 @@ def handle_interactivity():
 
         # Difficulty selection -> Project type
         elif action_id.startswith("rec_diff_"):
-            tech, difficulty = action_value.split("|")
+            try:
+                tech, difficulty = action_value.split("|")
+            except ValueError:
+                logging.warning("Invalid action_value for rec_diff_: %r", action_value)
+                return "", 200
             blocks = [
                 {
                     "type": "section",
@@ -508,7 +359,11 @@ def handle_interactivity():
 
         # Project type selection -> Show recommendations
         elif action_id.startswith("rec_type_"):
-            tech, difficulty, project_type = action_value.split("|")
+            try:
+                tech, difficulty, project_type = action_value.split("|")
+            except ValueError:
+                logging.warning("Invalid action_value for rec_type_: %r", action_value)
+                return "", 200
             recommendations = get_tech_recommendations(tech, difficulty, project_type)
             context = f"_Based on: {tech.title()} | {difficulty.title()} | {project_type.title()}_"
             blocks = build_recommendations_blocks(recommendations, context)
@@ -574,7 +429,11 @@ def handle_interactivity():
 
         # Contribution type selection -> Show recommendations
         elif action_id.startswith("rec_contrib_"):
-            mission, contribution = action_value.split("|")
+            try:
+                mission, contribution = action_value.split("|")
+            except ValueError:
+                logging.warning("Invalid action_value for rec_contrib_: %r", action_value)
+                return "", 200
             recommendations = get_mission_recommendations(mission, contribution)
             context = (
                 f"_Based on: {mission.replace('-', ' ').title()} | {contribution.title()}_"

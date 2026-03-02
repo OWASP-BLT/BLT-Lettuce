@@ -19,6 +19,7 @@ features:
       should_escape: false
     - command: /recommend
       description: Get personalized OWASP project recommendations
+      url: <YOUR_WORKER_URL>/slack/commands
       should_escape: false
 oauth_config:
   scopes:
@@ -35,7 +36,6 @@ oauth_config:
       - mpim:history
       - mpim:read
       - users:read
-      - chat:write
       - team:read
 settings:
   event_subscriptions:
@@ -52,7 +52,8 @@ settings:
   interactivity:
     is_enabled: true
     # IMPORTANT: Replace <YOUR_WORKER_URL> with your actual Cloudflare Worker URL
-    request_url: <YOUR_WORKER_URL>/webhook
+    # Example: https://blt-lettuce-worker.your-subdomain.workers.dev/slack/interactivity
+    request_url: <YOUR_WORKER_URL>/slack/interactivity
   org_deploy_enabled: true
   socket_mode_enabled: false
   token_rotation_enabled: false

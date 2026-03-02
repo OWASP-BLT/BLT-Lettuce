@@ -1,165 +1,183 @@
-"""Tests for the recommendations functionality in app.py."""
+"""Tests for the recommendations functionality using the shared recommendation engine."""
+
+from lettuce.recommendation_engine import (
+    MISSION_KEYWORDS,
+    TECH_KEYWORDS,
+    build_fallback_blocks,
+    build_recommendations_blocks,
+    get_mission_recommendations,
+    get_tech_recommendations,
+)
+
+
+SAMPLE_PROJECT_DATA = {
+    "www-project-juice-shop": [
+        "OWASP Foundation Web Repository",
+        "https://github.com/OWASP/www-project-juice-shop",
+    ],
+    "www-project-webgoat": [
+        "OWASP Foundation Training Web Repository",
+        "https://github.com/OWASP/www-project-webgoat",
+    ],
+    "www-project-pytm": [
+        "OWASP Foundation Web Repository",
+        "https://github.com/OWASP/www-project-pytm",
+    ],
+    "www-project-cheat-sheets": [
+        "OWASP Foundation Web Repository",
+        "https://github.com/OWASP/www-project-cheat-sheets",
+    ],
+    "www-project-threat-dragon": [
+        "OWASP Foundation Threat Dragon Project Web Repository",
+        "https://github.com/OWASP/www-project-threat-dragon",
+    ],
+}
 
 
 class TestRecommendationFunctions:
     """Tests for the OWASP project recommendations helper functions."""
 
     def test_tech_keywords_exist(self):
-        """Test TECH_KEYWORDS configuration exists and has expected keys."""
-        # Recreate the keywords here to test the logic
-        tech_keywords = {
-            "python": ["python", "django", "flask", "pygoat", "pytm", "honeypot"],
-            "java": ["java", "webgoat", "encoder", "benchmark", "esapi"],
-            "javascript": ["javascript", "js", "node", "juice-shop", "nodejs"],
-            "mobile": ["mobile", "android", "ios", "igoat", "androgoat", "seraphimdroid"],
-            "cloud-native": ["cloud", "kubernetes", "container", "docker", "serverless"],
-            "threat-modeling": ["threat", "dragon", "pytm", "threatspec"],
-            "devsecops": ["devsecops", "pipeline", "ci-cd", "securecodebox", "defectdojo"],
-        }
+        """Test TECH_KEYWORDS configuration has all expected technology keys."""
+        assert "python" in TECH_KEYWORDS
+        assert "java" in TECH_KEYWORDS
+        assert "javascript" in TECH_KEYWORDS
+        assert "mobile" in TECH_KEYWORDS
+        assert "cloud-native" in TECH_KEYWORDS
+        assert "threat-modeling" in TECH_KEYWORDS
+        assert "devsecops" in TECH_KEYWORDS
 
-        assert "python" in tech_keywords
-        assert "java" in tech_keywords
-        assert "javascript" in tech_keywords
-        assert "mobile" in tech_keywords
-        assert "cloud-native" in tech_keywords
-        assert "threat-modeling" in tech_keywords
-        assert "devsecops" in tech_keywords
+        # All values should be non-empty lists of strings
+        for tech, keywords in TECH_KEYWORDS.items():
+            assert isinstance(keywords, list), f"{tech} keywords should be a list"
+            assert len(keywords) > 0, f"{tech} keywords should not be empty"
+            assert all(isinstance(k, str) for k in keywords)
 
     def test_mission_keywords_exist(self):
-        """Test MISSION_KEYWORDS configuration exists and has expected keys."""
-        mission_keywords = {
-            "learn-appsec": ["webgoat", "juice-shop", "security-shepherd", "training"],
-            "contribute-code": ["tool", "scanner", "framework"],
-            "documentation": ["guide", "cheat-sheets", "testing-guide", "standard"],
-            "gsoc-prep": ["gsoc", "student", "beginner"],
-            "research": ["research", "top-10", "standard", "framework"],
-            "devsecops": ["devsecops", "pipeline", "automation"],
-            "ctf": ["ctf", "hackademic", "shepherd", "juice-shop"],
-        }
+        """Test MISSION_KEYWORDS configuration has all expected mission keys."""
+        assert "learn-appsec" in MISSION_KEYWORDS
+        assert "contribute-code" in MISSION_KEYWORDS
+        assert "documentation" in MISSION_KEYWORDS
+        assert "gsoc-prep" in MISSION_KEYWORDS
+        assert "research" in MISSION_KEYWORDS
+        assert "devsecops" in MISSION_KEYWORDS
+        assert "ctf" in MISSION_KEYWORDS
 
-        assert "learn-appsec" in mission_keywords
-        assert "contribute-code" in mission_keywords
-        assert "documentation" in mission_keywords
-        assert "gsoc-prep" in mission_keywords
-        assert "research" in mission_keywords
-        assert "devsecops" in mission_keywords
-        assert "ctf" in mission_keywords
+        # All values should be non-empty lists of strings
+        for mission, keywords in MISSION_KEYWORDS.items():
+            assert isinstance(keywords, list), f"{mission} keywords should be a list"
+            assert len(keywords) > 0, f"{mission} keywords should not be empty"
+            assert all(isinstance(k, str) for k in keywords)
 
-    def test_recommendation_scoring_logic(self):
-        """Test the recommendation scoring logic."""
-        sample_project_data = {
-            "www-project-juice-shop": [
-                "OWASP Foundation Web Respository",
-                "https://github.com/OWASP/www-project-juice-shop",
-            ],
-            "www-project-threat-dragon": [
-                "OWASP Foundation Threat Dragon Project Web Repository",
-                "https://github.com/OWASP/www-project-threat-dragon",
-            ],
-        }
+    def test_get_tech_recommendations_returns_list(self):
+        """Test that get_tech_recommendations returns a list of at most 5 items."""
+        recommendations = get_tech_recommendations(SAMPLE_PROJECT_DATA, "python", "beginner", "training")
+        assert isinstance(recommendations, list)
+        assert len(recommendations) <= 5
 
-        # Replicate the scoring logic for threat-modeling
-        keywords = ["threat", "dragon", "pytm", "threatspec"]
+    def test_get_tech_recommendations_scores_matches(self):
+        """Test that threat-modeling recommendations include threat-dragon."""
+        recommendations = get_tech_recommendations(
+            SAMPLE_PROJECT_DATA, "threat-modeling", "beginner", "tools"
+        )
+        project_names = [r[0] for r in recommendations]
+        assert any("threat" in name.lower() for name in project_names)
 
-        scored_projects = []
-        for project_name, project_info in sample_project_data.items():
-            description = project_info[0] if isinstance(project_info, list) else ""
-            url = ""
-            if isinstance(project_info, list) and len(project_info) > 1:
-                url = project_info[1]
+    def test_get_tech_recommendations_tuple_structure(self):
+        """Test that each recommendation is a (name, description, url, score) tuple."""
+        recommendations = get_tech_recommendations(
+            SAMPLE_PROJECT_DATA, "threat-modeling", "beginner", "tools"
+        )
+        for rec in recommendations:
+            assert len(rec) == 4
+            assert isinstance(rec[0], str)  # project name
+            assert isinstance(rec[1], str)  # description
+            assert isinstance(rec[2], str)  # url
+            assert isinstance(rec[3], int)  # score
 
-            score = 0
-            project_lower = project_name.lower()
-            desc_lower = description.lower() if description else ""
+    def test_get_mission_recommendations_returns_list(self):
+        """Test that get_mission_recommendations returns a list of at most 5 items."""
+        recommendations = get_mission_recommendations(SAMPLE_PROJECT_DATA, "learn-appsec", "code")
+        assert isinstance(recommendations, list)
+        assert len(recommendations) <= 5
 
-            for keyword in keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 10
+    def test_get_mission_recommendations_scores_documentation(self):
+        """Test that documentation mission returns cheat-sheets project."""
+        recommendations = get_mission_recommendations(
+            SAMPLE_PROJECT_DATA, "documentation", "documentation"
+        )
+        project_names = [r[0] for r in recommendations]
+        assert any("cheat" in name.lower() for name in project_names)
 
-            if score > 0:
-                scored_projects.append((project_name, description, url, score))
+    def test_build_recommendations_blocks_with_results(self):
+        """Test that build_recommendations_blocks creates valid Slack blocks with results."""
+        recommendations = [
+            ("www-project-juice-shop", "Test description", "https://example.com", 10),
+            ("www-project-webgoat", "Another desc", "https://example2.com", 5),
+        ]
 
-        scored_projects.sort(key=lambda x: x[3], reverse=True)
+        blocks = build_recommendations_blocks(recommendations, "_Test context_")
 
-        # Threat dragon should be in the results
-        project_names = [p[0] for p in scored_projects]
-        assert "www-project-threat-dragon" in project_names
+        assert isinstance(blocks, list)
+        assert len(blocks) > 0
 
-    def test_build_slack_blocks_structure(self):
-        """Test that Slack blocks have the correct structure."""
+        # First block should be the header
+        first_block = blocks[0]
+        assert first_block["type"] == "section"
+        assert "Recommended Projects" in first_block["text"]["text"]
+
+    def test_build_recommendations_blocks_project_names(self):
+        """Test that project names are formatted correctly for display."""
         recommendations = [
             ("www-project-juice-shop", "Test description", "https://example.com", 10),
         ]
 
-        # Replicate block building logic
-        blocks = [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f":star: *Recommended Projects (Top {len(recommendations)})*",
-                },
-            },
-            {"type": "divider"},
-        ]
+        blocks = build_recommendations_blocks(recommendations, "_Test context_")
 
-        for i, (name, description, url, _) in enumerate(recommendations, 1):
-            display_name = name.replace("www-project-", "").replace("-", " ").title()
-            desc_text = description if description and description != "None" else "OWASP Project"
+        project_block = None
+        for block in blocks:
+            if block.get("type") == "section" and "Juice Shop" in block.get("text", {}).get("text", ""):
+                project_block = block
+                break
 
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*{i}. {display_name}*\n{desc_text}\n<{url}|:link: View Project>",
-                },
-            })
+        assert project_block is not None
 
-        assert len(blocks) == 3
-        assert blocks[0]["type"] == "section"
-        assert blocks[1]["type"] == "divider"
-        assert blocks[2]["type"] == "section"
-        assert "Juice Shop" in blocks[2]["text"]["text"]
+    def test_build_recommendations_blocks_empty_returns_fallback(self):
+        """Test that build_recommendations_blocks delegates to fallback when empty."""
+        blocks = build_recommendations_blocks([], "_Test context_")
 
-    def test_fallback_blocks_structure(self):
-        """Test fallback blocks have correct structure."""
-        fallback_projects = [
-            (
-                "OWASP Juice Shop",
-                "Modern web app for security training",
-                "https://github.com/OWASP/www-project-juice-shop"
-            ),
-        ]
+        assert isinstance(blocks, list)
+        assert len(blocks) > 0
+        # Fallback should contain the "couldn't find" message
+        text_found = any(
+            "couldn't find" in block.get("text", {}).get("text", "")
+            for block in blocks
+            if block.get("type") == "section"
+        )
+        assert text_found
 
-        blocks = [
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": ":thinking_face: *I couldn't find exact matches*",
-                },
-            },
-            {"type": "divider"},
-        ]
+    def test_build_fallback_blocks(self):
+        """Test that build_fallback_blocks creates valid fallback blocks."""
+        blocks = build_fallback_blocks()
 
-        for i, (name, description, url) in enumerate(fallback_projects, 1):
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*{i}. {name}*\n{description}\n<{url}|:link: View Project>",
-                },
-            })
+        assert isinstance(blocks, list)
+        assert len(blocks) > 0
 
-        assert len(blocks) == 3
-        assert "couldn't find" in blocks[0]["text"]["text"]
+        # Check for the thinking face message
+        text_found = any(
+            "couldn't find" in block.get("text", {}).get("text", "")
+            for block in blocks
+            if block.get("type") == "section"
+        )
+        assert text_found
 
-    def test_project_name_formatting(self):
-        """Test that project names are formatted correctly for display."""
-        project_name = "www-project-juice-shop"
-        display_name = project_name.replace("www-project-", "").replace("-", " ").title()
-
-        assert display_name == "Juice Shop"
+        # Check that popular projects are listed
+        all_text = " ".join(
+            block.get("text", {}).get("text", "")
+            for block in blocks
+            if block.get("type") == "section"
+        )
+        assert "Juice Shop" in all_text or "WebGoat" in all_text
 
     def test_action_value_parsing(self):
         """Test that action values are parsed correctly."""
@@ -192,60 +210,19 @@ class TestRecommendationFunctions:
         assert button["action_id"] == "rec_path_technology"
         assert button["style"] == "primary"
 
-    def test_scoring_with_difficulty_levels(self):
-        """Test that difficulty level affects scoring."""
-        sample_project_data = {
-            "www-project-webgoat": [
-                "OWASP Foundation Training Web Respository",
-                "https://github.com/OWASP/www-project-webgoat",
-            ],
-            "www-project-enterprise-security": [
-                "Enterprise Security Framework",
-                "https://github.com/OWASP/www-project-enterprise",
-            ],
-        }
+    def test_scoring_beginner_project_ranked_higher(self):
+        """Test that beginner difficulty boosts webgoat over non-training projects."""
+        recommendations = get_tech_recommendations(
+            SAMPLE_PROJECT_DATA, "java", "beginner", "training"
+        )
+        # webgoat is a Java training project - should be in results
+        project_names = [r[0] for r in recommendations]
+        assert "www-project-webgoat" in project_names
 
-        # Beginner scoring keywords
-        beginner_keywords = ["webgoat", "juice-shop", "training", "curriculum", "beginner"]
+    def test_project_name_formatting(self):
+        """Test that project names are formatted correctly for display."""
+        project_name = "www-project-juice-shop"
+        display_name = project_name.replace("www-project-", "").replace("-", " ").title()
+        assert display_name == "Juice Shop"
 
-        # Advanced scoring keywords
-        advanced_keywords = ["framework", "enterprise", "standard", "verification"]
-
-        # Score for beginner
-        beginner_scores = []
-        for project_name, project_info in sample_project_data.items():
-            description = project_info[0] if isinstance(project_info, list) else ""
-            score = 0
-            project_lower = project_name.lower()
-            desc_lower = description.lower() if description else ""
-
-            for keyword in beginner_keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 3
-
-            if score > 0:
-                beginner_scores.append((project_name, score))
-
-        # Score for advanced
-        advanced_scores = []
-        for project_name, project_info in sample_project_data.items():
-            description = project_info[0] if isinstance(project_info, list) else ""
-            score = 0
-            project_lower = project_name.lower()
-            desc_lower = description.lower() if description else ""
-
-            for keyword in advanced_keywords:
-                if keyword in project_lower or keyword in desc_lower:
-                    score += 3
-
-            if score > 0:
-                advanced_scores.append((project_name, score))
-
-        # WebGoat should score for beginner
-        beginner_names = [p[0] for p in beginner_scores]
-        assert "www-project-webgoat" in beginner_names
-
-        # Enterprise security should score for advanced
-        advanced_names = [p[0] for p in advanced_scores]
-        assert "www-project-enterprise-security" in advanced_names
 
