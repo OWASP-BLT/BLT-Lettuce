@@ -804,8 +804,8 @@ async def on_fetch(request, env):
             "endpoints": {
                 "/": "GET - Homepage",
                 "/webhook": "POST - Slack webhook endpoint",
-                "/slack/interactivity": "POST - Slack interactive components",
-                "/slack/commands": "POST - Slack slash commands",
+                "/slack/interactivity": "POST - Slack interactive components (proxied to backend)",
+                "/slack/commands": "POST - Slack slash commands (proxied to backend)",
                 "/stats": "GET - Get current stats",
                 "/health": "GET - Health check",
             },

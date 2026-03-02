@@ -4,4 +4,4 @@ import sys
 from pathlib import Path
 
 # Add src to sys.path so `lettuce` package can be imported without installation
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
