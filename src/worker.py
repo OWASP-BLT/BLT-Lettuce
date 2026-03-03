@@ -6,12 +6,22 @@ tracks stats, serves the homepage, and handles all Slack interactions.
 Designed to be deployed to any Slack organization.
 """
 
+import asyncio
 import hashlib
 import hmac
 import json
+import logging
 from datetime import datetime, timezone
 
-from js import Headers, Response, fetch
+try:
+    from js import Headers, Response, fetch
+except ImportError:  # pragma: no cover - enables local unit tests
+    Headers = None
+    Response = None
+
+    async def fetch(*_args, **_kwargs):  # pragma: no cover
+        raise RuntimeError("fetch is only available in Cloudflare Workers runtime")
+
 
 # Channel IDs - these can be configured via environment variables
 # NOTE: These are OWASP-specific defaults. For other organizations:
@@ -23,6 +33,106 @@ DEFAULT_CONTRIBUTE_ID = None  # Optional: Channel for contribution guidelines
 
 # Stats are stored in Cloudflare KV namespace
 # Stats structure: { "joins": int, "commands": int, "last_updated": str }
+DEFAULT_BLT_API_TIMEOUT_SECONDS = 3
+BLT_LEAST_MEMBERS_CHANNEL_PATH = "projects/least-members-channel/"
+
+logger = logging.getLogger(__name__)
+
+
+def build_blt_api_url(base_url, path):
+    """Build a BLT API URL, adding /api/v1 when needed."""
+    base_path = (base_url or "").rstrip("/")
+    normalized_path = (path or "").lstrip("/")
+    if not base_path or not normalized_path:
+        return None
+
+    if not base_path.endswith("/api/v1") and not normalized_path.startswith("api/v1"):
+        normalized_path = f"api/v1/{normalized_path}"
+
+    return f"{base_path}/{normalized_path}"
+
+
+def build_blt_auth_header(token):
+    """Build Authorization header, defaulting to DRF Token auth."""
+    normalized_token = (token or "").strip()
+    if not normalized_token:
+        return {}
+
+    if " " in normalized_token:
+        return {"Authorization": normalized_token}
+
+    return {"Authorization": f"Token {normalized_token}"}
+
+
+async def blt_get(env, path, timeout_seconds=DEFAULT_BLT_API_TIMEOUT_SECONDS):
+    """GET data from BLT API with timeout and strict JSON/status validation."""
+    base_url = getattr(env, "BLT_API_BASE_URL", None)
+    request_url = build_blt_api_url(base_url, path)
+    if not request_url:
+        return None
+
+    token = getattr(env, "BLT_API_TOKEN", None)
+    request_options = {
+        "method": "GET",
+        "headers": build_blt_auth_header(token),
+    }
+
+    try:
+        response = await asyncio.wait_for(
+            fetch(request_url, request_options), timeout_seconds
+        )
+    except asyncio.TimeoutError:
+        logger.warning("BLT API request timed out for path '%s'", path)
+        return None
+    except Exception:
+        logger.warning("BLT API request failed for path '%s'", path, exc_info=True)
+        return None
+
+    if not bool(getattr(response, "ok", False)):
+        logger.warning(
+            "BLT API request returned non-2xx status %s for path '%s'",
+            getattr(response, "status", "unknown"),
+            path,
+        )
+        return None
+
+    try:
+        payload = await asyncio.wait_for(response.json(), timeout_seconds)
+    except asyncio.TimeoutError:
+        logger.warning("BLT API JSON parsing timed out for path '%s'", path)
+        return None
+    except Exception:
+        logger.warning(
+            "BLT API returned invalid JSON for path '%s'", path, exc_info=True
+        )
+        return None
+
+    if not isinstance(payload, dict):
+        logger.warning(
+            "BLT API returned unexpected payload type '%s' for path '%s'",
+            type(payload).__name__,
+            path,
+        )
+        return None
+
+    return payload
+
+
+async def get_least_members_channel(env):
+    """Get least-members project channel from BLT API."""
+    api_result = await blt_get(env, BLT_LEAST_MEMBERS_CHANNEL_PATH, timeout_seconds=2)
+    if not isinstance(api_result, dict):
+        return None
+
+    slack_channel = api_result.get("slack_channel")
+    if not isinstance(slack_channel, str) or not slack_channel.strip():
+        logger.warning(
+            "BLT API least-members response missing non-empty 'slack_channel': %s",
+            api_result,
+        )
+        return None
+
+    return slack_channel.strip().lstrip("#")
 
 
 def get_utc_now():
@@ -189,7 +299,9 @@ async def handle_team_join(env, event):
     # Post a message in the private joins channel (if configured)
     if joins_channel:
         try:
-            await send_slack_message(env, joins_channel, f"<@{user_id}> joined the team.")
+            await send_slack_message(
+                env, joins_channel, f"<@{user_id}> joined the team."
+            )
         except Exception:
             pass  # Don't fail if we can't post to joins channel
 
@@ -204,7 +316,9 @@ async def handle_team_join(env, event):
 
     # Format welcome message
     welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
-    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}]
+    blocks = [
+        {"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}
+    ]
 
     # Send welcome message
     result = await send_slack_message(
@@ -241,13 +355,20 @@ async def handle_message_event(env, event):
         subtype is None
         and "#contribute" not in message_text
         and any(
-            keyword in message_text for keyword in ("contribute", "contributing", "contributes")
+            keyword in message_text
+            for keyword in ("contribute", "contributing", "contributes")
         )
     ):
-        response_text = (
-            f"Hello <@{user}>! Please check this channel "
-            f"<#{contribute_id}> for contributing guidelines today!"
-        )
+        api_channel = await get_least_members_channel(env)
+        if api_channel:
+            response_text = f"Hello <@{user}>! Please check #{api_channel} for contributing guidelines today!"
+        elif contribute_id:
+            response_text = (
+                f"Hello <@{user}>! Please check this channel "
+                f"<#{contribute_id}> for contributing guidelines today!"
+            )
+        else:
+            response_text = f"Hello <@{user}>! Please check #contribute for contributing guidelines today!"
         result = await send_slack_message(env, channel, response_text)
         return {"ok": result.get("ok"), "action": "contribute_response"}
 
@@ -256,7 +377,9 @@ async def handle_message_event(env, event):
         # Log to joins channel (if configured)
         if joins_channel:
             try:
-                await send_slack_message(env, joins_channel, f"<@{user}> said {message_text}")
+                await send_slack_message(
+                    env, joins_channel, f"<@{user}> said {message_text}"
+                )
             except Exception:
                 pass
 
@@ -319,7 +442,10 @@ def is_homepage_request(url, method):
         path.endswith("/")
         or "/index" in path
         or last_segment == ""
-        or ("." not in last_segment and last_segment not in ["webhook", "stats", "health"])
+        or (
+            "." not in last_segment
+            and last_segment not in ["webhook", "stats", "health"]
+        )
     )
 
 
@@ -717,8 +843,12 @@ async def on_fetch(request, env):
                 timestamp = request.headers.get("X-Slack-Request-Timestamp")
                 signature = request.headers.get("X-Slack-Signature")
 
-                if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
-                    return Response.json({"error": "Invalid signature"}, {"status": 401})
+                if not verify_slack_signature(
+                    signing_secret, timestamp, body_text, signature
+                ):
+                    return Response.json(
+                        {"error": "Invalid signature"}, {"status": 401}
+                    )
 
             # Handle Slack URL verification challenge
             if body_json.get("type") == "url_verification":
