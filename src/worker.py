@@ -275,6 +275,46 @@ async def handle_command(env, event):
     return {"ok": True, "message": "Command tracked"}
 
 
+async def handle_welcome_command(env, body):
+    """Handle /welcome slash command."""
+
+    user_id = body.get("user_id")
+
+    if not user_id:
+        return {"ok": False, "error": "Missing user_id"}
+
+    # Track command usage
+    await increment_commands(env)
+
+    # Open DM with the user
+    dm_response = await open_conversation(env, user_id)
+
+    if not dm_response.get("ok"):
+        return {"ok": False, "error": "Failed to open DM"}
+
+    dm_channel = dm_response["channel"]["id"]
+
+    welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": welcome_text.strip(),
+            },
+        }
+    ]
+
+    result = await send_slack_message(
+        env,
+        dm_channel,
+        "Welcome to the OWASP Slack Community!",
+        blocks,
+    )
+
+    return {"ok": result.get("ok")}
+
 def verify_slack_signature(signing_secret, timestamp, body, signature):
     """Verify that the request came from Slack using the signing secret."""
     if not signing_secret or not timestamp or not signature:
@@ -710,8 +750,33 @@ async def on_fetch(request, env):
             # Get raw body for signature verification
             body_text = await request.text()
 
-            # Verify Slack signature (skip for url_verification)
-            body_json = json.loads(body_text)
+            content_type = request.headers.get("content-type") or ""
+
+            # Handle Slack slash commands
+            if "application/x-www-form-urlencoded" in content_type:
+                import urllib.parse
+
+                parsed = urllib.parse.parse_qs(body_text)
+                slash_body = {k: v[0] for k, v in parsed.items()}
+     
+                if slash_body.get("command") == "/welcome":
+                    
+
+                    import json as _json
+                    headers = Headers.new()
+                    headers.set("Content-Type", "application/json")
+                    return Response.new(
+                        _json.dumps({"response_type": "ephemeral", "text": "✅ Welcome! Check your DMs for the OWASP welcome message."}),
+                        headers=headers
+                    )
+                  
+                return Response.json({"text": "Command acknowledged."})       
+            # Handle Slack Events API requests (JSON)
+            if "application/json" in content_type:
+                
+                body_json = json.loads(body_text)
+            else:
+                body_json = {}
             if body_json.get("type") != "url_verification":
                 signing_secret = getattr(env, "SIGNING_SECRET", None)
                 timestamp = request.headers.get("X-Slack-Request-Timestamp")
