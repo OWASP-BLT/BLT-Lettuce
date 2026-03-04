@@ -35,6 +35,16 @@ BLT-Lettuce is an intelligent Slack bot designed for the OWASP Slack workspace. 
 
 > **Note:** This Slack bot functionality has been incorporated into the main [BLT repository](https://github.com/OWASP-BLT/BLT) and is being transferred back to this repo for better organization.
 
+### Relationship to BLT
+
+BLT-Lettuce is the **Slack bot for the OWASP community** and is part of the broader [BLT (Bug Logging Tool)](https://github.com/OWASP-BLT/BLT) ecosystem. It interacts with the BLT ecosystem by:
+
+- **Welcoming new members** to OWASP Slack and guiding them to relevant resources
+- **Helping users discover projects and communities** through interactive conversations and project discovery flows
+- **Complementing BLT-Sammich** — the main BLT Slack bot handles commands like `/project`, `/repo`, and `/ghissue`, while BLT-Lettuce focuses on onboarding and project discovery
+
+Together, these tools enable the OWASP community to connect contributors with the right projects and resources.
+
 ### 🎯 Core Features
 
 - **👋 Welcome New Members** - Automatically sends personalized welcome messages to newcomers
@@ -260,6 +270,99 @@ This bot supports org-wide deployment and can be installed in any Slack workspac
 4. Share the installation URL with other organizations
 
 Each organization will have its own isolated statistics and configuration.
+
+---
+
+## 🧑‍💻 Local Development
+
+This section explains how to run BLT-Lettuce locally for development and testing.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (for Wrangler CLI)
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/)
+- Cloudflare account
+- Slack Bot Token and Signing Secret (from a Slack app you create for development)
+
+### 1. Install Dependencies
+
+```bash
+# Install Wrangler CLI globally
+npm install -g wrangler
+
+# Login to Cloudflare (opens browser)
+wrangler login
+```
+
+### 2. Create KV Namespace (for local dev)
+
+```bash
+wrangler kv:namespace create "STATS_KV"
+```
+
+Copy the namespace ID from the output and add it to `wrangler.toml` under `[[kv_namespaces]]`:
+
+```toml
+[[kv_namespaces]]
+binding = "STATS_KV"
+id = "your-namespace-id"
+```
+
+### 3. Configure Environment Variables
+
+Create a `.dev.vars` file in the project root for local secrets:
+
+```
+SLACK_TOKEN=xoxb-your-bot-token
+SIGNING_SECRET=your-signing-secret
+```
+
+> **Note:** Never commit `.dev.vars` to version control. Wrangler loads these variables when running `wrangler dev`.
+
+### 4. Run the Worker Locally
+
+```bash
+wrangler dev
+```
+
+The worker will start at `http://localhost:8787`. You can:
+
+- Visit `http://localhost:8787/` for the dashboard
+- Visit `http://localhost:8787/health` to verify the worker is running
+- Visit `http://localhost:8787/stats` for the stats JSON
+
+### 5. Testing Slack Webhook Events Locally
+
+Slack needs a public URL to send webhook events. To test locally, use a tunnel service:
+
+**Option A: ngrok**
+
+```bash
+# Install ngrok: https://ngrok.com/download
+ngrok http 8787
+```
+
+Copy the HTTPS URL (e.g., `https://abc123.ngrok.io`) and set your Slack app's Event Subscriptions Request URL to:
+
+```
+https://abc123.ngrok.io/webhook
+```
+
+**Option B: Cloudflare Tunnel**
+
+```bash
+cloudflared tunnel --url http://localhost:8787
+```
+
+Use the provided URL with `/webhook` as the Slack Event Subscriptions endpoint.
+
+**Testing:**
+
+1. Point your Slack app's webhook URL to your tunnel URL + `/webhook`
+2. Trigger events (e.g., join a channel, send a DM to the bot, mention the bot)
+3. Watch the `wrangler dev` terminal for request logs
+
+For code formatting and tests, see the [Development](#-development) section below.
 
 ---
 
