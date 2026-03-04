@@ -275,6 +275,27 @@ async def handle_command(env, event):
     return {"ok": True, "message": "Command tracked"}
 
 
+async def send_to_response_url(response_url, user_id):
+    """Send welcome message via Slack response_url (bypasses 3s timeout)."""
+    from js import fetch, Headers, Object
+    
+    welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
+    
+    payload = {
+        "response_type": "ephemeral",
+        "text": welcome_text.strip()
+    }
+    
+    headers = Headers.new()
+    headers.set("Content-Type", "application/json")
+    
+    await fetch(response_url, Object.fromEntries([
+        ["method", "POST"],
+        ["headers", headers],
+        ["body", json.dumps(payload)]
+    ]))
+
+
 async def handle_welcome_command(env, body):
     """Handle /welcome slash command."""
 
@@ -760,16 +781,20 @@ async def on_fetch(request, env):
                 slash_body = {k: v[0] for k, v in parsed.items()}
      
                 if slash_body.get("command") == "/welcome":
-                    
-
+                    user_id = slash_body.get("user_id", "there")
+                    response_url = slash_body.get("response_url")
+    
+                    if response_url:
+                        await send_to_response_url(response_url, user_id)
+    
                     import json as _json
                     headers = Headers.new()
                     headers.set("Content-Type", "application/json")
                     return Response.new(
-                        _json.dumps({"response_type": "ephemeral", "text": "✅ Welcome! Check your DMs for the OWASP welcome message."}),
+                        _json.dumps({"response_type": "ephemeral", "text": f"✅ Welcome <@{user_id}>! Sending you the OWASP welcome message..."}),
                         headers=headers
                     )
-                  
+
                 return Response.json({"text": "Command acknowledged."})       
             # Handle Slack Events API requests (JSON)
             if "application/json" in content_type:
