@@ -174,6 +174,25 @@ async def open_conversation(env, user_id):
     return await response.json()
 
 
+async def send_welcome_dm(env, user_id):
+    """Shared helper to send the OWASP welcome message to a user via DM."""
+    dm_response = await open_conversation(env, user_id)
+    if not dm_response.get("ok"):
+        return {"ok": False, "error": f"Failed to open DM: {dm_response.get('error')}"}
+    dm_channel = dm_response.get("channel", {}).get("id")
+    if not dm_channel:
+        return {"ok": False, "error": "Failed to get DM channel ID"}
+    welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
+    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}]
+    result = await send_slack_message(
+        env,
+        dm_channel,
+        "Welcome to the OWASP Slack Community!",
+        blocks,
+    )
+    return {"ok": result.get("ok")}
+
+
 async def handle_team_join(env, event):
     """Handle a team_join event - send welcome message to new user."""
     user_id = event.get("user", {}).get("id")
@@ -193,27 +212,7 @@ async def handle_team_join(env, event):
         except Exception:
             pass  # Don't fail if we can't post to joins channel
 
-    # Open DM with user
-    dm_response = await open_conversation(env, user_id)
-    if not dm_response.get("ok"):
-        return {"error": f"Failed to open DM: {dm_response.get('error')}"}
-
-    dm_channel = dm_response.get("channel", {}).get("id")
-    if not dm_channel:
-        return {"error": "Failed to get DM channel ID"}
-
-    # Format welcome message
-    welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
-    blocks = [{"type": "section", "text": {"type": "mrkdwn", "text": welcome_text.strip()}}]
-
-    # Send welcome message
-    result = await send_slack_message(
-        env,
-        dm_channel,
-        "Welcome to the OWASP Slack Community!",
-        blocks,
-    )
-
+    result = await send_welcome_dm(env, user_id)
     return {"ok": result.get("ok"), "user_id": user_id}
 
 
