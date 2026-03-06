@@ -43,7 +43,7 @@ async def test_welcome_command_with_response_url():
     }
     with patch("src.worker.send_to_response_url", new_callable=AsyncMock) as mock_response_url, \
          patch("src.worker.increment_commands", new_callable=AsyncMock):
-        mock_response_url.return_value = None
+        mock_response_url.return_value = {"ok": True}
         result = await handle_welcome_command(env, body)
         assert result["ok"] is True
         mock_response_url.assert_called_once_with(

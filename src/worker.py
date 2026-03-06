@@ -288,11 +288,14 @@ async def send_to_response_url(response_url, user_id):
     headers = Headers.new()
     headers.set("Content-Type", "application/json")
     
-    await fetch(response_url, Object.fromEntries([
+    response = await fetch(response_url, Object.fromEntries([
         ["method", "POST"],
         ["headers", headers],
         ["body", json.dumps(payload)]
     ]))
+    if not response.ok:
+        return {"ok": False, "error": f"response_url returned HTTP {response.status}"}
+    return {"ok": True}
 
 
 async def handle_welcome_command(env, body):
@@ -312,8 +315,7 @@ async def handle_welcome_command(env, body):
 
     response_url = body.get("response_url")
     if response_url:
-        await send_to_response_url(response_url, user_id)
-        return {"ok": True}
+        return await send_to_response_url(response_url, user_id)
     return await send_welcome_dm(env, user_id)
 
 def verify_slack_signature(signing_secret, timestamp, body, signature):
