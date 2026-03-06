@@ -752,6 +752,12 @@ async def on_fetch(request, env):
             body_text = await request.text()
 
             content_type = request.headers.get("content-type") or ""
+            # Verify Slack signature for all requests
+            signing_secret = getattr(env, "SIGNING_SECRET", None)
+            timestamp = request.headers.get("X-Slack-Request-Timestamp")
+            signature = request.headers.get("X-Slack-Signature")
+            if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
+                return Response.json({"error": "Invalid signature"}, {"status": 401})
 
             # Handle Slack slash commands
             if "application/x-www-form-urlencoded" in content_type:
@@ -778,14 +784,6 @@ async def on_fetch(request, env):
                 body_json = json.loads(body_text)
             else:
                 body_json = {}
-            if body_json.get("type") != "url_verification":
-                signing_secret = getattr(env, "SIGNING_SECRET", None)
-                timestamp = request.headers.get("X-Slack-Request-Timestamp")
-                signature = request.headers.get("X-Slack-Signature")
-
-                if not verify_slack_signature(signing_secret, timestamp, body_text, signature):
-                    return Response.json({"error": "Invalid signature"}, {"status": 401})
-
             # Handle Slack URL verification challenge
             if body_json.get("type") == "url_verification":
                 return Response.json({"challenge": body_json.get("challenge")})
