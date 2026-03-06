@@ -306,34 +306,11 @@ async def handle_welcome_command(env, body):
     # Track command usage
     await increment_commands(env)
 
-    # Open DM with the user
-    dm_response = await open_conversation(env, user_id)
-
-    if not dm_response.get("ok"):
-        return {"ok": False, "error": "Failed to open DM"}
-
-    dm_channel = dm_response["channel"]["id"]
-
-    welcome_text = WELCOME_MESSAGE.format(user_id=user_id)
-
-    blocks = [
-        {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": welcome_text.strip(),
-            },
-        }
-    ]
-
-    result = await send_slack_message(
-        env,
-        dm_channel,
-        "Welcome to the OWASP Slack Community!",
-        blocks,
-    )
-
-    return {"ok": result.get("ok")}
+    response_url = body.get("response_url")
+    if response_url:
+        await send_to_response_url(response_url, user_id)
+        return {"ok": True}
+    return await send_welcome_dm(env, user_id)
 
 def verify_slack_signature(signing_secret, timestamp, body, signature):
     """Verify that the request came from Slack using the signing secret."""
@@ -782,19 +759,15 @@ async def on_fetch(request, env):
                 if slash_body.get("command") == "/welcome":
                     user_id = slash_body.get("user_id", "there")
                     response_url = slash_body.get("response_url")
-    
                     if response_url:
                         await send_to_response_url(response_url, user_id)
-    
                     import json as _json
                     headers = Headers.new()
                     headers.set("Content-Type", "application/json")
                     return Response.new(
                         _json.dumps({"response_type": "ephemeral", "text": f"✅ Welcome <@{user_id}>! Sending you the OWASP welcome message..."}),
                         headers=headers
-                    )
-
-                return Response.json({"text": "Command acknowledged."})       
+                    ) 
             # Handle Slack Events API requests (JSON)
             if "application/json" in content_type:
                 
