@@ -296,8 +296,12 @@ async def send_to_response_url(response_url, user_id):
 
 
 async def handle_welcome_command(env, body):
-    """Handle /welcome slash command."""
-
+    """Handle /welcome slash command.
+    
+    Note: on_fetch routes /welcome directly for Cloudflare Worker's 3-second
+    timeout constraint. This function serves as a testable unit and fallback
+    when response_url is unavailable.
+    """
     user_id = body.get("user_id")
 
     if not user_id:
