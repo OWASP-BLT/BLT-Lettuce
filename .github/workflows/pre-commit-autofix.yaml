@@ -1,0 +1,65 @@
+name: Pre-commit Auto-fix
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # Run every Monday at 06:00 UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  pre-commit-autofix:
+    name: Run pre-commit and open fix PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history so the created branch has correct base
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit on all files
+        # Allow the step to continue even when pre-commit exits non-zero
+        # (it exits 1 when it auto-fixes files)
+        run: pre-commit run --all-files
+        continue-on-error: true
+
+      - name: Create Pull Request with fixes
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'style: apply pre-commit auto-fixes'
+          branch: pre-commit/autofix
+          delete-branch: true
+          title: 'style: apply pre-commit auto-fixes'
+          body: |
+            This PR was automatically created by the **Pre-commit Auto-fix** workflow.
+
+            The following pre-commit hooks were run against all files and their
+            auto-fixes have been committed here:
+
+            - `check-ast`
+            - `check-builtin-literals`
+            - `check-yaml`
+            - `fix-encoding-pragma`
+            - `mixed-line-ending`
+            - `isort`
+            - `ruff` (with `--fix`)
+            - `ruff-format`
+
+            Please review the changes and merge if they look correct.
+          labels: pre-commit,automated
