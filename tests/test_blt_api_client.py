@@ -143,3 +143,96 @@ class BltApiClientTests(unittest.IsolatedAsyncioTestCase):
             result = await WORKER.get_least_members_channel(env)
 
         self.assertIsNone(result)
+
+    async def test_contribute_sends_message_to_contribute_channel_when_set(self):
+        """Test that contribute message handler sends to configured contribute channel."""
+        env = SimpleNamespace(
+            CONTRIBUTE_ID="C123456",
+            SLACK_TOKEN="xoxb-token",
+        )
+        event = {
+            "type": "message",
+            "text": "I want to contribute to this project",
+            "user": "U789",
+            "channel": "C999",
+            "channel_type": "channel",
+            "subtype": None,
+        }
+
+        mock_bot_id = AsyncMock(return_value="U_BOT")
+        mock_send_message = AsyncMock(return_value={"ok": True})
+
+        with patch.object(WORKER, "get_bot_user_id", mock_bot_id):
+            with patch.object(WORKER, "send_slack_message", mock_send_message):
+                result = await WORKER.handle_message_event(env, event)
+
+        # Verify the handler recognized the contribute keyword
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["action"], "contribute_response")
+
+        # Verify message was sent to the contribute channel with mention of user
+        mock_send_message.assert_called_once()
+        call_args = mock_send_message.call_args
+        self.assertEqual(call_args[0][1], "C123456")  # channel argument
+        self.assertIn("<@U789>", call_args[0][2])  # message text should mention user
+        self.assertIn("contributing", call_args[0][2].lower())
+
+    async def test_contribute_handler_with_no_contribute_id_configured(self):
+        """Test fallback behavior when CONTRIBUTE_ID is not configured."""
+        env = SimpleNamespace(
+            SLACK_TOKEN="xoxb-token",
+            # CONTRIBUTE_ID not set, should use default (None)
+        )
+        event = {
+            "type": "message",
+            "text": "how can I contribute?",
+            "user": "U789",
+            "channel": "C999",
+            "channel_type": "channel",
+            "subtype": None,
+        }
+
+        mock_bot_id = AsyncMock(return_value="U_BOT")
+        mock_send_message = AsyncMock(return_value={"ok": False})
+
+        with patch.object(WORKER, "get_bot_user_id", mock_bot_id):
+            with patch.object(WORKER, "send_slack_message", mock_send_message):
+                result = await WORKER.handle_message_event(env, event)
+
+        # Verify the handler recognized the contribute keyword
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["action"], "contribute_response")
+
+        # When contribute_id is None, the message should be sent to None
+        # The actual channeling behavior depends on send_slack_message implementation
+        mock_send_message.assert_called_once()
+        call_args = mock_send_message.call_args
+        self.assertIsNone(call_args[0][1])  # channel should be None
+
+    async def test_contribute_ignores_message_without_contribute_keyword(self):
+        """Test that non-contribute messages are not handled by contribute logic."""
+        env = SimpleNamespace(
+            CONTRIBUTE_ID="C123456",
+            SLACK_TOKEN="xoxb-token",
+        )
+        event = {
+            "type": "message",
+            "text": "This is just a regular message",
+            "user": "U789",
+            "channel": "C999",
+            "channel_type": "channel",
+            "subtype": None,
+        }
+
+        mock_bot_id = AsyncMock(return_value="U_BOT")
+        mock_send_message = AsyncMock(return_value={"ok": True})
+
+        with patch.object(WORKER, "get_bot_user_id", mock_bot_id):
+            with patch.object(WORKER, "send_slack_message", mock_send_message):
+                result = await WORKER.handle_message_event(env, event)
+
+        # send_slack_message should not be called for non-contribute messages
+        # (unless it's for other message handling logic)
+        # The result action should NOT be "contribute_response"
+        if "action" in result:
+            self.assertNotEqual(result.get("action"), "contribute_response")

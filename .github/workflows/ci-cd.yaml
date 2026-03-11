@@ -40,5 +40,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install test dependencies
+        run: |
+          pip install -r requirements-dev.txt
+
       - name: Run unittest suite
-        run: python -m unittest tests.test_blt_api_client -v
+        run: python -m unittest discover -s tests -p 'test*.py' -v
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tests:${{ github.workspace }}/src
