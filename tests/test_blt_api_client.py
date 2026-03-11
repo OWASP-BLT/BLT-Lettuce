@@ -7,12 +7,10 @@ from unittest.mock import AsyncMock, patch
 
 
 def load_worker_module():
-    module_path = (
-        Path(__file__).resolve().parents[1] / "cloudflare-worker" / "worker.py"
-    )
+    module_path = Path(__file__).resolve().parents[1] / "src" / "worker.py"
     spec = importlib.util.spec_from_file_location("blt_lettuce_worker", module_path)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Unable to load Cloudflare worker module")
+        raise RuntimeError("Unable to load worker module")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -79,8 +77,7 @@ class BltApiClientTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, {"slack_channel": "project-api"})
         args, _kwargs = fake_fetch.await_args
         self.assertEqual(
-            args[0],
-            "https://blt.example.com/api/v1/projects/least-members-channel/",
+            args[0], "https://blt.example.com/api/v1/projects/least-members-channel/"
         )
         self.assertEqual(args[1]["method"], "GET")
         self.assertEqual(args[1]["headers"]["Authorization"], "Token abc123")
