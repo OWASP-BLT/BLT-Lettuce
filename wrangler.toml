@@ -1,0 +1,45 @@
+name = "blt-lettuce"
+main = "src/worker.py"
+compatibility_date = "2026-03-01"
+compatibility_flags = ["python_workers"]
+
+
+[[d1_databases]]
+binding = "DB"
+database_name = "blt-lettuce"
+database_id = "b68ec3d9-6766-4496-b926-c8a24f29f2dd"
+
+# Environment variables (secrets should be set via wrangler secret put)
+# Required secrets:
+#   wrangler secret put SLACK_TOKEN        # Slack Bot User OAuth Token (xoxb-...)
+#   wrangler secret put SIGNING_SECRET     # Slack App Signing Secret
+#   wrangler secret put SLACK_CLIENT_ID    # Slack OAuth App Client ID
+#   wrangler secret put SLACK_CLIENT_SECRET # Slack OAuth App Client Secret
+#
+# Optional secrets:
+#   wrangler secret put SENTRY_DSN         # Sentry Data Source Name for error tracking
+
+[vars]
+VERSION = "2.0.0"
+
+[triggers]
+crons = ["*/10 * * * *"]
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+destinations = [ "sentry-logs" ]
+
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
+destinations = [ "sentry-traces" ]
+
