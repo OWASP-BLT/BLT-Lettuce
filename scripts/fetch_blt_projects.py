@@ -12,6 +12,7 @@ METADATA_URL = "https://raw.githubusercontent.com/OWASP-BLT/OWASP-metadata/main/
 # GitHub API for OWASP-BLT organization
 BLT_API_URL = "https://api.github.com/orgs/OWASP-BLT/repos?per_page=100"
 PROJECTS_FILE = Path(__file__).parent.parent / "data" / "projects_cache.json"
+HTTP_TIMEOUT_SECONDS = 20
 
 # Keywords to filter relevant OWASP projects for security recommendations
 RELEVANT_KEYWORDS = [
@@ -52,7 +53,7 @@ def fetch_blt_repos():
             req = urllib.request.Request(url)
             req.add_header("User-Agent", "OWASP-BLT-Lettuce/1.0")
 
-            with urllib.request.urlopen(req) as response:
+            with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_SECONDS) as response:
                 data = json.loads(response.read().decode())
                 all_repos.extend(data)
 
@@ -80,7 +81,7 @@ def fetch_owasp_metadata():
     req = urllib.request.Request(METADATA_URL)
     req.add_header("User-Agent", "OWASP-BLT-Lettuce/1.0")
 
-    with urllib.request.urlopen(req) as response:
+    with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_SECONDS) as response:
         metadata = json.loads(response.read().decode())
         print(f"Fetched {len(metadata)} OWASP repositories from metadata")
         return metadata
@@ -177,6 +178,10 @@ def transform_metadata_to_projects(metadata):
         # Get description from pitch or tags
         pitch = item.get("pitch", "")
         tags = item.get("tags", "")
+        if isinstance(tags, list):
+            tags = ", ".join(str(tag) for tag in tags if str(tag).strip())
+        elif not isinstance(tags, str):
+            tags = ""
 
         if pitch:
             description = pitch
