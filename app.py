@@ -4,7 +4,6 @@ import json
 import logging
 import os
 from datetime import datetime, timezone
-from pathlib import Path
 
 import git
 from dotenv import load_dotenv
@@ -40,21 +39,18 @@ app = Flask(__name__)
 
 # Initialize conversation manager and project recommender
 conversation_manager = ConversationManager()
-projects_data_path = Path(__file__).parent / "data" / "projects.json"
-if not projects_data_path.is_file():
-    logging.error(f"Projects data file not found at: {projects_data_path}")
-    raise FileNotFoundError(f"Required projects data file is missing: {projects_data_path}")
-project_recommender = ProjectRecommender(str(projects_data_path))
+try:
+    project_recommender = ProjectRecommender()
+except RuntimeError as exc:
+    logging.error("Failed to initialize project recommender: %s", exc)
+    project_recommender = ProjectRecommender(projects_source={})
 
 # Don't use SlackEventAdapter - we'll handle events manually
 # NOTE: For production, ensure SLACK_SIGNING_SECRET is set to validate requests
 client = WebClient(token=os.environ.get("SLACK_TOKEN", ""))
 
 # Send startup message if credentials are valid
-if (
-    os.environ.get("SLACK_TOKEN")
-    and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER"
-):
+if os.environ.get("SLACK_TOKEN") and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER":
     deploys_channel = os.environ.get("DEPLOYS_CHANNEL_NAME", DEPLOYS_CHANNEL_NAME)
     if deploys_channel:
         try:
@@ -109,19 +105,19 @@ def verify_slack_signature(signing_secret, timestamp, body, signature):
 def slack_events():
     # Read the raw request body once for both signature verification and JSON parsing
     body = request.get_data(as_text=True)
-    
+
     # Verify Slack signature for security
     signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
     if signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
         signature = request.headers.get("X-Slack-Signature")
-        
+
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/events")
             return jsonify({"error": "Invalid signature"}), 403
     else:
         logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
-    
+
     # Parse JSON from the already-retrieved body
     try:
         data = json.loads(body) if body else {}
@@ -157,7 +153,7 @@ def slack_events():
 
 
 # Determine the root directory (assumes the script is run from the root folder)
-root_dir = Path(__file__).resolve().parent
+root_dir = os.path.dirname(os.path.abspath(__file__))
 
 
 @app.route("/update_server", methods=["POST"])
@@ -256,7 +252,10 @@ def handle_message_event(message):
                     )
                 except SlackApiError as e:
                     logging.warning(
-                        "Failed to post monitoring message to channel %s for user %s with text %r: %s",
+                        (
+                            "Failed to post monitoring message to channel %s "
+                            "for user %s with text %r: %s"
+                        ),
                         JOINS_CHANNEL_ID,
                         user,
                         text,
@@ -325,27 +324,30 @@ def handle_dm_conversation(channel_id: str, user_id: str, text: str):
                 e,
                 exc_info=True,
             )
+
+
 @app.route("/slack/interactions", methods=["POST"])
 def slack_interactions():
     """Handle interactive button clicks"""
     # Read the raw request body once for both signature verification and form parsing
     body = request.get_data(as_text=True)
-    
+
     # Verify Slack signature for security
     signing_secret = os.environ.get("SLACK_SIGNING_SECRET")
     if signing_secret:
         timestamp = request.headers.get("X-Slack-Request-Timestamp")
         signature = request.headers.get("X-Slack-Signature")
-        
+
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/interactions")
             return jsonify({"error": "Invalid signature"}), 403
     else:
         logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
-    
+
     try:
         # Parse form data from the already-retrieved body
         from urllib.parse import parse_qs
+
         form_data = parse_qs(body)
         payload = json.loads(form_data.get("payload", [""])[0])
         user_id = payload["user"]["id"]
@@ -377,13 +379,17 @@ def slack_interactions():
 
         # Handle technology stack choice
         elif action_id.startswith("tech_") and conversation.state == ConversationState.TECH_STACK:
-            conversation.update_state(ConversationState.TECH_DIFFICULTY, "technology", action_value)
+            conversation.update_state(
+                ConversationState.TECH_DIFFICULTY, "technology", action_value
+            )
             slack_message = get_difficulty_message()
             client.chat_postMessage(channel=user_id, **slack_message)
 
         # Handle difficulty choice
         elif action_id.startswith("difficulty_"):
-            conversation.update_state(ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value)
+            conversation.update_state(
+                ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value
+            )
             slack_message = get_project_type_message()
             client.chat_postMessage(channel=user_id, **slack_message)
 
@@ -403,7 +409,10 @@ def slack_interactions():
             conversation.update_state(ConversationState.COMPLETED)
 
         # Handle mission goal choice
-        elif action_id.startswith("mission_") and conversation.state == ConversationState.MISSION_GOAL:
+        elif (
+            action_id.startswith("mission_")
+            and conversation.state == ConversationState.MISSION_GOAL
+        ):
             conversation.update_state(ConversationState.MISSION_CONTRIBUTION, "goal", action_value)
             slack_message = get_contribution_type_message()
             client.chat_postMessage(channel=user_id, **slack_message)
@@ -432,7 +441,9 @@ def slack_interactions():
                 goal = conversation.get_data("goal")
                 contribution_type = conversation.get_data("contribution_type")
 
-                logging.debug(f"Tech data: tech={technology}, diff={difficulty}, type={project_type}")
+                logging.debug(
+                    f"Tech data: tech={technology}, diff={difficulty}, type={project_type}"
+                )
                 logging.debug(f"Mission data: goal={goal}, contrib={contribution_type}")
 
                 if technology:
@@ -482,10 +493,13 @@ def slack_interactions():
         elif action_id == "end_conversation":
             client.chat_postMessage(
                 channel=user_id,
-                text="Thanks for using the OWASP project finder! Feel free to message me anytime. 👋",
+                text=(
+                    "Thanks for using the OWASP project finder! "
+                    "Feel free to message me anytime. 👋"
+                ),
             )
             conversation_manager.end_conversation(user_id)
-    
+
     except SlackApiError as e:
         logging.error(
             "Slack API error in interaction handler for user %s, action %s: %s",

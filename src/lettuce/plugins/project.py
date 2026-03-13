@@ -1,22 +1,16 @@
-import json
-import os
-
 from machine.clients.slack import SlackClient
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.decorators import command
 from machine.storage import PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
 
+from src.lettuce.project_recommender import ProjectRecommender
+
 
 class ProjectPlugin(MachineBasePlugin):
     def __init__(self, client: SlackClient, settings: CaseInsensitiveDict, storage: PluginStorage):
         super().__init__(client, settings, storage)
-
-        # Construct the absolute path to repos.json
-        project_home = "/home/DonnieBLT/BLT-Lettuce"
-        data_path = os.path.join(project_home, "data", "projects.json")
-        with open(data_path) as f:
-            self.repo_data = json.load(f)
+        self.project_data = ProjectRecommender().projects
 
     @command("/project")
     async def project(self, command):

@@ -11,7 +11,7 @@ from pathlib import Path
 METADATA_URL = "https://raw.githubusercontent.com/OWASP-BLT/OWASP-metadata/main/data/metadata.json"
 # GitHub API for OWASP-BLT organization
 BLT_API_URL = "https://api.github.com/orgs/OWASP-BLT/repos?per_page=100"
-PROJECTS_FILE = Path(__file__).parent.parent / "data" / "projects.json"
+PROJECTS_FILE = Path(__file__).parent.parent / "data" / "projects_cache.json"
 
 # Keywords to filter relevant OWASP projects for security recommendations
 RELEVANT_KEYWORDS = [
@@ -87,7 +87,7 @@ def fetch_owasp_metadata():
 
 
 def load_existing_projects():
-    """Load existing projects from projects.json"""
+    """Load existing projects from projects_cache.json"""
     if PROJECTS_FILE.exists():
         with open(PROJECTS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -95,7 +95,7 @@ def load_existing_projects():
 
 
 def save_projects(projects):
-    """Save projects to projects.json"""
+    """Save projects to projects_cache.json"""
     with open(PROJECTS_FILE, "w", encoding="utf-8") as f:
         json.dump(projects, f, indent=2, ensure_ascii=False)
 
@@ -126,7 +126,7 @@ def is_relevant_project(item):
 
 
 def transform_blt_repos_to_projects(repos):
-    """Transform OWASP-BLT GitHub repos into projects.json format"""
+    """Transform OWASP-BLT GitHub repos into recommender project format"""
     projects = {}
 
     for repo in repos:
@@ -146,7 +146,7 @@ def transform_blt_repos_to_projects(repos):
 
 
 def transform_metadata_to_projects(metadata):
-    """Transform OWASP metadata into projects.json format (filtered for relevance)"""
+    """Transform OWASP metadata into recommender project format (filtered for relevance)"""
     projects = {}
 
     for item in metadata:

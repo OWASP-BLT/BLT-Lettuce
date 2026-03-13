@@ -2,17 +2,100 @@
 Project Recommendation Engine
 Filters and ranks OWASP projects based on user preferences
 """
+
 import json
-from typing import Dict, List, Optional
+from pathlib import Path
+from typing import Dict, List, Optional, Union
+
+import requests
+
+METADATA_URL = "https://raw.githubusercontent.com/OWASP-BLT/OWASP-metadata/main/data/metadata.json"
 
 
 class ProjectRecommender:
     """Recommends OWASP projects based on user criteria"""
 
-    def __init__(self, projects_data_path: str):
-        """Initialize with projects data"""
-        with open(projects_data_path, "r", encoding="utf-8") as f:
-            self.projects = json.load(f)
+    def __init__(self, projects_source: Optional[Union[str, Dict[str, List[str]]]] = None):
+        """
+        Initialize recommender projects.
+
+        Args:
+            projects_source:
+                - dict: use provided projects directly (recommended for tests)
+                - str: legacy mode, load projects from a local JSON file path
+                - None: fetch projects from the OWASP metadata repository
+        """
+        if isinstance(projects_source, dict):
+            self.projects = projects_source
+            return
+
+        if isinstance(projects_source, str):
+            with open(projects_source, "r", encoding="utf-8") as f:
+                self.projects = json.load(f)
+            return
+
+        self.projects = self._load_projects_from_repository()
+
+    def _load_projects_from_repository(self) -> Dict[str, List[str]]:
+        """Load projects from the OWASP metadata repository with local cache fallback."""
+        cache_path = Path(__file__).resolve().parents[2] / "data" / "projects_cache.json"
+
+        try:
+            response = requests.get(METADATA_URL, timeout=15)
+            response.raise_for_status()
+            metadata = response.json()
+            projects = self._transform_metadata_to_projects(metadata)
+            if projects:
+                cache_path.parent.mkdir(parents=True, exist_ok=True)
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(projects, f, indent=2, ensure_ascii=False)
+                return projects
+        except requests.RequestException:
+            pass
+        except (TypeError, ValueError, json.JSONDecodeError):
+            pass
+
+        if cache_path.is_file():
+            with open(cache_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+
+        raise RuntimeError(
+            "Unable to load OWASP projects from repository and no local cache is available"
+        )
+
+    def _transform_metadata_to_projects(
+        self, metadata: List[Dict[str, object]]
+    ) -> Dict[str, List[str]]:
+        """Transform OWASP metadata list into recommender project mapping."""
+        projects: Dict[str, List[str]] = {}
+
+        for item in metadata:
+            if not isinstance(item, dict):
+                continue
+
+            if item.get("archived", False):
+                continue
+
+            repo = item.get("repo")
+            if not isinstance(repo, str) or not repo:
+                continue
+
+            project_name = repo.split("/", 1)[-1].lower()
+            project_key = project_name.replace("www-project-", "").replace("www-chapter-", "")
+
+            title = item.get("title") if isinstance(item.get("title"), str) else ""
+            pitch = item.get("pitch") if isinstance(item.get("pitch"), str) else ""
+
+            if pitch:
+                description = pitch
+            elif title:
+                description = title
+            else:
+                description = f"OWASP {project_name.replace('-', ' ').title()}"
+
+            projects[project_key] = [description, f"https://github.com/{repo}"]
+
+        return projects
 
     def recommend_tech_based(
         self, technology: str, difficulty: str, project_type: str, limit: int = 3

@@ -2,7 +2,6 @@
 Unit tests for project recommender
 """
 import json
-import os
 
 import pytest
 
@@ -14,9 +13,34 @@ class TestProjectRecommender:
 
     @pytest.fixture
     def recommender(self):
-        """Create recommender with real projects data"""
-        projects_path = os.path.join(os.path.dirname(__file__), "..", "data", "projects.json")
-        return ProjectRecommender(projects_path)
+        """Create recommender with deterministic project data."""
+        projects = {
+            "juice-shop": [
+                "Modern insecure web application for security training",
+                "https://github.com/OWASP/juice-shop",
+            ],
+            "zap": [
+                "Web application security scanner",
+                "https://github.com/zaproxy/zaproxy",
+            ],
+            "webgoat": [
+                "Deliberately insecure application for secure coding training",
+                "https://github.com/WebGoat/WebGoat",
+            ],
+            "dependency-check": [
+                "Software composition analysis tool",
+                "https://github.com/dependency-check/DependencyCheck",
+            ],
+            "blt-api": [
+                "Python API for OWASP BLT integrations",
+                "https://github.com/OWASP-BLT/blt-api",
+            ],
+            "security-shepherd": [
+                "Security training platform",
+                "https://github.com/OWASP/SecurityShepherd",
+            ],
+        }
+        return ProjectRecommender(projects_source=projects)
 
     def test_recommend_tech_based_python(self, recommender):
         """Test technology-based recommendations for Python"""

@@ -204,8 +204,8 @@ BLT-Lettuce/
 │   ├── wrangler.toml       # Worker configuration
 │   └── README.md           # Worker documentation
 ├── data/
-│   ├── projects.json       # OWASP project metadata cache
-│   └── repos.json          # Repository categorization
+│   ├── repos.json          # Repository categorization
+│   └── stats.json          # Local stats snapshot
 ├── docs/
 │   └── index.html          # GitHub Pages dashboard
 ├── src/lettuce/            # Bot plugins and modules
