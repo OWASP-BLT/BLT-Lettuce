@@ -3317,13 +3317,22 @@ async def _send_slack_or_interactive(
 ):
     """Send to channel when possible, else use interactivity response_url."""
     if ws_token and channel_id:
-        return await send_slack_message(
+        channel_result = await send_slack_message(
             env,
             channel_id,
             text,
             blocks=blocks,
             token=ws_token,
         )
+        if channel_result.get("ok"):
+            return channel_result
+        if response_url:
+            fallback_result = await send_interactive_response(
+                response_url, text, blocks=blocks
+            )
+            if fallback_result.get("ok"):
+                return fallback_result
+        return channel_result
     return await send_interactive_response(response_url, text, blocks=blocks)
 
 
@@ -5935,7 +5944,6 @@ async def handle_request(request, env):
                         label = selected_stack if selected_stack != "any" else "any stack"
                         text = _format_project_recommendations(urls, label)
                         blocks = _build_recommendation_blocks(text)
-                        await db_clear_conversation_state(env, user_id)
                         send_result = await _send_slack_or_interactive(
                             env,
                             text,
@@ -5953,6 +5961,7 @@ async def handle_request(request, env):
                                     ),
                                 }
                             )
+                        await db_clear_conversation_state(env, user_id)
 
                     elif action_id == "flow_goal":
                         state = await db_get_conversation_state(env, user_id)
@@ -5996,7 +6005,6 @@ async def handle_request(request, env):
                             label_map.get(selected_goal, "your goal"),
                         )
                         blocks = _build_recommendation_blocks(text)
-                        await db_clear_conversation_state(env, user_id)
                         send_result = await _send_slack_or_interactive(
                             env,
                             text,
@@ -6014,6 +6022,7 @@ async def handle_request(request, env):
                                     ),
                                 }
                             )
+                        await db_clear_conversation_state(env, user_id)
 
                     elif action_id == "flow_restart":
                         await db_set_conversation_state(
