@@ -102,9 +102,19 @@ def _load_repo_catalog():
                         url_list.append(url.strip())
             normalized[key.strip().lower()] = url_list
         _repo_catalog_cache = normalized
-    except Exception:
-        _repo_catalog_cache = {}
-    return _repo_catalog_cache
+        return _repo_catalog_cache
+    except Exception as e:
+        try:
+            sentry = get_sentry()
+            sentry.capture_exception_nowait(
+                e,
+                level="error",
+                extra={"context": "load_repo_catalog"},
+            )
+        except Exception:
+            pass
+        # Do not cache failure; allow future requests to recover if file/data is fixed.
+        return {}
 
 
 def _dedupe_preserve_order(items):
@@ -300,6 +310,16 @@ def _build_restart_blocks():
                 }
             ],
         }
+    ]
+
+
+def _build_recommendation_blocks(message_text):
+    return [
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": message_text},
+        },
+        *_build_restart_blocks(),
     ]
 
 
@@ -5794,7 +5814,7 @@ async def handle_request(request, env):
                         urls = _recommend_projects_for_stack(selected_stack)
                         label = selected_stack if selected_stack != "any" else "any stack"
                         text = _format_project_recommendations(urls, label)
-                        blocks = _build_restart_blocks()
+                        blocks = _build_recommendation_blocks(text)
                         _clear_conversation_state(user_id)
                         await _send_slack_or_interactive(
                             env,
@@ -5818,7 +5838,7 @@ async def handle_request(request, env):
                             urls,
                             label_map.get(selected_goal, "your goal"),
                         )
-                        blocks = _build_restart_blocks()
+                        blocks = _build_recommendation_blocks(text)
                         _clear_conversation_state(user_id)
                         await _send_slack_or_interactive(
                             env,

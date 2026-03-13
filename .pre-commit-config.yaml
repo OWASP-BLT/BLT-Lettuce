@@ -37,4 +37,4 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit
     rev: v3.3.3
     hooks:
-      - id: pre-commit
+      - id: validate_manifest
