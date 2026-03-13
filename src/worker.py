@@ -5860,7 +5860,7 @@ async def handle_request(request, env):
                             )
                             text = "Awesome. Pick a technology stack."
                             blocks = _build_technology_choice_blocks()
-                        else:
+                        elif pref == "mission":
                             await db_set_conversation_state(
                                 env,
                                 user_id,
@@ -5871,7 +5871,19 @@ async def handle_request(request, env):
                             )
                             text = "Great choice. Pick your mission goal."
                             blocks = _build_mission_choice_blocks()
-                        await _send_slack_or_interactive(
+                        else:
+                            await db_set_conversation_state(
+                                env,
+                                user_id,
+                                {"step": "preference"},
+                            )
+                            text = (
+                                "I did not recognize that option. "
+                                "Please choose Technology-Based or Mission-Based."
+                            )
+                            blocks = _build_project_flow_start_blocks()
+
+                        send_result = await _send_slack_or_interactive(
                             env,
                             text,
                             blocks,
@@ -5879,6 +5891,15 @@ async def handle_request(request, env):
                             response_url=response_url,
                             ws_token=ws_token,
                         )
+                        if not send_result.get("ok"):
+                            return Response.json(
+                                {
+                                    "ok": False,
+                                    "error": send_result.get(
+                                        "error", "failed_to_send_flow_pref"
+                                    ),
+                                }
+                            )
 
                     elif action_id == "flow_stack":
                         state = await db_get_conversation_state(env, user_id)
@@ -5890,7 +5911,7 @@ async def handle_request(request, env):
                                 user_id,
                                 {"step": "preference"},
                             )
-                            await _send_slack_or_interactive(
+                            send_result = await _send_slack_or_interactive(
                                 env,
                                 text,
                                 blocks,
@@ -5898,6 +5919,15 @@ async def handle_request(request, env):
                                 response_url=response_url,
                                 ws_token=ws_token,
                             )
+                            if not send_result.get("ok"):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": send_result.get(
+                                            "error", "failed_to_send_flow_stack_reset"
+                                        ),
+                                    }
+                                )
                             return Response.json({"ok": True})
 
                         selected_stack = str(action.get("value") or "any").strip().lower()
@@ -5906,7 +5936,7 @@ async def handle_request(request, env):
                         text = _format_project_recommendations(urls, label)
                         blocks = _build_recommendation_blocks(text)
                         await db_clear_conversation_state(env, user_id)
-                        await _send_slack_or_interactive(
+                        send_result = await _send_slack_or_interactive(
                             env,
                             text,
                             blocks,
@@ -5914,6 +5944,15 @@ async def handle_request(request, env):
                             response_url=response_url,
                             ws_token=ws_token,
                         )
+                        if not send_result.get("ok"):
+                            return Response.json(
+                                {
+                                    "ok": False,
+                                    "error": send_result.get(
+                                        "error", "failed_to_send_flow_stack"
+                                    ),
+                                }
+                            )
 
                     elif action_id == "flow_goal":
                         state = await db_get_conversation_state(env, user_id)
@@ -5925,7 +5964,7 @@ async def handle_request(request, env):
                                 user_id,
                                 {"step": "preference"},
                             )
-                            await _send_slack_or_interactive(
+                            send_result = await _send_slack_or_interactive(
                                 env,
                                 text,
                                 blocks,
@@ -5933,6 +5972,15 @@ async def handle_request(request, env):
                                 response_url=response_url,
                                 ws_token=ws_token,
                             )
+                            if not send_result.get("ok"):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": send_result.get(
+                                            "error", "failed_to_send_flow_goal_reset"
+                                        ),
+                                    }
+                                )
                             return Response.json({"ok": True})
 
                         selected_goal = str(action.get("value") or "").strip().lower()
@@ -5949,7 +5997,7 @@ async def handle_request(request, env):
                         )
                         blocks = _build_recommendation_blocks(text)
                         await db_clear_conversation_state(env, user_id)
-                        await _send_slack_or_interactive(
+                        send_result = await _send_slack_or_interactive(
                             env,
                             text,
                             blocks,
@@ -5957,6 +6005,15 @@ async def handle_request(request, env):
                             response_url=response_url,
                             ws_token=ws_token,
                         )
+                        if not send_result.get("ok"):
+                            return Response.json(
+                                {
+                                    "ok": False,
+                                    "error": send_result.get(
+                                        "error", "failed_to_send_flow_goal"
+                                    ),
+                                }
+                            )
 
                     elif action_id == "flow_restart":
                         await db_set_conversation_state(
@@ -5964,7 +6021,7 @@ async def handle_request(request, env):
                         )
                         text = "No problem. Let us start over."
                         blocks = _build_project_flow_start_blocks()
-                        await _send_slack_or_interactive(
+                        send_result = await _send_slack_or_interactive(
                             env,
                             text,
                             blocks,
@@ -5972,6 +6029,15 @@ async def handle_request(request, env):
                             response_url=response_url,
                             ws_token=ws_token,
                         )
+                        if not send_result.get("ok"):
+                            return Response.json(
+                                {
+                                    "ok": False,
+                                    "error": send_result.get(
+                                        "error", "failed_to_send_flow_restart"
+                                    ),
+                                }
+                            )
 
                 return Response.json({"ok": True})
 

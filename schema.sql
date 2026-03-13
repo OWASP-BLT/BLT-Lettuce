@@ -27,6 +27,15 @@ CREATE TABLE IF NOT EXISTS sessions (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- Persistent per-user state for multi-step DM conversation flow
+CREATE TABLE IF NOT EXISTS conversation_states (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_slack_id TEXT UNIQUE NOT NULL,
+    state_json TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL
+);
+
 -- Slack workspaces that have had the bot installed
 -- SECURITY NOTE: access_token stores the bot OAuth token in plaintext.
 -- A compromised D1 read would allow full bot impersonation for that workspace.
@@ -110,5 +119,6 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS idx_events_workspace_created ON events(workspace_id, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_channels_workspace ON channels(workspace_id, member_count DESC);
 CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+CREATE INDEX IF NOT EXISTS idx_conversation_states_expires ON conversation_states(expires_at);
 CREATE INDEX IF NOT EXISTS idx_user_workspaces_user ON user_workspaces(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_workspaces_workspace ON user_workspaces(workspace_id);
