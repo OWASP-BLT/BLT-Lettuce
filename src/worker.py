@@ -3687,7 +3687,8 @@ async def handle_message_event(env, event, team_id=None):
                 "find something to contribute",
             )
         ):
-            await db_set_conversation_state(env, user, {"step": "preference"})
+            if not await db_set_conversation_state(env, user, {"step": "preference"}):
+                return {"ok": False, "error": "failed_to_persist_flow_state"}
             flow_text = (
                 "I can guide you through project recommendations with a short flow."
             )
@@ -3698,7 +3699,8 @@ async def handle_message_event(env, event, team_id=None):
             return {"ok": result.get("ok"), "action": "dm_project_flow_start"}
 
         if message_text in ("start over", "restart"):
-            await db_set_conversation_state(env, user, {"step": "preference"})
+            if not await db_set_conversation_state(env, user, {"step": "preference"}):
+                return {"ok": False, "error": "failed_to_persist_flow_state"}
             flow_text = "Restarted. Choose how you want recommendations."
             flow_blocks = _build_project_flow_start_blocks()
             result = await send_slack_message(
@@ -5859,33 +5861,51 @@ async def handle_request(request, env):
                     elif action_id == "flow_pref":
                         pref = str(action.get("value") or "").strip().lower()
                         if pref == "technology":
-                            await db_set_conversation_state(
+                            if not await db_set_conversation_state(
                                 env,
                                 user_id,
                                 {
                                     "step": "technology_stack",
                                     "preference": "technology",
                                 },
-                            )
+                            ):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": "failed_to_persist_flow_state",
+                                    }
+                                )
                             text = "Awesome. Pick a technology stack."
                             blocks = _build_technology_choice_blocks()
                         elif pref == "mission":
-                            await db_set_conversation_state(
+                            if not await db_set_conversation_state(
                                 env,
                                 user_id,
                                 {
                                     "step": "mission_goal",
                                     "preference": "mission",
                                 },
-                            )
+                            ):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": "failed_to_persist_flow_state",
+                                    }
+                                )
                             text = "Great choice. Pick your mission goal."
                             blocks = _build_mission_choice_blocks()
                         else:
-                            await db_set_conversation_state(
+                            if not await db_set_conversation_state(
                                 env,
                                 user_id,
                                 {"step": "preference"},
-                            )
+                            ):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": "failed_to_persist_flow_state",
+                                    }
+                                )
                             text = (
                                 "I did not recognize that option. "
                                 "Please choose Technology-Based or Mission-Based."
@@ -5915,11 +5935,17 @@ async def handle_request(request, env):
                         if not state or state.get("step") != "technology_stack":
                             text = "Let us start with your preference first."
                             blocks = _build_project_flow_start_blocks()
-                            await db_set_conversation_state(
+                            if not await db_set_conversation_state(
                                 env,
                                 user_id,
                                 {"step": "preference"},
-                            )
+                            ):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": "failed_to_persist_flow_state",
+                                    }
+                                )
                             send_result = await _send_slack_or_interactive(
                                 env,
                                 text,
@@ -5968,11 +5994,17 @@ async def handle_request(request, env):
                         if not state or state.get("step") != "mission_goal":
                             text = "Let us start with your preference first."
                             blocks = _build_project_flow_start_blocks()
-                            await db_set_conversation_state(
+                            if not await db_set_conversation_state(
                                 env,
                                 user_id,
                                 {"step": "preference"},
-                            )
+                            ):
+                                return Response.json(
+                                    {
+                                        "ok": False,
+                                        "error": "failed_to_persist_flow_state",
+                                    }
+                                )
                             send_result = await _send_slack_or_interactive(
                                 env,
                                 text,
@@ -6025,9 +6057,15 @@ async def handle_request(request, env):
                         await db_clear_conversation_state(env, user_id)
 
                     elif action_id == "flow_restart":
-                        await db_set_conversation_state(
+                        if not await db_set_conversation_state(
                             env, user_id, {"step": "preference"}
-                        )
+                        ):
+                            return Response.json(
+                                {
+                                    "ok": False,
+                                    "error": "failed_to_persist_flow_state",
+                                }
+                            )
                         text = "No problem. Let us start over."
                         blocks = _build_project_flow_start_blocks()
                         send_result = await _send_slack_or_interactive(
