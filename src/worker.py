@@ -46,6 +46,275 @@ DEFAULT_DEPLOYS_CHANNEL = None
 DEFAULT_JOINS_CHANNEL_ID = None
 DEFAULT_CONTRIBUTE_ID = None
 
+_FLOW_STATE_TTL_SECONDS = 3600
+_conversation_states = {}
+_repo_catalog_cache = None
+
+
+def _now_epoch_seconds():
+    return int(datetime.now(timezone.utc).timestamp())
+
+
+def _prune_conversation_states():
+    now = _now_epoch_seconds()
+    expired_users = [
+        user_id
+        for user_id, state in _conversation_states.items()
+        if now - int(state.get("updated_at", 0)) > _FLOW_STATE_TTL_SECONDS
+    ]
+    for user_id in expired_users:
+        _conversation_states.pop(user_id, None)
+
+
+def _set_conversation_state(user_id, state):
+    if not user_id:
+        return
+    _prune_conversation_states()
+    _conversation_states[user_id] = {
+        **(state or {}),
+        "updated_at": _now_epoch_seconds(),
+    }
+
+
+def _clear_conversation_state(user_id):
+    if not user_id:
+        return
+    _conversation_states.pop(user_id, None)
+
+
+def _load_repo_catalog():
+    global _repo_catalog_cache
+    if _repo_catalog_cache is not None:
+        return _repo_catalog_cache
+
+    try:
+        data_path = Path(__file__).resolve().parent.parent / "data" / "repos.json"
+        with open(data_path, encoding="utf-8") as f:
+            data = json.load(f)
+        normalized = {}
+        for key, urls in (data or {}).items():
+            if not isinstance(key, str):
+                continue
+            url_list = []
+            if isinstance(urls, list):
+                for url in urls:
+                    if isinstance(url, str) and url.strip():
+                        url_list.append(url.strip())
+            normalized[key.strip().lower()] = url_list
+        _repo_catalog_cache = normalized
+    except Exception:
+        _repo_catalog_cache = {}
+    return _repo_catalog_cache
+
+
+def _dedupe_preserve_order(items):
+    seen = set()
+    out = []
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
+def _recommend_projects_for_stack(stack):
+    catalog = _load_repo_catalog()
+    stack = str(stack or "").strip().lower()
+    if stack == "any":
+        all_urls = []
+        for urls in catalog.values():
+            all_urls.extend(urls)
+        return _dedupe_preserve_order(all_urls)[:5]
+    return _dedupe_preserve_order(catalog.get(stack, []))[:5]
+
+
+def _recommend_projects_for_goal(goal):
+    mission_to_stacks = {
+        "learn_appsec": ["python", "javascript"],
+        "contribute_code": ["python", "javascript", "dart", "flutter"],
+        "documentation": ["django", "html", "css"],
+        "research": ["blockchain", "cryptography"],
+    }
+    stacks = mission_to_stacks.get(str(goal or "").strip().lower(), [])
+    all_urls = []
+    for stack in stacks:
+        all_urls.extend(_recommend_projects_for_stack(stack))
+    return _dedupe_preserve_order(all_urls)[:5]
+
+
+def _build_project_flow_start_blocks():
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": (
+                    "*Project Discovery Flow*\n"
+                    "Would you like recommendations based on *Technology* or *Mission*?"
+                ),
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Technology-Based"},
+                    "value": "technology",
+                    "action_id": "flow_pref",
+                    "style": "primary",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Mission-Based"},
+                    "value": "mission",
+                    "action_id": "flow_pref",
+                },
+            ],
+        },
+    ]
+
+
+def _build_technology_choice_blocks():
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Great. Which technology stack interests you most?",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Python"},
+                    "value": "python",
+                    "action_id": "flow_stack",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "JavaScript"},
+                    "value": "javascript",
+                    "action_id": "flow_stack",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Django"},
+                    "value": "django",
+                    "action_id": "flow_stack",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Flutter"},
+                    "value": "flutter",
+                    "action_id": "flow_stack",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Any"},
+                    "value": "any",
+                    "action_id": "flow_stack",
+                },
+            ],
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Start Over"},
+                    "value": "restart",
+                    "action_id": "flow_restart",
+                }
+            ],
+        },
+    ]
+
+
+def _build_mission_choice_blocks():
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "Nice. What is your primary goal?",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Learn AppSec"},
+                    "value": "learn_appsec",
+                    "action_id": "flow_goal",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Contribute Code"},
+                    "value": "contribute_code",
+                    "action_id": "flow_goal",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Documentation"},
+                    "value": "documentation",
+                    "action_id": "flow_goal",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Research"},
+                    "value": "research",
+                    "action_id": "flow_goal",
+                },
+            ],
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Start Over"},
+                    "value": "restart",
+                    "action_id": "flow_restart",
+                }
+            ],
+        },
+    ]
+
+
+def _build_restart_blocks():
+    return [
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "Try Another Filter"},
+                    "value": "restart",
+                    "action_id": "flow_restart",
+                    "style": "primary",
+                }
+            ],
+        }
+    ]
+
+
+def _format_project_recommendations(urls, context_label):
+    if not urls:
+        return (
+            f"I could not find strong matches for *{context_label}* right now.\n"
+            "Try another filter and I will broaden the search."
+        )
+    lines = [f"*Top project matches for {context_label}:*"]
+    for idx, url in enumerate(urls[:3], 1):
+        lines.append(f"{idx}. {url}")
+    lines.append("\nNeed different results? Tap *Try Another Filter*.")
+    return "\n".join(lines)
+
 
 def get_blt_base_url(env):
     """Return canonical BLT base URL for links and branding."""
@@ -2954,6 +3223,21 @@ async def send_interactive_response(response_url, text, blocks=None):
     return {"ok": 200 <= status < 300, "status": status}
 
 
+async def _send_slack_or_interactive(
+    env, text, blocks, channel_id=None, response_url=None, ws_token=None
+):
+    """Send to channel when possible, else use interactivity response_url."""
+    if ws_token and channel_id:
+        return await send_slack_message(
+            env,
+            channel_id,
+            text,
+            blocks=blocks,
+            token=ws_token,
+        )
+    return await send_interactive_response(response_url, text, blocks=blocks)
+
+
 async def open_conversation(env, user_id, token=None):
     slack_token = token or getattr(env, "SLACK_TOKEN", None)
     if not slack_token:
@@ -3032,6 +3316,18 @@ def render_join_message_template(template_text, context):
         output = output.replace("{" + key + "}", safe_value)
         output = output.replace("{{" + key + "}}", safe_value)
     return output
+
+
+def is_valid_slack_url(url):
+    """Return True for https Slack API/Hook URLs and False otherwise."""
+    try:
+        parsed = urlparse(str(url or "").strip())
+        if parsed.scheme != "https":
+            return False
+        host = (parsed.netloc or "").lower()
+        return host == "slack.com" or host.endswith(".slack.com")
+    except Exception:
+        return False
 
 
 # ===========================================================================
@@ -3283,6 +3579,34 @@ async def handle_message_event(env, event, team_id=None):
                 )
             except Exception:
                 pass
+
+        if any(
+            trigger in message_text
+            for trigger in (
+                "project",
+                "recommend",
+                "flowchart",
+                "find something to contribute",
+            )
+        ):
+            _set_conversation_state(user, {"step": "preference"})
+            flow_text = (
+                "I can guide you through project recommendations with a short flow."
+            )
+            flow_blocks = _build_project_flow_start_blocks()
+            result = await send_slack_message(
+                env, channel, flow_text, blocks=flow_blocks, token=ws_token
+            )
+            return {"ok": result.get("ok"), "action": "dm_project_flow_start"}
+
+        if message_text in ("start over", "restart"):
+            _set_conversation_state(user, {"step": "preference"})
+            flow_text = "Restarted. Choose how you want recommendations."
+            flow_blocks = _build_project_flow_start_blocks()
+            result = await send_slack_message(
+                env, channel, flow_text, blocks=flow_blocks, token=ws_token
+            )
+            return {"ok": result.get("ok"), "action": "dm_project_flow_restart"}
 
         if any(word in message_text for word in ("stats", "health", "tables", "db")):
             counts = await get_db_table_counts(env)
@@ -5433,6 +5757,90 @@ async def handle_request(request, env):
                                 help_text,
                                 blocks=blocks,
                             )
+
+                    elif action_id == "flow_pref":
+                        pref = str(action.get("value") or "").strip().lower()
+                        if pref == "technology":
+                            _set_conversation_state(
+                                user_id,
+                                {
+                                    "step": "technology_stack",
+                                    "preference": "technology",
+                                },
+                            )
+                            text = "Awesome. Pick a technology stack."
+                            blocks = _build_technology_choice_blocks()
+                        else:
+                            _set_conversation_state(
+                                user_id,
+                                {
+                                    "step": "mission_goal",
+                                    "preference": "mission",
+                                },
+                            )
+                            text = "Great choice. Pick your mission goal."
+                            blocks = _build_mission_choice_blocks()
+                        await _send_slack_or_interactive(
+                            env,
+                            text,
+                            blocks,
+                            channel_id=channel_id,
+                            response_url=response_url,
+                            ws_token=ws_token,
+                        )
+
+                    elif action_id == "flow_stack":
+                        selected_stack = str(action.get("value") or "any").strip().lower()
+                        urls = _recommend_projects_for_stack(selected_stack)
+                        label = selected_stack if selected_stack != "any" else "any stack"
+                        text = _format_project_recommendations(urls, label)
+                        blocks = _build_restart_blocks()
+                        _clear_conversation_state(user_id)
+                        await _send_slack_or_interactive(
+                            env,
+                            text,
+                            blocks,
+                            channel_id=channel_id,
+                            response_url=response_url,
+                            ws_token=ws_token,
+                        )
+
+                    elif action_id == "flow_goal":
+                        selected_goal = str(action.get("value") or "").strip().lower()
+                        urls = _recommend_projects_for_goal(selected_goal)
+                        label_map = {
+                            "learn_appsec": "learn AppSec",
+                            "contribute_code": "contribute code",
+                            "documentation": "documentation",
+                            "research": "research",
+                        }
+                        text = _format_project_recommendations(
+                            urls,
+                            label_map.get(selected_goal, "your goal"),
+                        )
+                        blocks = _build_restart_blocks()
+                        _clear_conversation_state(user_id)
+                        await _send_slack_or_interactive(
+                            env,
+                            text,
+                            blocks,
+                            channel_id=channel_id,
+                            response_url=response_url,
+                            ws_token=ws_token,
+                        )
+
+                    elif action_id == "flow_restart":
+                        _set_conversation_state(user_id, {"step": "preference"})
+                        text = "No problem. Let us start over."
+                        blocks = _build_project_flow_start_blocks()
+                        await _send_slack_or_interactive(
+                            env,
+                            text,
+                            blocks,
+                            channel_id=channel_id,
+                            response_url=response_url,
+                            ws_token=ws_token,
+                        )
 
                 return Response.json({"ok": True})
 
