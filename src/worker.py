@@ -47,39 +47,7 @@ DEFAULT_JOINS_CHANNEL_ID = None
 DEFAULT_CONTRIBUTE_ID = None
 
 _FLOW_STATE_TTL_SECONDS = 3600
-_conversation_states = {}
 _repo_catalog_cache = None
-
-
-def _now_epoch_seconds():
-    return int(datetime.now(timezone.utc).timestamp())
-
-
-def _prune_conversation_states():
-    now = _now_epoch_seconds()
-    expired_users = [
-        user_id
-        for user_id, state in _conversation_states.items()
-        if now - int(state.get("updated_at", 0)) > _FLOW_STATE_TTL_SECONDS
-    ]
-    for user_id in expired_users:
-        _conversation_states.pop(user_id, None)
-
-
-def _set_conversation_state(user_id, state):
-    if not user_id:
-        return
-    _prune_conversation_states()
-    _conversation_states[user_id] = {
-        **(state or {}),
-        "updated_at": _now_epoch_seconds(),
-    }
-
-
-def _clear_conversation_state(user_id):
-    if not user_id:
-        return
-    _conversation_states.pop(user_id, None)
 
 
 def _load_repo_catalog():
@@ -520,6 +488,15 @@ async def ensure_d1_schema(env):
             ")"
         ),
         (
+            "CREATE TABLE IF NOT EXISTS conversation_states ("
+            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "user_slack_id TEXT UNIQUE NOT NULL,"
+            "state_json TEXT NOT NULL,"
+            "updated_at TEXT NOT NULL,"
+            "expires_at TEXT NOT NULL"
+            ")"
+        ),
+        (
             "CREATE TABLE IF NOT EXISTS workspaces ("
             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
             "team_id TEXT NOT NULL,"
@@ -624,6 +601,10 @@ async def ensure_d1_schema(env):
             "ON join_messages(workspace_id, created_at DESC)"
         ),
         "CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at)",
+        (
+            "CREATE INDEX IF NOT EXISTS idx_conversation_states_expires "
+            "ON conversation_states(expires_at)"
+        ),
         (
             "CREATE INDEX IF NOT EXISTS idx_user_workspaces_user "
             "ON user_workspaces(user_id)"
@@ -1045,6 +1026,92 @@ async def db_update_workspace_app_metadata(
                 now,
                 workspace_id,
             )
+            .run()
+        )
+        return True
+    except Exception:
+        return False
+
+
+async def db_set_conversation_state(env, user_slack_id, state):
+    """Persist conversation state for a Slack user with TTL."""
+    if not user_slack_id:
+        return False
+    now_dt = datetime.now(timezone.utc)
+    now = now_dt.isoformat()
+    expires_at = (now_dt + timedelta(seconds=_FLOW_STATE_TTL_SECONDS)).isoformat()
+    state_json = json.dumps(state or {})
+    try:
+        await ensure_d1_schema(env)
+        await (
+            env.DB.prepare(
+                "INSERT INTO conversation_states (user_slack_id, state_json, updated_at, expires_at) "
+                "VALUES (?, ?, ?, ?) "
+                "ON CONFLICT(user_slack_id) DO UPDATE SET "
+                "state_json = excluded.state_json, "
+                "updated_at = excluded.updated_at, "
+                "expires_at = excluded.expires_at"
+            )
+            .bind(user_slack_id, state_json, now, expires_at)
+            .run()
+        )
+        return True
+    except Exception as e:
+        try:
+            sentry = get_sentry()
+            sentry.capture_exception_nowait(
+                e,
+                level="error",
+                extra={"context": "db_set_conversation_state", "user": user_slack_id},
+            )
+        except Exception:
+            pass
+        return False
+
+
+async def db_get_conversation_state(env, user_slack_id):
+    """Load conversation state for a Slack user if not expired."""
+    if not user_slack_id:
+        return None
+    now = datetime.now(timezone.utc)
+    try:
+        await ensure_d1_schema(env)
+        row = _row(
+            await env.DB.prepare(
+                "SELECT state_json, expires_at FROM conversation_states WHERE user_slack_id = ? LIMIT 1"
+            )
+            .bind(user_slack_id)
+            .first()
+        )
+        if not row:
+            return None
+
+        expires_at = str(row.get("expires_at") or "")
+        if expires_at:
+            try:
+                if datetime.fromisoformat(expires_at) < now:
+                    await db_clear_conversation_state(env, user_slack_id)
+                    return None
+            except Exception:
+                await db_clear_conversation_state(env, user_slack_id)
+                return None
+
+        state_json = str(row.get("state_json") or "{}")
+        loaded = json.loads(state_json)
+        return loaded if isinstance(loaded, dict) else None
+    except Exception:
+        return None
+
+
+async def db_clear_conversation_state(env, user_slack_id):
+    """Delete persisted conversation state for a Slack user."""
+    if not user_slack_id:
+        return False
+    try:
+        await ensure_d1_schema(env)
+        await (
+            env.DB.prepare("DELETE FROM conversation_states WHERE user_slack_id = ?")
+            .bind(user_slack_id)
             .run()
         )
         return True
@@ -3223,6 +3290,8 @@ async def send_interactive_response(response_url, text, blocks=None):
     """Send a response to Slack interactivity response_url."""
     if not response_url:
         return {"ok": False, "error": "missing_response_url"}
+    if not is_valid_slack_url(response_url):
+        return {"ok": False, "error": "invalid_response_url"}
     payload = {
         "response_type": "ephemeral",
         "text": text,
@@ -3609,7 +3678,7 @@ async def handle_message_event(env, event, team_id=None):
                 "find something to contribute",
             )
         ):
-            _set_conversation_state(user, {"step": "preference"})
+            await db_set_conversation_state(env, user, {"step": "preference"})
             flow_text = (
                 "I can guide you through project recommendations with a short flow."
             )
@@ -3620,7 +3689,7 @@ async def handle_message_event(env, event, team_id=None):
             return {"ok": result.get("ok"), "action": "dm_project_flow_start"}
 
         if message_text in ("start over", "restart"):
-            _set_conversation_state(user, {"step": "preference"})
+            await db_set_conversation_state(env, user, {"step": "preference"})
             flow_text = "Restarted. Choose how you want recommendations."
             flow_blocks = _build_project_flow_start_blocks()
             result = await send_slack_message(
@@ -5781,7 +5850,8 @@ async def handle_request(request, env):
                     elif action_id == "flow_pref":
                         pref = str(action.get("value") or "").strip().lower()
                         if pref == "technology":
-                            _set_conversation_state(
+                            await db_set_conversation_state(
+                                env,
                                 user_id,
                                 {
                                     "step": "technology_stack",
@@ -5791,7 +5861,8 @@ async def handle_request(request, env):
                             text = "Awesome. Pick a technology stack."
                             blocks = _build_technology_choice_blocks()
                         else:
-                            _set_conversation_state(
+                            await db_set_conversation_state(
+                                env,
                                 user_id,
                                 {
                                     "step": "mission_goal",
@@ -5810,12 +5881,31 @@ async def handle_request(request, env):
                         )
 
                     elif action_id == "flow_stack":
+                        state = await db_get_conversation_state(env, user_id)
+                        if not state or state.get("step") != "technology_stack":
+                            text = "Let us start with your preference first."
+                            blocks = _build_project_flow_start_blocks()
+                            await db_set_conversation_state(
+                                env,
+                                user_id,
+                                {"step": "preference"},
+                            )
+                            await _send_slack_or_interactive(
+                                env,
+                                text,
+                                blocks,
+                                channel_id=channel_id,
+                                response_url=response_url,
+                                ws_token=ws_token,
+                            )
+                            return Response.json({"ok": True})
+
                         selected_stack = str(action.get("value") or "any").strip().lower()
                         urls = _recommend_projects_for_stack(selected_stack)
                         label = selected_stack if selected_stack != "any" else "any stack"
                         text = _format_project_recommendations(urls, label)
                         blocks = _build_recommendation_blocks(text)
-                        _clear_conversation_state(user_id)
+                        await db_clear_conversation_state(env, user_id)
                         await _send_slack_or_interactive(
                             env,
                             text,
@@ -5826,6 +5916,25 @@ async def handle_request(request, env):
                         )
 
                     elif action_id == "flow_goal":
+                        state = await db_get_conversation_state(env, user_id)
+                        if not state or state.get("step") != "mission_goal":
+                            text = "Let us start with your preference first."
+                            blocks = _build_project_flow_start_blocks()
+                            await db_set_conversation_state(
+                                env,
+                                user_id,
+                                {"step": "preference"},
+                            )
+                            await _send_slack_or_interactive(
+                                env,
+                                text,
+                                blocks,
+                                channel_id=channel_id,
+                                response_url=response_url,
+                                ws_token=ws_token,
+                            )
+                            return Response.json({"ok": True})
+
                         selected_goal = str(action.get("value") or "").strip().lower()
                         urls = _recommend_projects_for_goal(selected_goal)
                         label_map = {
@@ -5839,7 +5948,7 @@ async def handle_request(request, env):
                             label_map.get(selected_goal, "your goal"),
                         )
                         blocks = _build_recommendation_blocks(text)
-                        _clear_conversation_state(user_id)
+                        await db_clear_conversation_state(env, user_id)
                         await _send_slack_or_interactive(
                             env,
                             text,
@@ -5850,7 +5959,9 @@ async def handle_request(request, env):
                         )
 
                     elif action_id == "flow_restart":
-                        _set_conversation_state(user_id, {"step": "preference"})
+                        await db_set_conversation_state(
+                            env, user_id, {"step": "preference"}
+                        )
                         text = "No problem. Let us start over."
                         blocks = _build_project_flow_start_blocks()
                         await _send_slack_or_interactive(
