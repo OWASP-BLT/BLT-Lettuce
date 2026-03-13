@@ -3,6 +3,7 @@ Conversation Manager for Slack Bot 2.0
 Handles multi-step conversations with users via DM
 """
 from enum import Enum
+from threading import Lock
 from typing import Dict, Optional
 
 
@@ -55,7 +56,7 @@ class UserConversation:
 
 class ConversationManager:
     """Manages all active user conversations
-    
+
     NOTE: This implementation stores conversation state in memory.
     All conversation progress will be lost if the application restarts.
     Users in the middle of a conversation will need to start over after a restart.
@@ -65,17 +66,20 @@ class ConversationManager:
 
     def __init__(self):
         self.conversations: Dict[str, UserConversation] = {}
+        self._lock = Lock()
 
     def get_or_create_conversation(self, user_id: str) -> UserConversation:
         """Get existing conversation or create new one"""
-        if user_id not in self.conversations:
-            self.conversations[user_id] = UserConversation(user_id)
-        return self.conversations[user_id]
+        with self._lock:
+            if user_id not in self.conversations:
+                self.conversations[user_id] = UserConversation(user_id)
+            return self.conversations[user_id]
 
     def end_conversation(self, user_id: str):
         """End and remove a conversation"""
-        if user_id in self.conversations:
-            del self.conversations[user_id]
+        with self._lock:
+            if user_id in self.conversations:
+                del self.conversations[user_id]
 
 
 # Message templates with Slack Block Kit format

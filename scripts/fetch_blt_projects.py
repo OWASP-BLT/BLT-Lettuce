@@ -151,7 +151,7 @@ def transform_metadata_to_projects(metadata):
 
     for item in metadata:
         # Skip archived repositories
-        if item.get("archived", True):
+        if item.get("archived", False):
             continue
 
         # Filter for relevant projects only

@@ -49,6 +49,17 @@ except RuntimeError as exc:
 # NOTE: For production, ensure SLACK_SIGNING_SECRET is set to validate requests
 client = WebClient(token=os.environ.get("SLACK_TOKEN", ""))
 
+
+def should_enforce_slack_signature() -> bool:
+    """Require Slack signature checks by default, with explicit local opt-out."""
+    allow_unsigned = os.environ.get("ALLOW_UNSIGNED_SLACK_REQUESTS", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    return not allow_unsigned
+
+
 # Send startup message if credentials are valid
 if os.environ.get("SLACK_TOKEN") and os.environ.get("SLACK_TOKEN") != "SLACK_TOKEN_PLACEHOLDER":
     deploys_channel = os.environ.get("DEPLOYS_CHANNEL_NAME", DEPLOYS_CHANNEL_NAME)
@@ -115,8 +126,11 @@ def slack_events():
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/events")
             return jsonify({"error": "Invalid signature"}), 403
+    elif should_enforce_slack_signature():
+        logging.error("SLACK_SIGNING_SECRET not set - refusing /slack/events request")
+        return jsonify({"error": "Slack signing secret not configured"}), 500
     else:
-        logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
+        logging.warning("Skipping signature verification for /slack/events in local mode")
 
     # Parse JSON from the already-retrieved body
     try:
@@ -341,8 +355,11 @@ def slack_interactions():
         if not verify_slack_signature(signing_secret, timestamp, body, signature):
             logging.warning("Invalid Slack signature for /slack/interactions")
             return jsonify({"error": "Invalid signature"}), 403
+    elif should_enforce_slack_signature():
+        logging.error("SLACK_SIGNING_SECRET not set - refusing /slack/interactions request")
+        return jsonify({"error": "Slack signing secret not configured"}), 500
     else:
-        logging.warning("SLACK_SIGNING_SECRET not set - skipping signature verification")
+        logging.warning("Skipping signature verification for /slack/interactions in local mode")
 
     try:
         # Parse form data from the already-retrieved body
@@ -386,7 +403,10 @@ def slack_interactions():
             client.chat_postMessage(channel=user_id, **slack_message)
 
         # Handle difficulty choice
-        elif action_id.startswith("difficulty_"):
+        elif (
+            action_id.startswith("difficulty_")
+            and conversation.state == ConversationState.TECH_DIFFICULTY
+        ):
             conversation.update_state(
                 ConversationState.TECH_PROJECT_TYPE, "difficulty", action_value
             )
@@ -394,7 +414,10 @@ def slack_interactions():
             client.chat_postMessage(channel=user_id, **slack_message)
 
         # Handle project type choice - generate tech recommendations
-        elif action_id.startswith("type_"):
+        elif (
+            action_id.startswith("type_")
+            and conversation.state == ConversationState.TECH_PROJECT_TYPE
+        ):
             conversation.data["project_type"] = action_value
 
             # Get recommendations
@@ -418,7 +441,10 @@ def slack_interactions():
             client.chat_postMessage(channel=user_id, **slack_message)
 
         # Handle contribution type choice - generate mission recommendations
-        elif action_id.startswith("contrib_"):
+        elif (
+            action_id.startswith("contrib_")
+            and conversation.state == ConversationState.MISSION_CONTRIBUTION
+        ):
             conversation.data["contribution_type"] = action_value
 
             # Get recommendations

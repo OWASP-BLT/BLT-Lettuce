@@ -10,7 +10,10 @@ from src.lettuce.project_recommender import ProjectRecommender
 class ProjectPlugin(MachineBasePlugin):
     def __init__(self, client: SlackClient, settings: CaseInsensitiveDict, storage: PluginStorage):
         super().__init__(client, settings, storage)
-        self.project_data = ProjectRecommender().projects
+        try:
+            self.project_data = ProjectRecommender().projects
+        except RuntimeError:
+            self.project_data = {}
 
     @command("/project")
     async def project(self, command):
