@@ -362,7 +362,12 @@ def handle_interactivity():
             try:
                 tech, difficulty, project_type = action_value.split("|")
             except ValueError:
-                logging.warning("Invalid action_value for rec_type_: %r", action_value)
+                safe_action_value = (
+                    action_value.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+                    if isinstance(action_value, str)
+                    else action_value
+                )
+                logging.warning("Invalid action_value for rec_type_: %r", safe_action_value)
                 return "", 200
             recommendations = get_tech_recommendations(tech, difficulty, project_type)
             context = f"_Based on: {tech.title()} | {difficulty.title()} | {project_type.title()}_"
