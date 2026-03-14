@@ -432,7 +432,11 @@ def handle_interactivity():
             try:
                 mission, contribution = action_value.split("|")
             except ValueError:
-                logging.warning("Invalid action_value for rec_contrib_: %r", action_value)
+                safe_action_value = action_value.replace("\r", "").replace("\n", "")
+                logging.warning(
+                    "Invalid action_value for rec_contrib_: %r",
+                    safe_action_value,
+                )
                 return "", 200
             recommendations = get_mission_recommendations(mission, contribution)
             context = (
