@@ -92,6 +92,7 @@ def get_dashboard_html(
         user_avatar_html = '<i class="fas fa-user-circle text-red-500 text-2xl"></i>'
     ws_id = (current_ws or {}).get("id", "")
     ws_name = html_escape((current_ws or {}).get("team_name", "No workspace selected"))
+    ws_team_id = html_escape((current_ws or {}).get("team_id", ""))
     ws_app_id = (current_ws or {}).get("app_id", "")
     app_edit_url = (
         f"https://api.slack.com/apps/{ws_app_id}/general"
@@ -214,8 +215,15 @@ def get_dashboard_html(
             else:
                 raw_channel_name = "Unknown Channel"
         channel_name = html_escape(raw_channel_name)
+        workspace_cell = (
+            f'<div class="font-medium">{ws_name}</div>'
+            f'<div class="text-xs text-gray-400">{ws_team_id}</div>'
+            if ws_team_id
+            else f'<div class="font-medium">{ws_name}</div>'
+        )
         events_html += (
             '<tr class="border-b border-gray-100 hover:bg-gray-50">'
+            f'<td class="py-3 px-4 text-sm text-gray-700">{workspace_cell}</td>'
             f'<td class="py-3 px-4 text-sm text-gray-700">{ev_type}</td>'
             f'<td class="py-3 px-4 text-sm text-gray-700">{user_name}</td>'
             f'<td class="py-3 px-4 text-sm text-gray-500">{channel_name}</td>'
@@ -227,7 +235,7 @@ def get_dashboard_html(
         )
     if not events_html:
         events_html = (
-            '<tr><td colspan="7" class="py-6 text-center text-sm text-gray-400">'
+            '<tr><td colspan="8" class="py-6 text-center text-sm text-gray-400">'
             "No events recorded yet.</td></tr>"
         )
 
