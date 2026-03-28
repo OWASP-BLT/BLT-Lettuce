@@ -2857,12 +2857,166 @@ def build_results_blocks(projects, answers):
 # Flowchart — Recommendation engine
 # ===========================================================================
 
+# Topics that map to tech_tags when converting GitHub repo metadata
+_TECH_TOPIC_SET = {
+    "python",
+    "java",
+    "javascript",
+    "go",
+    "dart",
+    "flutter",
+    "ruby",
+    "php",
+    "typescript",
+    "c",
+    "cpp",
+    "rust",
+    "kotlin",
+    "swift",
+    "mobile",
+    "android",
+    "ios",
+    "cloud-native",
+    "kubernetes",
+    "docker",
+    "devsecops",
+    "threat-modeling",
+    "security",
+    "appsec",
+    "web",
+    "html",
+    "css",
+    "nodejs",
+    "django",
+    "react",
+    "angular",
+    "vue",
+}
 
-def recommend_projects(answers):
-    """Filter and rank CURATED_PROJECTS based on collected conversation answers.
+# GitHub topics → mission_tags
+_MISSION_TOPIC_MAP = {
+    "security": "learn-appsec",
+    "appsec": "learn-appsec",
+    "owasp": "learn-appsec",
+    "devsecops": "devsecops",
+    "ctf": "ctf",
+    "gsoc": "gsoc",
+    "documentation": "documentation",
+    "research": "research",
+}
+
+# GitHub topics → project type
+_TYPE_TOPIC_MAP = {
+    "documentation": "documentation",
+    "docs": "documentation",
+    "training": "training",
+    "ctf": "training",
+    "learning": "training",
+    "tool": "tool",
+    "scanner": "tool",
+}
+
+
+def _repos_to_projects(repo_rows):
+    """Convert workspace repository DB rows to flowchart-compatible project dicts.
+
+    Args:
+        repo_rows: list of dicts with keys repo_url, repo_name, description,
+            language, stars, and metadata_json (JSON string containing topics,
+            is_archived, etc. from the GitHub API).
+
+    Returns:
+        list of project dicts with keys name, url, description, tech_tags,
+        mission_tags, level, and type. Archived repos and rows without a URL
+        are excluded.
+
+    Infers tech_tags from the primary language and GitHub topics,
+    mission_tags from topics, level from star count, and type from topics.
+    """
+    projects = []
+    for row in repo_rows:
+        try:
+            metadata = {}
+            try:
+                raw = json.loads(row.get("metadata_json") or "{}")
+                metadata = raw if isinstance(raw, dict) else {}
+            except Exception:
+                metadata = {}
+
+            if bool(metadata.get("is_archived")):
+                continue
+
+            language = str(row.get("language") or "").lower().strip()
+            topics = [
+                str(t).lower().strip() for t in (metadata.get("topics") or []) if t
+            ]
+            stars = int(row.get("stars") or 0)
+            repo_url = str(row.get("repo_url") or "").strip()
+            if not repo_url:
+                continue
+
+            # Build tech_tags from language + matching topics
+            tech_tags = []
+            if language:
+                tech_tags.append(language)
+            for topic in topics:
+                if topic in _TECH_TOPIC_SET and topic not in tech_tags:
+                    tech_tags.append(topic)
+
+            # Build mission_tags from topics; always include contribute-code
+            mission_tags = []
+            for topic in topics:
+                mapped = _MISSION_TOPIC_MAP.get(topic)
+                if mapped and mapped not in mission_tags:
+                    mission_tags.append(mapped)
+            if "contribute-code" not in mission_tags:
+                mission_tags.append("contribute-code")
+
+            # Infer level from star count
+            if stars >= 500:
+                level = "advanced"
+            elif stars >= 30:
+                level = "intermediate"
+            else:
+                level = "beginner"
+
+            # Infer type from topics
+            project_type = "code"
+            for topic in topics:
+                if topic in _TYPE_TOPIC_MAP:
+                    project_type = _TYPE_TOPIC_MAP[topic]
+                    break
+
+            repo_name = str(row.get("repo_name") or "").strip()
+            description = str(row.get("description") or "").strip()
+
+            projects.append(
+                {
+                    "name": repo_name or repo_url,
+                    "url": repo_url,
+                    "description": description,
+                    "tech_tags": tech_tags,
+                    "mission_tags": mission_tags,
+                    "level": level,
+                    "type": project_type,
+                }
+            )
+        except Exception:
+            continue
+    return projects
+
+
+def recommend_projects(answers, workspace_projects=None):
+    """Filter and rank projects based on collected conversation answers.
+
+    Uses workspace_projects (repos linked to the workspace) when provided and
+    non-empty, falling back to CURATED_PROJECTS when the workspace has no
+    connected repositories.
 
     Returns a list of up to 3 recommended project dicts.
     """
+    # Use workspace repos when available (non-empty list); fall back to curated list.
+    project_pool = workspace_projects if workspace_projects else CURATED_PROJECTS
     path = answers.get("path", "technology")
 
     if path == "technology":
@@ -2871,7 +3025,7 @@ def recommend_projects(answers):
         proj_type = answers.get("project_type", "")
 
         candidates = []
-        for project in CURATED_PROJECTS:
+        for project in project_pool:
             score = 0
             if tech and tech in project.get("tech_tags", []):
                 score += 3
@@ -2879,13 +3033,12 @@ def recommend_projects(answers):
                 score += 2
             if proj_type and project.get("type") == proj_type:
                 score += 2
-            # Always include projects with a tech match even if difficulty/type differ
             if score > 0:
                 candidates.append((score, project))
 
         # If no tech match, fall back to difficulty + type filtering only
         if not candidates:
-            for project in CURATED_PROJECTS:
+            for project in project_pool:
                 score = 0
                 if difficulty and project.get("level") == difficulty:
                     score += 2
@@ -2900,7 +3053,7 @@ def recommend_projects(answers):
         contrib = answers.get("contribution_type", "")
 
         candidates = []
-        for project in CURATED_PROJECTS:
+        for project in project_pool:
             score = 0
             if goal and goal in project.get("mission_tags", []):
                 score += 3
@@ -2909,9 +3062,9 @@ def recommend_projects(answers):
             if score > 0:
                 candidates.append((score, project))
 
-        # Fallback: return top community picks
+        # Fallback: contribution type only
         if not candidates:
-            for project in CURATED_PROJECTS:
+            for project in project_pool:
                 score = 0
                 if contrib and project.get("type") == contrib:
                     score += 2
@@ -2939,7 +3092,14 @@ def _parse_conversation_answers(state):
 
 
 async def handle_flowchart_action(
-    env, action_id, action_value, user_id, channel_id, ws, ws_token
+    env,
+    action_id,
+    action_value,
+    user_id,
+    channel_id,
+    ws,
+    ws_token,
+    workspace_projects=None,
 ):
     """Advance the project-finder conversation based on a button click.
 
@@ -3033,7 +3193,7 @@ async def handle_flowchart_action(
         state = await db_get_conversation_state(env, ws_id, user_id)
         answers = _parse_conversation_answers(state)
         answers["project_type"] = action_value
-        projects = recommend_projects(answers)
+        projects = recommend_projects(answers, workspace_projects=workspace_projects)
         await db_delete_conversation_state(env, ws_id, user_id)
         blocks = build_results_blocks(projects, answers)
         await send_slack_message(
@@ -3071,7 +3231,7 @@ async def handle_flowchart_action(
         state = await db_get_conversation_state(env, ws_id, user_id)
         answers = _parse_conversation_answers(state)
         answers["contribution_type"] = action_value
-        projects = recommend_projects(answers)
+        projects = recommend_projects(answers, workspace_projects=workspace_projects)
         await db_delete_conversation_state(env, ws_id, user_id)
         blocks = build_results_blocks(projects, answers)
         await send_slack_message(
@@ -7537,6 +7697,20 @@ async def handle_request(request, env):
 
                     # Handle flowchart conversation actions (action_id starts with "flow_")
                     if action_id.startswith("flow_") and ws_token and channel_id:
+                        # Load workspace repos to drive recommendations dynamically;
+                        # convert to project dicts; fall back to CURATED_PROJECTS if empty.
+                        ws_id_for_flow = ws.get("id") if ws else None
+                        workspace_projects = None
+                        if ws_id_for_flow:
+                            try:
+                                repo_rows = await db_get_repositories(
+                                    env, ws_id_for_flow
+                                )
+                                if repo_rows:
+                                    workspace_projects = _repos_to_projects(repo_rows)
+                            except Exception:
+                                workspace_projects = None
+
                         flow_result = await handle_flowchart_action(
                             env,
                             action_id,
@@ -7545,6 +7719,7 @@ async def handle_request(request, env):
                             channel_id,
                             ws,
                             ws_token,
+                            workspace_projects=workspace_projects,
                         )
                         if flow_result is not None:
                             return Response.json({"ok": True})

@@ -1467,3 +1467,134 @@ def test_curated_projects_schema():
         assert isinstance(project["tech_tags"], list)
         assert isinstance(project["mission_tags"], list)
         assert project["level"] in ("beginner", "intermediate", "advanced")
+
+
+def test_repos_to_projects_basic_conversion():
+    """_repos_to_projects converts a repo row into a valid project dict."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "https://github.com/example/myapp",
+            "repo_name": "myapp",
+            "description": "A cool security tool",
+            "language": "Python",
+            "stars": 150,
+            "metadata_json": '{"topics": ["security", "appsec", "ctf"], "is_archived": false}',
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+
+    assert len(projects) == 1
+    p = projects[0]
+    assert p["name"] == "myapp"
+    assert p["url"] == "https://github.com/example/myapp"
+    assert "python" in p["tech_tags"]
+    assert "learn-appsec" in p["mission_tags"]
+    assert "ctf" in p["mission_tags"]
+    assert "contribute-code" in p["mission_tags"]
+    assert p["level"] == "intermediate"  # stars=150, 30<=150<500
+    assert p["type"] == "training"  # ctf topic maps to training type
+
+
+def test_repos_to_projects_skips_archived():
+    """Archived repos are excluded from the result."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "https://github.com/example/old",
+            "repo_name": "old",
+            "description": "",
+            "language": "Java",
+            "stars": 0,
+            "metadata_json": '{"topics": [], "is_archived": true}',
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+    assert projects == []
+
+
+def test_repos_to_projects_skips_empty_url():
+    """Rows without a repo_url are excluded."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "",
+            "repo_name": "nourl",
+            "description": "",
+            "language": "Go",
+            "stars": 0,
+            "metadata_json": "{}",
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+    assert projects == []
+
+
+def test_repos_to_projects_level_thresholds():
+    """Star-based level inference works at each threshold."""
+    worker = _get_worker()
+
+    def make_row(stars):
+        return {
+            "repo_url": f"https://github.com/x/r{stars}",
+            "repo_name": f"r{stars}",
+            "description": "",
+            "language": "",
+            "stars": stars,
+            "metadata_json": "{}",
+        }
+
+    rows = [make_row(5), make_row(30), make_row(500)]
+    projects = worker._repos_to_projects(rows)
+    assert projects[0]["level"] == "beginner"
+    assert projects[1]["level"] == "intermediate"
+    assert projects[2]["level"] == "advanced"
+
+
+def test_recommend_projects_uses_workspace_projects_when_provided():
+    """recommend_projects uses workspace_projects instead of CURATED_PROJECTS."""
+    worker = _get_worker()
+
+    custom = [
+        {
+            "name": "CustomRepo",
+            "url": "https://github.com/x/custom",
+            "description": "A custom repo",
+            "tech_tags": ["rust"],
+            "mission_tags": ["contribute-code"],
+            "level": "beginner",
+            "type": "code",
+        }
+    ]
+    answers = {
+        "path": "technology",
+        "tech_stack": "rust",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    results = worker.recommend_projects(answers, workspace_projects=custom)
+
+    assert len(results) == 1
+    assert results[0]["name"] == "CustomRepo"
+
+
+def test_recommend_projects_falls_back_to_curated_when_workspace_empty():
+    """recommend_projects falls back to CURATED_PROJECTS when workspace_projects is empty."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "technology",
+        "tech_stack": "python",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    # Passing empty list should trigger fallback
+    results_empty = worker.recommend_projects(answers, workspace_projects=[])
+    results_none = worker.recommend_projects(answers, workspace_projects=None)
+
+    # Both should return results from CURATED_PROJECTS (non-empty for python)
+    assert len(results_empty) > 0
+    assert len(results_none) > 0
