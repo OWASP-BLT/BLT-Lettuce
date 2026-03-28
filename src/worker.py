@@ -2245,6 +2245,1009 @@ async def db_get_workspace_stats(env, workspace_id):
 
 
 # ===========================================================================
+# Flowchart — Project recommendation conversation data
+# ===========================================================================
+
+# Trigger words that start the project-finder conversation in a DM
+FLOWCHART_TRIGGER_WORDS = (
+    "find",
+    "recommend",
+    "projects",
+    "contribute",
+    "discover",
+    "suggest",
+    "project",
+)
+
+# Curated list of OWASP and BLT projects with metadata for recommendations
+CURATED_PROJECTS = [
+    {
+        "name": "OWASP ZAP",
+        "url": "https://owasp.org/www-project-zap/",
+        "description": "The world's most widely used web app scanner — free and open-source.",
+        "tech_tags": ["java", "security", "web"],
+        "mission_tags": ["learn-appsec", "contribute-code", "research"],
+        "level": "intermediate",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP Dependency-Check",
+        "url": "https://owasp.org/www-project-dependency-check/",
+        "description": "Detects publicly disclosed vulnerabilities in project dependencies.",
+        "tech_tags": ["java", "devsecops", "security"],
+        "mission_tags": ["devsecops", "contribute-code", "research"],
+        "level": "intermediate",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP PyTM",
+        "url": "https://owasp.org/www-project-pytm/",
+        "description": "A Pythonic framework for threat modeling.",
+        "tech_tags": ["python", "threat-modeling"],
+        "mission_tags": ["learn-appsec", "contribute-code", "research"],
+        "level": "intermediate",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP Juice Shop",
+        "url": "https://owasp.org/www-project-juice-shop/",
+        "description": "An intentionally insecure web application for security training and CTF.",
+        "tech_tags": ["javascript", "nodejs", "web"],
+        "mission_tags": ["learn-appsec", "ctf", "contribute-code"],
+        "level": "beginner",
+        "type": "training",
+    },
+    {
+        "name": "OWASP WebGoat",
+        "url": "https://owasp.org/www-project-webgoat/",
+        "description": "Deliberately insecure web application for teaching web security.",
+        "tech_tags": ["java", "web", "security"],
+        "mission_tags": ["learn-appsec", "ctf"],
+        "level": "beginner",
+        "type": "training",
+    },
+    {
+        "name": "OWASP DefectDojo",
+        "url": "https://owasp.org/www-project-defectdojo/",
+        "description": "DevSecOps, ASPM, and vulnerability management platform.",
+        "tech_tags": ["python", "django", "devsecops"],
+        "mission_tags": ["devsecops", "contribute-code"],
+        "level": "intermediate",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP SAMM",
+        "url": "https://owasp.org/www-project-samm/",
+        "description": "Software Assurance Maturity Model — framework for secure software development.",
+        "tech_tags": ["documentation", "security"],
+        "mission_tags": ["learn-appsec", "documentation", "research"],
+        "level": "beginner",
+        "type": "documentation",
+    },
+    {
+        "name": "OWASP ASVS",
+        "url": "https://owasp.org/www-project-application-security-verification-standard/",
+        "description": "Application Security Verification Standard for web applications.",
+        "tech_tags": ["documentation", "security", "web"],
+        "mission_tags": ["learn-appsec", "documentation", "research"],
+        "level": "beginner",
+        "type": "documentation",
+    },
+    {
+        "name": "OWASP Mobile Application Security",
+        "url": "https://owasp.org/www-project-mobile-app-security/",
+        "description": "Mobile security testing guide and verification standard.",
+        "tech_tags": ["mobile", "android", "ios", "security"],
+        "mission_tags": ["learn-appsec", "documentation", "research"],
+        "level": "intermediate",
+        "type": "documentation",
+    },
+    {
+        "name": "OWASP Threat Dragon",
+        "url": "https://owasp.org/www-project-threat-dragon/",
+        "description": "An open-source threat modeling tool with diagram support.",
+        "tech_tags": ["javascript", "threat-modeling", "web"],
+        "mission_tags": ["learn-appsec", "contribute-code"],
+        "level": "intermediate",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP Amass",
+        "url": "https://owasp.org/www-project-amass/",
+        "description": "In-depth attack surface management and network mapping.",
+        "tech_tags": ["go", "security", "cloud-native"],
+        "mission_tags": ["research", "contribute-code"],
+        "level": "advanced",
+        "type": "tool",
+    },
+    {
+        "name": "OWASP Cloud-Native Application Security Top 10",
+        "url": "https://owasp.org/www-project-cloud-native-application-security-top-10/",
+        "description": "Top 10 security risks for cloud-native applications.",
+        "tech_tags": ["cloud-native", "documentation", "security"],
+        "mission_tags": ["learn-appsec", "documentation", "research"],
+        "level": "intermediate",
+        "type": "documentation",
+    },
+    {
+        "name": "OWASP DevSecOps Maturity Model",
+        "url": "https://owasp.org/www-project-devsecops-maturity-model/",
+        "description": "A framework for implementing DevSecOps practices.",
+        "tech_tags": ["devsecops", "documentation"],
+        "mission_tags": ["devsecops", "documentation", "research"],
+        "level": "intermediate",
+        "type": "documentation",
+    },
+    {
+        "name": "BLT (Bug Logging Tool)",
+        "url": "https://github.com/OWASP-BLT/BLT",
+        "description": "OWASP Bug Logging Tool — report bugs, earn points, and improve security.",
+        "tech_tags": ["python", "django", "javascript", "web"],
+        "mission_tags": ["contribute-code", "learn-appsec", "gsoc"],
+        "level": "intermediate",
+        "type": "code",
+    },
+    {
+        "name": "BLT Flutter",
+        "url": "https://github.com/OWASP-BLT/BLT-Flutter",
+        "description": "Flutter mobile app for BLT — bug reporting on mobile devices.",
+        "tech_tags": ["flutter", "dart", "mobile"],
+        "mission_tags": ["contribute-code", "gsoc"],
+        "level": "beginner",
+        "type": "code",
+    },
+    {
+        "name": "BLT Lettuce (Slack Bot)",
+        "url": "https://github.com/OWASP-BLT/BLT-Lettuce",
+        "description": "Cloudflare Worker-based Slack bot for the BLT community.",
+        "tech_tags": ["python", "javascript", "cloud-native"],
+        "mission_tags": ["contribute-code", "gsoc"],
+        "level": "intermediate",
+        "type": "code",
+    },
+    {
+        "name": "BLT Extension",
+        "url": "https://github.com/OWASP-BLT/BLT-Extension",
+        "description": "Browser extension for reporting bugs directly from your browser.",
+        "tech_tags": ["javascript", "css", "html", "web"],
+        "mission_tags": ["contribute-code", "gsoc"],
+        "level": "beginner",
+        "type": "code",
+    },
+]
+
+
+# ===========================================================================
+# Flowchart — Conversation state DB helpers
+# ===========================================================================
+
+
+async def db_get_conversation_state(env, workspace_id, user_slack_id):
+    """Return the active conversation state for a user, or None."""
+    try:
+        result = await (
+            env.DB.prepare(
+                "SELECT * FROM conversation_states "
+                "WHERE workspace_id = ? AND user_slack_id = ? LIMIT 1"
+            )
+            .bind(workspace_id, user_slack_id)
+            .first()
+        )
+        return _row(result)
+    except Exception:
+        return None
+
+
+async def db_save_conversation_state(
+    env, workspace_id, user_slack_id, channel_id, step, answers
+):
+    """Upsert the conversation state for a user."""
+    now = get_utc_now()
+    answers_json = json.dumps(answers)
+    try:
+        run_result = _js_to_python(
+            await env.DB.prepare(
+                "UPDATE conversation_states "
+                "SET channel_id = ?, step = ?, answers_json = ?, updated_at = ? "
+                "WHERE workspace_id = ? AND user_slack_id = ?"
+            )
+            .bind(channel_id, step, answers_json, now, workspace_id, user_slack_id)
+            .run()
+        )
+        changes = 0
+        try:
+            changes = int((run_result.get("meta") or {}).get("changes") or 0)
+        except Exception:
+            pass
+        if changes == 0:
+            await (
+                env.DB.prepare(
+                    "INSERT INTO conversation_states "
+                    "(workspace_id, user_slack_id, channel_id, step, answers_json, created_at, updated_at) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)"
+                )
+                .bind(
+                    workspace_id,
+                    user_slack_id,
+                    channel_id,
+                    step,
+                    answers_json,
+                    now,
+                    now,
+                )
+                .run()
+            )
+    except Exception:
+        pass
+
+
+async def db_delete_conversation_state(env, workspace_id, user_slack_id):
+    """Delete the conversation state for a user (after completion or cancellation)."""
+    try:
+        await (
+            env.DB.prepare(
+                "DELETE FROM conversation_states "
+                "WHERE workspace_id = ? AND user_slack_id = ?"
+            )
+            .bind(workspace_id, user_slack_id)
+            .run()
+        )
+    except Exception:
+        pass
+
+
+# ===========================================================================
+# Flowchart — Slack block builders
+# ===========================================================================
+
+
+def build_flowchart_start_blocks():
+    """Return Slack blocks for the initial path-selection question."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": (
+                    "*Hi! I can help you find OWASP projects to contribute to.* 🌿\n\n"
+                    "Would you like recommendations based on *Technology* "
+                    "(what you know) or *Mission* (what you want to accomplish)?"
+                ),
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🖥️ Technology"},
+                    "action_id": "flow_path_technology",
+                    "value": "technology",
+                    "style": "primary",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🎯 Mission"},
+                    "action_id": "flow_path_mission",
+                    "value": "mission",
+                },
+            ],
+        },
+    ]
+
+
+def build_tech_stack_blocks():
+    """Return Slack blocks for the technology stack selection step."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*Which technology or stack are you most comfortable with?*",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🐍 Python"},
+                    "action_id": "flow_tech_python",
+                    "value": "python",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "☕ Java"},
+                    "action_id": "flow_tech_java",
+                    "value": "java",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🌐 JavaScript"},
+                    "action_id": "flow_tech_javascript",
+                    "value": "javascript",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📱 Mobile"},
+                    "action_id": "flow_tech_mobile",
+                    "value": "mobile",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "☁️ Cloud Native"},
+                    "action_id": "flow_tech_cloud",
+                    "value": "cloud-native",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔐 Threat Modeling"},
+                    "action_id": "flow_tech_threat",
+                    "value": "threat-modeling",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🛡️ DevSecOps"},
+                    "action_id": "flow_tech_devsecops",
+                    "value": "devsecops",
+                },
+            ],
+        },
+    ]
+
+
+def build_difficulty_blocks():
+    """Return Slack blocks for the experience/difficulty selection step."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*What is your experience level?*",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🌱 Beginner"},
+                    "action_id": "flow_diff_beginner",
+                    "value": "beginner",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔧 Intermediate"},
+                    "action_id": "flow_diff_intermediate",
+                    "value": "intermediate",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🚀 Advanced"},
+                    "action_id": "flow_diff_advanced",
+                    "value": "advanced",
+                },
+            ],
+        },
+    ]
+
+
+def build_project_type_blocks():
+    """Return Slack blocks for the contribution type selection step (tech path)."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*What type of contribution are you interested in?*",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔨 Tools / Code"},
+                    "action_id": "flow_type_code",
+                    "value": "code",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📚 Documentation"},
+                    "action_id": "flow_type_docs",
+                    "value": "documentation",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🎓 Training"},
+                    "action_id": "flow_type_training",
+                    "value": "training",
+                },
+            ],
+        },
+    ]
+
+
+def build_mission_goal_blocks():
+    """Return Slack blocks for the mission goal selection step."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*What is your primary goal?*",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔍 Learn AppSec"},
+                    "action_id": "flow_goal_learn",
+                    "value": "learn-appsec",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "💻 Contribute Code"},
+                    "action_id": "flow_goal_code",
+                    "value": "contribute-code",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📝 Documentation"},
+                    "action_id": "flow_goal_docs",
+                    "value": "documentation",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🎓 GSoC Prep"},
+                    "action_id": "flow_goal_gsoc",
+                    "value": "gsoc",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔬 Research"},
+                    "action_id": "flow_goal_research",
+                    "value": "research",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🛡️ DevSecOps"},
+                    "action_id": "flow_goal_devsecops",
+                    "value": "devsecops",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🚩 CTF"},
+                    "action_id": "flow_goal_ctf",
+                    "value": "ctf",
+                },
+            ],
+        },
+    ]
+
+
+def build_mission_contrib_blocks():
+    """Return Slack blocks for the contribution type selection step (mission path)."""
+    return [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*How would you like to contribute?*",
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "💻 Code"},
+                    "action_id": "flow_contrib_code",
+                    "value": "code",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "📚 Documentation"},
+                    "action_id": "flow_contrib_docs",
+                    "value": "documentation",
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🎓 Training / Research"},
+                    "action_id": "flow_contrib_training",
+                    "value": "training",
+                },
+            ],
+        },
+    ]
+
+
+def build_results_blocks(projects, answers):
+    """Return Slack blocks showing the top recommended projects."""
+    if not projects:
+        return [
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": (
+                        "😕 I couldn't find a perfect match for your criteria, "
+                        "but you can explore all OWASP projects here:\n"
+                        "• <https://owasp.org/projects/|OWASP Projects Directory>\n"
+                        "• <https://github.com/OWASP-BLT|BLT GitHub Org>"
+                    ),
+                },
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "🔄 Start Over"},
+                        "action_id": "flow_restart",
+                        "value": "restart",
+                        "style": "primary",
+                    },
+                ],
+            },
+        ]
+
+    blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "*🎯 Here are your top project matches!*",
+            },
+        },
+        {"type": "divider"},
+    ]
+
+    for i, project in enumerate(projects, 1):
+        level_emoji = {"beginner": "🌱", "intermediate": "🔧", "advanced": "🚀"}.get(
+            project.get("level", ""), "📌"
+        )
+        type_label = project.get("type", "project").title()
+        blocks.append(
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": (
+                        f"*{i}. <{project['url']}|{project['name']}>*\n"
+                        f"{project['description']}\n"
+                        f"{level_emoji} _{project.get('level', '').title()}_ · _{type_label}_"
+                    ),
+                },
+            }
+        )
+
+    blocks += [
+        {"type": "divider"},
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": (
+                    "Want to explore more? Visit the "
+                    "<https://owasp.org/projects/|OWASP Projects Directory> "
+                    "or type *find* to start over."
+                ),
+            },
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "🔄 Start Over"},
+                    "action_id": "flow_restart",
+                    "value": "restart",
+                    "style": "primary",
+                },
+            ],
+        },
+    ]
+    return blocks
+
+
+# ===========================================================================
+# Flowchart — Recommendation engine
+# ===========================================================================
+
+# Topics that map to tech_tags when converting GitHub repo metadata
+_TECH_TOPIC_SET = {
+    "python",
+    "java",
+    "javascript",
+    "go",
+    "dart",
+    "flutter",
+    "ruby",
+    "php",
+    "typescript",
+    "c",
+    "cpp",
+    "rust",
+    "kotlin",
+    "swift",
+    "mobile",
+    "android",
+    "ios",
+    "cloud-native",
+    "kubernetes",
+    "docker",
+    "devsecops",
+    "threat-modeling",
+    "security",
+    "appsec",
+    "web",
+    "html",
+    "css",
+    "nodejs",
+    "django",
+    "react",
+    "angular",
+    "vue",
+}
+
+# GitHub topics → mission_tags
+_MISSION_TOPIC_MAP = {
+    "security": "learn-appsec",
+    "appsec": "learn-appsec",
+    "owasp": "learn-appsec",
+    "devsecops": "devsecops",
+    "ctf": "ctf",
+    "gsoc": "gsoc",
+    "documentation": "documentation",
+    "research": "research",
+}
+
+# GitHub topics → project type
+_TYPE_TOPIC_MAP = {
+    "documentation": "documentation",
+    "docs": "documentation",
+    "training": "training",
+    "ctf": "training",
+    "learning": "training",
+    "tool": "tool",
+    "scanner": "tool",
+}
+
+
+def _repos_to_projects(repo_rows):
+    """Convert workspace repository DB rows to flowchart-compatible project dicts.
+
+    Args:
+        repo_rows: list of dicts with keys repo_url, repo_name, description,
+            language, stars, and metadata_json (JSON string containing topics,
+            is_archived, etc. from the GitHub API).
+
+    Returns:
+        list of project dicts with keys name, url, description, tech_tags,
+        mission_tags, level, and type. Archived repos and rows without a URL
+        are excluded.
+
+    Infers tech_tags from the primary language and GitHub topics,
+    mission_tags from topics, level from star count, and type from topics.
+    """
+    projects = []
+    for row in repo_rows:
+        try:
+            metadata = {}
+            try:
+                raw = json.loads(row.get("metadata_json") or "{}")
+                metadata = raw if isinstance(raw, dict) else {}
+            except Exception:
+                metadata = {}
+
+            if bool(metadata.get("is_archived")):
+                continue
+
+            language = str(row.get("language") or "").lower().strip()
+            topics = [
+                str(t).lower().strip() for t in (metadata.get("topics") or []) if t
+            ]
+            stars = int(row.get("stars") or 0)
+            repo_url = str(row.get("repo_url") or "").strip()
+            if not repo_url:
+                continue
+
+            # Build tech_tags from language + matching topics
+            tech_tags = []
+            if language:
+                tech_tags.append(language)
+            for topic in topics:
+                if topic in _TECH_TOPIC_SET and topic not in tech_tags:
+                    tech_tags.append(topic)
+
+            # Build mission_tags from topics; always include contribute-code
+            mission_tags = []
+            for topic in topics:
+                mapped = _MISSION_TOPIC_MAP.get(topic)
+                if mapped and mapped not in mission_tags:
+                    mission_tags.append(mapped)
+            if "contribute-code" not in mission_tags:
+                mission_tags.append("contribute-code")
+
+            # Infer level from star count
+            if stars >= 500:
+                level = "advanced"
+            elif stars >= 30:
+                level = "intermediate"
+            else:
+                level = "beginner"
+
+            # Infer type from topics
+            project_type = "code"
+            for topic in topics:
+                if topic in _TYPE_TOPIC_MAP:
+                    project_type = _TYPE_TOPIC_MAP[topic]
+                    break
+
+            repo_name = str(row.get("repo_name") or "").strip()
+            description = str(row.get("description") or "").strip()
+
+            projects.append(
+                {
+                    "name": repo_name or repo_url,
+                    "url": repo_url,
+                    "description": description,
+                    "tech_tags": tech_tags,
+                    "mission_tags": mission_tags,
+                    "level": level,
+                    "type": project_type,
+                }
+            )
+        except Exception:
+            continue
+    return projects
+
+
+def recommend_projects(answers, workspace_projects=None):
+    """Filter and rank projects based on collected conversation answers.
+
+    Uses workspace_projects (repos linked to the workspace) when provided and
+    non-empty, falling back to CURATED_PROJECTS when the workspace has no
+    connected repositories.
+
+    Returns a list of up to 3 recommended project dicts.
+    """
+    # Use workspace repos when available (non-empty list); fall back to curated list.
+    project_pool = workspace_projects if workspace_projects else CURATED_PROJECTS
+    path = answers.get("path", "technology")
+
+    if path == "technology":
+        tech = answers.get("tech_stack", "")
+        difficulty = answers.get("difficulty", "")
+        proj_type = answers.get("project_type", "")
+
+        candidates = []
+        for project in project_pool:
+            score = 0
+            if tech and tech in project.get("tech_tags", []):
+                score += 3
+            if difficulty and project.get("level") == difficulty:
+                score += 2
+            if proj_type and project.get("type") == proj_type:
+                score += 2
+            if score > 0:
+                candidates.append((score, project))
+
+        # If no tech match, fall back to difficulty + type filtering only
+        if not candidates:
+            for project in project_pool:
+                score = 0
+                if difficulty and project.get("level") == difficulty:
+                    score += 2
+                if proj_type and project.get("type") == proj_type:
+                    score += 2
+                if score > 0:
+                    candidates.append((score, project))
+
+    else:
+        # Mission path
+        goal = answers.get("mission_goal", "")
+        contrib = answers.get("contribution_type", "")
+
+        candidates = []
+        for project in project_pool:
+            score = 0
+            if goal and goal in project.get("mission_tags", []):
+                score += 3
+            if contrib and project.get("type") == contrib:
+                score += 2
+            if score > 0:
+                candidates.append((score, project))
+
+        # Fallback: contribution type only
+        if not candidates:
+            for project in project_pool:
+                score = 0
+                if contrib and project.get("type") == contrib:
+                    score += 2
+                if score > 0:
+                    candidates.append((score, project))
+
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    return [p for _, p in candidates[:3]]
+
+
+# ===========================================================================
+# Flowchart — Conversation step handler
+# ===========================================================================
+
+
+def _parse_conversation_answers(state):
+    """Extract and JSON-parse the answers dict from a conversation state row."""
+    if not state:
+        return {}
+    try:
+        answers = json.loads((state or {}).get("answers_json") or "{}")
+        return answers if isinstance(answers, dict) else {}
+    except Exception:
+        return {}
+
+
+async def handle_flowchart_action(
+    env,
+    action_id,
+    action_value,
+    user_id,
+    channel_id,
+    ws,
+    ws_token,
+    workspace_projects=None,
+):
+    """Advance the project-finder conversation based on a button click.
+
+    Returns a dict with {"ok": bool, "action": str}.
+    """
+    ws_id = ws.get("id") if ws else None
+
+    # --- Restart ---
+    if action_id == "flow_restart":
+        await db_delete_conversation_state(env, ws_id, user_id)
+        await db_save_conversation_state(env, ws_id, user_id, channel_id, "start", {})
+        blocks = build_flowchart_start_blocks()
+        await send_slack_message(
+            env,
+            channel_id,
+            "Let's find you a project! 🌿",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_restart"}
+
+    # --- Path selection ---
+    if action_id in ("flow_path_technology", "flow_path_mission"):
+        path = action_value  # "technology" or "mission"
+        answers = {"path": path}
+        if path == "technology":
+            next_step = "tech_stack"
+            blocks = build_tech_stack_blocks()
+            text = "Great! Let's narrow it down by technology."
+        else:
+            next_step = "mission_goal"
+            blocks = build_mission_goal_blocks()
+            text = "Great! Let's find projects that match your mission."
+
+        await db_save_conversation_state(
+            env, ws_id, user_id, channel_id, next_step, answers
+        )
+        await send_slack_message(
+            env,
+            channel_id,
+            text,
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": f"flow_set_path_{path}"}
+
+    # --- Technology stack selection ---
+    if action_id.startswith("flow_tech_"):
+        state = await db_get_conversation_state(env, ws_id, user_id)
+        answers = _parse_conversation_answers(state)
+        answers["tech_stack"] = action_value
+        next_step = "difficulty"
+        await db_save_conversation_state(
+            env, ws_id, user_id, channel_id, next_step, answers
+        )
+        blocks = build_difficulty_blocks()
+        await send_slack_message(
+            env,
+            channel_id,
+            f"*{action_value.replace('-', ' ').title()}* — nice choice! Now tell me about your experience level.",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_set_tech_stack"}
+
+    # --- Difficulty selection ---
+    if action_id.startswith("flow_diff_"):
+        state = await db_get_conversation_state(env, ws_id, user_id)
+        answers = _parse_conversation_answers(state)
+        answers["difficulty"] = action_value
+        next_step = "project_type"
+        await db_save_conversation_state(
+            env, ws_id, user_id, channel_id, next_step, answers
+        )
+        blocks = build_project_type_blocks()
+        await send_slack_message(
+            env,
+            channel_id,
+            "Almost there! What type of contribution interests you most?",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_set_difficulty"}
+
+    # --- Project type selection (tech path final step) ---
+    if action_id.startswith("flow_type_"):
+        state = await db_get_conversation_state(env, ws_id, user_id)
+        answers = _parse_conversation_answers(state)
+        answers["project_type"] = action_value
+        projects = recommend_projects(answers, workspace_projects=workspace_projects)
+        await db_delete_conversation_state(env, ws_id, user_id)
+        blocks = build_results_blocks(projects, answers)
+        await send_slack_message(
+            env,
+            channel_id,
+            "Here are your project matches!",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_tech_results"}
+
+    # --- Mission goal selection ---
+    if action_id.startswith("flow_goal_"):
+        state = await db_get_conversation_state(env, ws_id, user_id)
+        answers = _parse_conversation_answers(state)
+        answers["mission_goal"] = action_value
+        next_step = "mission_contrib"
+        await db_save_conversation_state(
+            env, ws_id, user_id, channel_id, next_step, answers
+        )
+        blocks = build_mission_contrib_blocks()
+        await send_slack_message(
+            env,
+            channel_id,
+            "Good to know! One last question — how would you like to contribute?",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_set_mission_goal"}
+
+    # --- Mission contribution type selection (mission path final step) ---
+    if action_id.startswith("flow_contrib_"):
+        state = await db_get_conversation_state(env, ws_id, user_id)
+        answers = _parse_conversation_answers(state)
+        answers["contribution_type"] = action_value
+        projects = recommend_projects(answers, workspace_projects=workspace_projects)
+        await db_delete_conversation_state(env, ws_id, user_id)
+        blocks = build_results_blocks(projects, answers)
+        await send_slack_message(
+            env,
+            channel_id,
+            "Here are your project matches!",
+            blocks=blocks,
+            token=ws_token,
+            include_branding=False,
+        )
+        return {"ok": True, "action": "flow_mission_results"}
+
+    return None
+
+
+# ===========================================================================
 # OAuth / session helpers
 # ===========================================================================
 
@@ -4415,6 +5418,23 @@ async def handle_message_event(env, event, team_id=None):
                 env, channel, help_with_settings, token=ws_token
             )
             return {"ok": result.get("ok"), "action": "dm_help"}
+
+        # Project-finder flowchart: start a new conversation when trigger words appear
+        ws_id = ws.get("id") if ws else None
+        message_words = set(message_text.split())
+        if ws_id and any(word in message_words for word in FLOWCHART_TRIGGER_WORDS):
+            await db_delete_conversation_state(env, ws_id, user)
+            await db_save_conversation_state(env, ws_id, user, channel, "start", {})
+            blocks = build_flowchart_start_blocks()
+            result = await send_slack_message(
+                env,
+                channel,
+                "Let me help you find a project! 🌿",
+                blocks=blocks,
+                token=ws_token,
+                include_branding=False,
+            )
+            return {"ok": result.get("ok"), "action": "dm_flowchart_start"}
 
         # Non-command DM text: return available commands and current settings.
         result = await send_slack_message(
@@ -6675,8 +7695,37 @@ async def handle_request(request, env):
                     if not ws_token:
                         ws_token = getattr(env, "SLACK_TOKEN", None)
 
+                    # Handle flowchart conversation actions (action_id starts with "flow_")
+                    if action_id.startswith("flow_") and ws_token and channel_id:
+                        # Load workspace repos to drive recommendations dynamically;
+                        # convert to project dicts; fall back to CURATED_PROJECTS if empty.
+                        ws_id_for_flow = ws.get("id") if ws else None
+                        workspace_projects = None
+                        if ws_id_for_flow:
+                            try:
+                                repo_rows = await db_get_repositories(
+                                    env, ws_id_for_flow
+                                )
+                                if repo_rows:
+                                    workspace_projects = _repos_to_projects(repo_rows)
+                            except Exception:
+                                workspace_projects = None
+
+                        flow_result = await handle_flowchart_action(
+                            env,
+                            action_id,
+                            action.get("value", ""),
+                            user_id,
+                            channel_id,
+                            ws,
+                            ws_token,
+                            workspace_projects=workspace_projects,
+                        )
+                        if flow_result is not None:
+                            return Response.json({"ok": True})
+
                     # Handle button actions by simulating the command
-                    if action_id == "quick_stats":
+                    elif action_id == "quick_stats":
                         counts = await get_db_table_counts(env)
                         stats_text = _format_db_stats_for_slack(counts)
                         if ws_token and channel_id:

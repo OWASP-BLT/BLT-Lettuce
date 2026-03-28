@@ -1286,3 +1286,315 @@ def test_webhook_persists_webhook_received_event_with_request_data():
     assert captured["webhook_fields"]["webhook_event_subtype"] == "channel_join"
     assert captured["webhook_fields"]["webhook_retry_num"] == "1"
     assert captured["webhook_fields"]["webhook_retry_reason"] == "http_timeout"
+
+
+# ===========================================================================
+# Flowchart tests
+# ===========================================================================
+
+
+def _get_worker():
+    """Import worker module with mocked runtime dependencies."""
+    import sys
+    from unittest.mock import Mock
+
+    sys.modules["js"] = Mock()
+    sys.modules["cloudflare"] = Mock()
+    sys.modules["workers"] = Mock()
+
+    import importlib
+
+    import src.worker as worker
+
+    importlib.reload(worker)
+    return worker
+
+
+def test_recommend_projects_technology_path():
+    """Technology path returns projects matching tech tag and difficulty."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "technology",
+        "tech_stack": "python",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    results = worker.recommend_projects(answers)
+
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    # All returned projects should have python in tech_tags or be a fallback
+    names = [p["name"] for p in results]
+    assert len(names) > 0
+
+
+def test_recommend_projects_mission_path():
+    """Mission path returns projects matching mission goal."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "mission",
+        "mission_goal": "learn-appsec",
+        "contribution_type": "training",
+    }
+    results = worker.recommend_projects(answers)
+
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    assert len(results) > 0
+
+
+def test_recommend_projects_returns_at_most_three():
+    """Recommendation engine never returns more than 3 projects."""
+    worker = _get_worker()
+
+    for path in ["technology", "mission"]:
+        answers = {"path": path}
+        results = worker.recommend_projects(answers)
+        assert len(results) <= 3
+
+
+def test_recommend_projects_fallback_no_match():
+    """Recommendation engine returns fallback results when nothing matches exactly."""
+    worker = _get_worker()
+
+    # Unlikely combo that won't match exactly on tech_stack
+    answers = {
+        "path": "technology",
+        "tech_stack": "cobol",
+        "difficulty": "advanced",
+        "project_type": "tool",
+    }
+    results = worker.recommend_projects(answers)
+
+    # Should still return a list within bounds
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    # Fallback should return projects that match difficulty+type even without tech match
+    # (advanced tools exist in the curated list)
+    if results:
+        for project in results:
+            assert "name" in project
+            assert "url" in project
+
+
+def test_build_flowchart_start_blocks_structure():
+    """Start blocks contain a section and an actions block with two buttons."""
+    worker = _get_worker()
+
+    blocks = worker.build_flowchart_start_blocks()
+
+    assert any(b.get("type") == "section" for b in blocks)
+    actions = [b for b in blocks if b.get("type") == "actions"]
+    assert len(actions) == 1
+    elements = actions[0]["elements"]
+    action_ids = [e["action_id"] for e in elements]
+    assert "flow_path_technology" in action_ids
+    assert "flow_path_mission" in action_ids
+
+
+def test_build_tech_stack_blocks_has_seven_options():
+    """Tech stack block has exactly seven technology buttons."""
+    worker = _get_worker()
+
+    blocks = worker.build_tech_stack_blocks()
+    actions = [b for b in blocks if b.get("type") == "actions"]
+    assert len(actions) == 1
+    assert len(actions[0]["elements"]) == 7
+
+
+def test_build_results_blocks_no_projects():
+    """Results block handles empty project list gracefully."""
+    worker = _get_worker()
+
+    blocks = worker.build_results_blocks([], {})
+    assert len(blocks) > 0
+    # Should contain a restart button
+    all_action_ids = [
+        e.get("action_id")
+        for b in blocks
+        if b.get("type") == "actions"
+        for e in b.get("elements", [])
+    ]
+    assert "flow_restart" in all_action_ids
+
+
+def test_build_results_blocks_with_projects():
+    """Results block renders one section per project."""
+    worker = _get_worker()
+
+    projects = worker.CURATED_PROJECTS[:2]
+    blocks = worker.build_results_blocks(projects, {"path": "technology"})
+
+    # Check that project names appear in block text
+    block_texts = [
+        b.get("text", {}).get("text", "") for b in blocks if b.get("type") == "section"
+    ]
+    combined_text = " ".join(block_texts)
+    for project in projects:
+        assert project["name"] in combined_text
+
+
+def test_flowchart_trigger_words_are_defined():
+    """FLOWCHART_TRIGGER_WORDS is a non-empty tuple/list."""
+    worker = _get_worker()
+
+    assert hasattr(worker, "FLOWCHART_TRIGGER_WORDS")
+    assert len(worker.FLOWCHART_TRIGGER_WORDS) > 0
+    assert "find" in worker.FLOWCHART_TRIGGER_WORDS
+    assert "recommend" in worker.FLOWCHART_TRIGGER_WORDS
+
+
+def test_curated_projects_schema():
+    """Every curated project has required fields."""
+    worker = _get_worker()
+
+    required = {
+        "name",
+        "url",
+        "description",
+        "tech_tags",
+        "mission_tags",
+        "level",
+        "type",
+    }
+    for project in worker.CURATED_PROJECTS:
+        for field in required:
+            assert (
+                field in project
+            ), f"Project '{project.get('name')}' missing field '{field}'"
+        assert isinstance(project["tech_tags"], list)
+        assert isinstance(project["mission_tags"], list)
+        assert project["level"] in ("beginner", "intermediate", "advanced")
+
+
+def test_repos_to_projects_basic_conversion():
+    """_repos_to_projects converts a repo row into a valid project dict."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "https://github.com/example/myapp",
+            "repo_name": "myapp",
+            "description": "A cool security tool",
+            "language": "Python",
+            "stars": 150,
+            "metadata_json": '{"topics": ["security", "appsec", "ctf"], "is_archived": false}',
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+
+    assert len(projects) == 1
+    p = projects[0]
+    assert p["name"] == "myapp"
+    assert p["url"] == "https://github.com/example/myapp"
+    assert "python" in p["tech_tags"]
+    assert "learn-appsec" in p["mission_tags"]
+    assert "ctf" in p["mission_tags"]
+    assert "contribute-code" in p["mission_tags"]
+    assert p["level"] == "intermediate"  # stars=150, 30<=150<500
+    assert p["type"] == "training"  # ctf topic maps to training type
+
+
+def test_repos_to_projects_skips_archived():
+    """Archived repos are excluded from the result."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "https://github.com/example/old",
+            "repo_name": "old",
+            "description": "",
+            "language": "Java",
+            "stars": 0,
+            "metadata_json": '{"topics": [], "is_archived": true}',
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+    assert projects == []
+
+
+def test_repos_to_projects_skips_empty_url():
+    """Rows without a repo_url are excluded."""
+    worker = _get_worker()
+
+    rows = [
+        {
+            "repo_url": "",
+            "repo_name": "nourl",
+            "description": "",
+            "language": "Go",
+            "stars": 0,
+            "metadata_json": "{}",
+        }
+    ]
+    projects = worker._repos_to_projects(rows)
+    assert projects == []
+
+
+def test_repos_to_projects_level_thresholds():
+    """Star-based level inference works at each threshold."""
+    worker = _get_worker()
+
+    def make_row(stars):
+        return {
+            "repo_url": f"https://github.com/x/r{stars}",
+            "repo_name": f"r{stars}",
+            "description": "",
+            "language": "",
+            "stars": stars,
+            "metadata_json": "{}",
+        }
+
+    rows = [make_row(5), make_row(30), make_row(500)]
+    projects = worker._repos_to_projects(rows)
+    assert projects[0]["level"] == "beginner"
+    assert projects[1]["level"] == "intermediate"
+    assert projects[2]["level"] == "advanced"
+
+
+def test_recommend_projects_uses_workspace_projects_when_provided():
+    """recommend_projects uses workspace_projects instead of CURATED_PROJECTS."""
+    worker = _get_worker()
+
+    custom = [
+        {
+            "name": "CustomRepo",
+            "url": "https://github.com/x/custom",
+            "description": "A custom repo",
+            "tech_tags": ["rust"],
+            "mission_tags": ["contribute-code"],
+            "level": "beginner",
+            "type": "code",
+        }
+    ]
+    answers = {
+        "path": "technology",
+        "tech_stack": "rust",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    results = worker.recommend_projects(answers, workspace_projects=custom)
+
+    assert len(results) == 1
+    assert results[0]["name"] == "CustomRepo"
+
+
+def test_recommend_projects_falls_back_to_curated_when_workspace_empty():
+    """recommend_projects falls back to CURATED_PROJECTS when workspace_projects is empty."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "technology",
+        "tech_stack": "python",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    # Passing empty list should trigger fallback
+    results_empty = worker.recommend_projects(answers, workspace_projects=[])
+    results_none = worker.recommend_projects(answers, workspace_projects=None)
+
+    # Both should return results from CURATED_PROJECTS (non-empty for python)
+    assert len(results_empty) > 0
+    assert len(results_none) > 0
