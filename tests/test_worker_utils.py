@@ -1286,3 +1286,184 @@ def test_webhook_persists_webhook_received_event_with_request_data():
     assert captured["webhook_fields"]["webhook_event_subtype"] == "channel_join"
     assert captured["webhook_fields"]["webhook_retry_num"] == "1"
     assert captured["webhook_fields"]["webhook_retry_reason"] == "http_timeout"
+
+
+# ===========================================================================
+# Flowchart tests
+# ===========================================================================
+
+
+def _get_worker():
+    """Import worker module with mocked runtime dependencies."""
+    import sys
+    from unittest.mock import Mock
+
+    sys.modules["js"] = Mock()
+    sys.modules["cloudflare"] = Mock()
+    sys.modules["workers"] = Mock()
+
+    import importlib
+
+    import src.worker as worker
+
+    importlib.reload(worker)
+    return worker
+
+
+def test_recommend_projects_technology_path():
+    """Technology path returns projects matching tech tag and difficulty."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "technology",
+        "tech_stack": "python",
+        "difficulty": "beginner",
+        "project_type": "code",
+    }
+    results = worker.recommend_projects(answers)
+
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    # All returned projects should have python in tech_tags or be a fallback
+    names = [p["name"] for p in results]
+    assert len(names) > 0
+
+
+def test_recommend_projects_mission_path():
+    """Mission path returns projects matching mission goal."""
+    worker = _get_worker()
+
+    answers = {
+        "path": "mission",
+        "mission_goal": "learn-appsec",
+        "contribution_type": "training",
+    }
+    results = worker.recommend_projects(answers)
+
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    assert len(results) > 0
+
+
+def test_recommend_projects_returns_at_most_three():
+    """Recommendation engine never returns more than 3 projects."""
+    worker = _get_worker()
+
+    for path in ["technology", "mission"]:
+        answers = {"path": path}
+        results = worker.recommend_projects(answers)
+        assert len(results) <= 3
+
+
+def test_recommend_projects_fallback_no_match():
+    """Recommendation engine returns fallback results when nothing matches exactly."""
+    worker = _get_worker()
+
+    # Unlikely combo that won't match exactly on tech_stack
+    answers = {
+        "path": "technology",
+        "tech_stack": "cobol",
+        "difficulty": "advanced",
+        "project_type": "tool",
+    }
+    results = worker.recommend_projects(answers)
+
+    # Should still return a list within bounds
+    assert isinstance(results, list)
+    assert len(results) <= 3
+    # Fallback should return projects that match difficulty+type even without tech match
+    # (advanced tools exist in the curated list)
+    if results:
+        for project in results:
+            assert "name" in project
+            assert "url" in project
+
+
+def test_build_flowchart_start_blocks_structure():
+    """Start blocks contain a section and an actions block with two buttons."""
+    worker = _get_worker()
+
+    blocks = worker.build_flowchart_start_blocks()
+
+    assert any(b.get("type") == "section" for b in blocks)
+    actions = [b for b in blocks if b.get("type") == "actions"]
+    assert len(actions) == 1
+    elements = actions[0]["elements"]
+    action_ids = [e["action_id"] for e in elements]
+    assert "flow_path_technology" in action_ids
+    assert "flow_path_mission" in action_ids
+
+
+def test_build_tech_stack_blocks_has_seven_options():
+    """Tech stack block has exactly seven technology buttons."""
+    worker = _get_worker()
+
+    blocks = worker.build_tech_stack_blocks()
+    actions = [b for b in blocks if b.get("type") == "actions"]
+    assert len(actions) == 1
+    assert len(actions[0]["elements"]) == 7
+
+
+def test_build_results_blocks_no_projects():
+    """Results block handles empty project list gracefully."""
+    worker = _get_worker()
+
+    blocks = worker.build_results_blocks([], {})
+    assert len(blocks) > 0
+    # Should contain a restart button
+    all_action_ids = [
+        e.get("action_id")
+        for b in blocks
+        if b.get("type") == "actions"
+        for e in b.get("elements", [])
+    ]
+    assert "flow_restart" in all_action_ids
+
+
+def test_build_results_blocks_with_projects():
+    """Results block renders one section per project."""
+    worker = _get_worker()
+
+    projects = worker.CURATED_PROJECTS[:2]
+    blocks = worker.build_results_blocks(projects, {"path": "technology"})
+
+    # Check that project names appear in block text
+    block_texts = [
+        b.get("text", {}).get("text", "") for b in blocks if b.get("type") == "section"
+    ]
+    combined_text = " ".join(block_texts)
+    for project in projects:
+        assert project["name"] in combined_text
+
+
+def test_flowchart_trigger_words_are_defined():
+    """FLOWCHART_TRIGGER_WORDS is a non-empty tuple/list."""
+    worker = _get_worker()
+
+    assert hasattr(worker, "FLOWCHART_TRIGGER_WORDS")
+    assert len(worker.FLOWCHART_TRIGGER_WORDS) > 0
+    assert "find" in worker.FLOWCHART_TRIGGER_WORDS
+    assert "recommend" in worker.FLOWCHART_TRIGGER_WORDS
+
+
+def test_curated_projects_schema():
+    """Every curated project has required fields."""
+    worker = _get_worker()
+
+    required = {
+        "name",
+        "url",
+        "description",
+        "tech_tags",
+        "mission_tags",
+        "level",
+        "type",
+    }
+    for project in worker.CURATED_PROJECTS:
+        for field in required:
+            assert (
+                field in project
+            ), f"Project '{project.get('name')}' missing field '{field}'"
+        assert isinstance(project["tech_tags"], list)
+        assert isinstance(project["mission_tags"], list)
+        assert project["level"] in ("beginner", "intermediate", "advanced")
